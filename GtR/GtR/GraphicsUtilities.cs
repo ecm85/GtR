@@ -75,6 +75,16 @@ namespace GtR
             }
         }
 
+        public static int PrintFullWidthPng(Graphics graphics, string fileName, int x, int y, int width)
+        {
+            using (var srcImage = Image.FromFile($"Images\\{fileName}.png"))
+            {
+                var height = width * srcImage.Height / srcImage.Width;
+                PrintScaledImage(graphics, srcImage, x, y, width, height);
+                return height;
+            }
+        }
+
         public static void PrintScaledJpg(Graphics graphics, string fileName, int x, int y, int width, int height)
         {
             using (var srcImage = Image.FromFile($"Images\\{fileName}.jpg"))

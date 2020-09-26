@@ -26,23 +26,23 @@ namespace GtR
         private int WidthInPixelsWithBleed => Orientation == ImageOrientation.Landscape ? cardLongSideInPixelsWithBleed : cardShortSideInPixelsWithBleed;
         private int HeightInPixelsWithBleed => Orientation == ImageOrientation.Portrait ? cardLongSideInPixelsWithBleed : cardShortSideInPixelsWithBleed;
 
-        public Rectangle FullRectangWithPadding => new Rectangle(
+        public Rectangle FullRectangle => new Rectangle(
             0,
             0,
             WidthInPixelsWithBleed,
             HeightInPixelsWithBleed);
 
-        public Rectangle UsableRectangle => new Rectangle(
+        private Rectangle UsableRectangleWithoutPadding => new Rectangle(
             Origin.X,
             Origin.Y,
             WidthInPixels - 2 * borderThicknessInPixels,
             HeightInPixels - 2 * borderThicknessInPixels);
 
-        public Rectangle UsableRectangWithPadding => new Rectangle(
-            UsableRectangle.X + borderPaddingInPixels,
-            UsableRectangle.Y + borderPaddingInPixels,
-            UsableRectangle.Width - (borderPaddingInPixels * 2),
-            UsableRectangle.Height - (borderPaddingInPixels * 2));
+        public Rectangle UsableRectangle => new Rectangle(
+            UsableRectangleWithoutPadding.X + borderPaddingInPixels,
+            UsableRectangleWithoutPadding.Y + borderPaddingInPixels,
+            UsableRectangleWithoutPadding.Width - (borderPaddingInPixels * 2),
+            UsableRectangleWithoutPadding.Height - (borderPaddingInPixels * 2));
 
         public Bitmap Bitmap { get; private set; }
         public Graphics Graphics { get; private set; }
@@ -93,10 +93,10 @@ namespace GtR
                     borderRadius);
             Graphics.FillRoundedRectangle(
                 new SolidBrush(backgroundColor),
-                UsableRectangle.X,
-                UsableRectangle.Y,
-                UsableRectangle.Width,
-                UsableRectangle.Height,
+                UsableRectangleWithoutPadding.X,
+                UsableRectangleWithoutPadding.Y,
+                UsableRectangleWithoutPadding.Width,
+                UsableRectangleWithoutPadding.Height,
                 borderRadius);
         }
     }

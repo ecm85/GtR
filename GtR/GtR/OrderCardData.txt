@@ -1,6 +1,6 @@
 ﻿Academy	Brick	You may perform one THINKER action after any turn during which you performed at least one CRAFTSMAN action.	Standard
-Amphitheatre	Concrete	Upon completion, you may perform one CRAFTSMAN action for each INFLUENCE.	Standard
-Aqueduct	Concrete	When performing PATRON action, you may take one additional client from your hand.  Maximum CLIENTELE size x2	Standard
+Amphitheatre	Concrete	Upon completion, you may perform one CRAFTSMAN action for each influence.	Standard
+Aqueduct	Concrete	When performing PATRON action, you may take one additional client from your hand.  Maximum clientele size x2	Standard
 Archway	Brick	When performing ARCHITECT action, you may take a material from the pool instead of your stockpile.	Standard
 Atrium	Brick	When performing MERCHANT action, you may take a card from the deck instead of your stockpile (Don't look at it).	Standard
 Bar	Rubble	When performing PATRON action, you may take one additional client card from the deck.	Standard
@@ -10,7 +10,7 @@ Bridge	Concrete	When performing LEGIONARY action, you may demand materials from 
 Catacomb	Stone	Upon completion, game ends immediately.  Score as usual.	Standard
 Circus	Wood	You may play two cards of the same role as a JACK.	Imperium
 Circus Maximus	Stone	Each of your clients may perform its action twice when you lead or follow its role.	Standard
-Colosseum	Stone	When performing LEGIONARY action, you may additionally take one matching client from each opponent and place it in your VAULT.	Imperium
+Colosseum	Stone	When performing LEGIONARY action, you may additionally take one matching client from each opponent and place it in your vault.	Imperium
 Crane	Wood	You may use any card to lead or follow ARCHITECT.	Republic
 Dock	Wood	When performing LABORER action, you may take one additional material from your hand.	Standard
 Domus Aurea	Stone	When performing LEGIONARY action, you may addtionally tear down one matching incomplete building with no material of each victim. Place foundation in your stockpile and site in your influence.	Republic
@@ -33,7 +33,7 @@ Scriptorium	Stone	You may complete any structure by adding MARBLE to it, no matt
 Senate	Concrete	At the end of each turn, you may take into your hand any JACKS played by opponents.	Imperium
 Sewer	Stone	You may place order cards you used to lead or follow into your stockpile at the end of your turn.	Standard
 Shrine	Brick	Hand refill size +2	Standard
-Stairway	Marble	When performing ARCHITECT action, you may additionally add a material to an opponent's completed STRUCTURE to make its function available to all players.	Standard
+Stairway	Marble	When performing ARCHITECT action, you may additionally add a material to an opponent's completed structure to make its function available to all players.	Standard
 Statue	Marble	+ 3 VP You may place the statue on any site.	Standard
 Storeroom	Concrete	Each client in your clientele also counds as a LABORER.	Standard
 Temple	Marble	Hand refill size +4	Standard
