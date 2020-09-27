@@ -13,13 +13,18 @@ namespace GtR
 
         static void Main(string[] args)
         {
+            var imageCreator = new GloryToRomeImageCreator();
+
             var orderCards = ReadOrderCards();
-            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(orderCard)).ToList();
+            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
+            var orderCardBackImage = new [] {imageCreator.CreateOrderCardBack()};
 
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
 
-            var allImages = orderCardFrontImages;
+            var allImages = orderCardFrontImages
+                .Concat(orderCardBackImage)
+                .ToList();
 
             if (useOverlay)
             {
@@ -49,9 +54,8 @@ namespace GtR
                 image.Bitmap.Save($"c:\\delete\\images\\{dateStamp}\\{image.Name}.png", ImageFormat.Png);
         }
 
-        private static IEnumerable<CardImage> CreateCardsForOrderCard(OrderCard orderCard)
+        private static IEnumerable<CardImage> CreateCardsForOrderCard(GloryToRomeImageCreator imageCreator, OrderCard orderCard)
         {
-            var imageCreator = new GloryToRomeImageCreator();
             return Enumerable.Range(0, orderCard.CardSuit.CardCountPerDeck())
                 .Select(index => imageCreator.CreateOrderCardFront(orderCard, index))
                 .ToList();

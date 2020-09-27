@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace GtR
@@ -14,6 +12,7 @@ namespace GtR
         private const int orderCardTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
         private const float influenceImagePercentage = .13f;
         private const float RoleIconPercentage = .18f;
+
         private const float SetIndicatorPercentage = .10f;
 
         private int InfluenceImageSide(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * influenceImagePercentage);
@@ -24,12 +23,43 @@ namespace GtR
         private readonly Font CardTextFont = new Font(headerFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
         private readonly Font BoldCardTextFont = new Font(headerFontFamily, orderCardTextFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
+        public CardImage CreateOrderCardBack()
+        {
+            var name = "OrderCardBack";
+            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var graphics = cardImage.Graphics;
+            var usableRectangle = cardImage.UsableRectangle;
+            cardImage.PrintCardBorderAndBackground(Color.Black, Color.Black);
+            GraphicsUtilities.PrintScaledPng(
+                graphics,
+                $@"Misc\GloryToRome",
+                usableRectangle.X + (int)(usableRectangle.Width * .07f),
+                usableRectangle.Y + (int)(usableRectangle.Height * .15f),
+                (int)(usableRectangle.Width * (1 - (.07f * 2))),
+                (int)(usableRectangle.Height * .3f));
+            GraphicsUtilities.PrintScaledPng(
+                graphics,
+                $@"Misc\GloryToRome",
+                usableRectangle.X + (int)(usableRectangle.Width * .07f),
+                usableRectangle.Bottom - (int)(usableRectangle.Height * (.15f + .3f)),
+                (int)(usableRectangle.Width * (1 - (.07f * 2))),
+                (int)(usableRectangle.Height * .3f),
+                RotateFlipType.Rotate180FlipNone);
+            GraphicsUtilities.PrintScaledPng(
+                graphics,
+                $@"Misc\OrderBackSeparator",
+                usableRectangle.X + (usableRectangle.Width/2 - (int)((usableRectangle.Width * .4f)/2)),
+                usableRectangle.Y + (usableRectangle.Height/2 - (int)((usableRectangle.Height* .05f)/2)),
+                (int)(usableRectangle.Width * .4f),
+                (int)(usableRectangle.Height * .05f));
+            return cardImage;
+        }
+
         public CardImage CreateOrderCardFront(OrderCard orderCard, int index)
         {
             var name = $"{orderCard.CardName}_{index}";
             var cardImage = new CardImage(name, ImageOrientation.Portrait);
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
-            //cardImage.PrintCardBorderAndBackground(Color.FromArgb(225, 225, 225));
             var bottomOfImage = PrintCardImage(orderCard, cardImage);
             PrintRoleIconAndName(orderCard, cardImage);
             PrintCardName(orderCard, cardImage);

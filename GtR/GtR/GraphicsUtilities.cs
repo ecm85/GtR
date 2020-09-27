@@ -71,10 +71,12 @@ namespace GtR
             graphics.DrawPath(new Pen(Color.Black, textOutlineWidth), path);
         }
 
-        public static void PrintScaledPng(Graphics graphics, string fileName, int x, int y, int width, int height)
+        public static void PrintScaledPng(Graphics graphics, string fileName, int x, int y, int width, int height, RotateFlipType? rotateFlipType = null)
         {
             using (var srcImage = Image.FromFile($"Images\\{fileName}.png"))
             {
+                if (rotateFlipType != null)
+                    srcImage.RotateFlip(rotateFlipType.Value);
                 PrintScaledImage(graphics, srcImage, x, y, width, height);
             }
         }
