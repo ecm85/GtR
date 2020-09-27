@@ -1,44 +1,44 @@
 ﻿Academy	Brick	You may perform one THINKER action after any turn during which you performed at least one CRAFTSMAN action.	Standard
-Amphitheatre	Concrete	Upon completion, you may perform one CRAFTSMAN action for each influence.	Standard
-Aqueduct	Concrete	When performing PATRON action, you may take one additional client from your hand.  Maximum clientele size x2	Standard
-Archway	Brick	When performing ARCHITECT action, you may take a material from the pool instead of your stockpile.	Standard
-Atrium	Brick	When performing MERCHANT action, you may take a card from the deck instead of your stockpile (Don't look at it).	Standard
-Bar	Rubble	When performing PATRON action, you may take one additional client card from the deck.	Standard
-Basilica	Marble	When performing MERCHANT action, you may move one additional card from your hand to your vault.	Standard
-Bath	Brick	When performing PATRON action, each client you hire may perform its action once as it enters your clientele.	Standard
-Bridge	Concrete	When performing LEGIONARY action, you may demand materials from all players. You may additionally take one material from each opponent's stockpile. Ignore Palisades.	Standard
-Catacomb	Stone	Upon completion, game ends immediately.  Score as usual.	Standard
+Amphitheatre	Concrete	Upon completion, |you may perform one CRAFTSMAN action for each influence.	Standard
+Aqueduct	Concrete	When performing |PATRON action, you |may take one additional client from your hand. |Maximum clientele size x2	Standard
+Archway	Brick	When performing |ARCHITECT action, you |may take a material |from the pool |instead of your stockpile.	Standard
+Atrium	Brick	When performing |MERCHANT action, you |may take a card |from the deck |instead of your stockpile |(Don't look at it).	Standard
+Bar	Rubble	When performing |PATRON action, you |may take one additional client card from the deck.	Standard
+Basilica	Marble	When performing |MERCHANT action, you |may move one additional |card from your hand |to your vault.	Standard
+Bath	Brick	When performing |PATRON action, each |client you hire |may perform its action once |as it enters your clientele.	Standard
+Bridge	Concrete	When performing |LEGIONARY action, you |may demand materials |from all players. |You may additionally take one material from each opponent's stockpile. |Ignore Palisades.	Standard
+Catacomb	Stone	Upon completion, |game ends immediately. |Score as usual.	Standard
 Circus	Wood	You may play two cards of the same role as a JACK.	Imperium
-Circus Maximus	Stone	Each of your clients may perform its action twice when you lead or follow its role.	Standard
-Colosseum	Stone	When performing LEGIONARY action, you may additionally take one matching client from each opponent and place it in your vault.	Imperium
+Circus Maximus	Stone	Each of your clients may perform its action twice when you lead or follow |its role.	Standard
+Colosseum	Stone	When performing |LEGIONARY action, you |may additionally take one matching client from each opponent and place it in your vault.	Imperium
 Crane	Wood	You may use any card to lead or follow ARCHITECT.	Republic
-Dock	Wood	When performing LABORER action, you may take one additional material from your hand.	Standard
-Domus Aurea	Stone	When performing LEGIONARY action, you may addtionally tear down one matching incomplete building with no material of each victim. Place foundation in your stockpile and site in your influence.	Republic
-Forum	Marble	You win immediately whenever you have a client of each type in your clientele.	Imperium
-Forum Romanum	Marble	You win immediately whenever you have a client of each type in your clientele and one material of each type in your stockpile.	Republic
-Foundry	Brick	Upon completion, you may perform one LABORER action for each influence.	Standard
-Fountain	Marble	You may perform CRAFTSMAN actions with cards from the deck instead of from your hand. You may also keep the card and skip the action.	Standard
-Garden	Stone	Upon completion, you may perform one PATRON action for each influence.	Standard
+Dock	Wood	When performing |LABORER action, you |may take one additional material from your hand.	Standard
+Domus Aurea	Stone	When performing |LEGIONARY action, you |may addtionally tear down one matching incomplete building with no material of each victim. |Place foundation in your |stockpile and site |in your influence.	Republic
+Forum	Marble	You win immediately |whenever you have |a client of each type |in your clientele.	Imperium
+Forum Romanum	Marble	You win immediately |whenever you have |a client of each role |in your clientele and |one material of each |type in your stockpile.	Republic
+Foundry	Brick	Upon completion, |you may perform one LABORER action |for each influence.	Standard
+Fountain	Marble	You may perform CRAFTSMAN actions with cards from the deck instead of from your hand. |You may also keep the card and skip the action.	Standard
+Garden	Stone	Upon completion, |you may perform one PATRON action |for each influence.	Standard
 Gate	Brick	MARBLE structures provide their functions as soon as you lay their foundations.	Standard
 Insula	Rubble	Maximum clientele size +2	Standard
-Latrine	Rubble	Before performing THINKER action, you may discard one card to pool.	Standard
-Ludus Magnus	Marble	Each MERCHANT client in your clientele counts as any role.	Standard
+Latrine	Rubble	Before performing |THINKER action, you may discard one card to pool.	Standard
+Ludus Magnus	Marble	Each MERCHANT client |in your clientele |counts as any role.	Standard
 Market	Wood	Maximum vault size +2	Standard
 Palace	Marble	You may play multiple cards of same role to perform additional actions.	Standard
-Palisade	Wood	Immune to LEGIONARY	Standard
-Prison	Stone	Upon completion, you may exchange the prison's site (and thus influence) for an opponent's completed structure.	Standard
+Palisade	Wood	Immune to |LEGIONARY	Standard
+Prison	Stone	Upon completion, |you may exchange the prison's site (and thus influence) for an opponent's completed structure.	Standard
 Road	Rubble	You may use any material towards the completion of STONE structures.	Standard
-School	Brick	Upon completion, you may perform one THINKER action for each influence.	Standard
-Scriptorium	Stone	You may complete any structure by adding MARBLE to it, no matter its stated cost.	Standard
-Senate	Concrete	At the end of each turn, you may take into your hand any JACKS played by opponents.	Imperium
+School	Brick	Upon completion, |you may perform |one THINKER action |for each influence.	Standard
+Scriptorium	Stone	You may complete any |structure by adding |MARBLE to it, |no matter its stated cost.	Standard
+Senate	Concrete	At the end of each turn, |you may take into your hand |any JACKS played by opponents.	Imperium
 Sewer	Stone	You may place order cards you used to lead or follow into your stockpile at the end of your turn.	Standard
 Shrine	Brick	Hand refill size +2	Standard
-Stairway	Marble	When performing ARCHITECT action, you may additionally add a material to an opponent's completed structure to make its function available to all players.	Standard
-Statue	Marble	+ 3 VP You may place the statue on any site.	Standard
-Storeroom	Concrete	Each client in your clientele also counds as a LABORER.	Standard
+Stairway	Marble	When performing |ARCHITECT action, you |may additionally add a material to an opponent's completed structure to make its function available |to all players.	Standard
+Statue	Marble	+3 VP |You may place the statue on any site.	Standard
+Storeroom	Concrete	Each client |in your clientele also |counts as a LABORER.	Standard
 Temple	Marble	Hand refill size +4	Standard
-Tower	Concrete	You may use RUBBLE in any structure. You may lay foundations onto out of town sites at no extra cost.	Standard
-Tribunal	Concrete	After performing THINKER action, you may draw a JACK.	Republic
+Tower	Concrete	You may use RUBBLE |in any structure. |You may lay foundations onto out of town sites |at no extra cost.	Standard
+Tribunal	Concrete	After performing |THINKER action, you may draw a JACK.	Republic
 Villa	Stone	If you use the ARCHITECT to put one stone into the construction of the villa, it is completed immediately.	Standard
-Vomitorium	Concrete	Before performing THINKER action, you may discard all your cards to the pool.	Standard
-Wall	Concrete	Immune to LEGIONARY.  + 1 VP for every two materials in your stockpile.	Standard
+Vomitorium	Concrete	Before performing |THINKER action, you may discard all your cards |to the pool.	Standard
+Wall	Concrete	Immune to LEGIONARY. |+1 VP for every two materials in your stockpile.	Standard

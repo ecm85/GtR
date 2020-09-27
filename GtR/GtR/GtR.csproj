@@ -50,10 +50,12 @@
     <Compile Include="GraphicsExtensions.cs" />
     <Compile Include="GraphicsUtilities.cs" />
     <Compile Include="ImageOrientation.cs" />
+    <Compile Include="MeasuredTextFragment.cs" />
     <Compile Include="OrderCard.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CardSuit.cs" />
+    <Compile Include="TextFragment.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

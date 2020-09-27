@@ -1,5 +1,9 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Collections.Generic;
+using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GtR
 {
@@ -116,6 +120,55 @@ namespace GtR
         public static void DrawString(Graphics graphics, string text, Font font, Brush brush, RectangleF rectangle, StringFormat stringFormat)
         {
             graphics.DrawString(text, font, brush, rectangle, stringFormat);
+        }
+
+        public static void DrawFragmentsCentered(Graphics graphics, IList<TextFragment> fragments, Rectangle rectangle)
+        {
+            var measuredFragments = fragments
+                .Select(fragment => MeasureTextFragment(graphics, fragment, rectangle.Width))
+                .ToList();
+            var fragmentsGroupedByLine = GetFragmentsGroupedByLine(graphics, rectangle, measuredFragments).ToList();
+            var totalHeight = fragmentsGroupedByLine.Sum(group => group.Max(measuredFragment => measuredFragment.Height));
+            var totalWidth = fragmentsGroupedByLine.Max(group => group.Sum(measuredFragment => measuredFragment.Width));
+            var minX = rectangle.X + (rectangle.Width / 2 - totalWidth / 2);
+            var minY = rectangle.Y + (rectangle.Height / 2 - totalHeight / 2);
+            graphics.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.White)), new Rectangle(minX, minY, totalWidth, totalHeight));
+            var currentY = minY;
+            foreach(var fragmentGroup in fragmentsGroupedByLine)
+            {
+                var groupWidth = fragmentGroup.Sum(fragment => fragment.Width);
+                var groupHeight = fragmentGroup.Max(fragment => fragment.Height);
+                var currentX = rectangle.X + (rectangle.Width / 2 - groupWidth / 2);
+                foreach(var fragment in fragmentGroup)
+                {
+                    graphics.DrawString(fragment.TextFragment.Text, fragment.TextFragment.Font, fragment.TextFragment.Brush, new Rectangle(currentX, currentY, rectangle.Width, rectangle.Height));
+                    currentX += fragment.Width;
+                }
+                currentY += groupHeight;
+            }
+        }
+
+        private static MeasuredTextFragment MeasureTextFragment(Graphics graphics, TextFragment textFragment, int maxWidth)
+        {
+            var measurement = graphics.MeasureString(textFragment.Text, textFragment.Font, maxWidth);
+            return new MeasuredTextFragment((int)measurement.Width, (int)measurement.Height, textFragment);
+        }
+
+        private static IEnumerable<IEnumerable<MeasuredTextFragment>> GetFragmentsGroupedByLine(Graphics graphics, Rectangle rectangle, IEnumerable<MeasuredTextFragment> original)
+        {
+            var remaining = original.ToList();
+            while(remaining.Any())
+            {
+                var tokens = 0;
+                var currentWidth = 0;
+                do
+                {
+                    currentWidth += remaining[tokens].Width;
+                    tokens++;
+                } while (tokens < remaining.Count && !remaining[tokens].TextFragment.ForcesNewline && currentWidth + remaining[tokens].Width <= rectangle.Width);
+                yield return remaining.Take(tokens).ToList();
+                remaining = remaining.Skip(tokens).ToList();
+            }
         }
     }
 }

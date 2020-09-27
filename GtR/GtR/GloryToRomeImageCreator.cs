@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -7,7 +9,7 @@ namespace GtR
 {
     public class GloryToRomeImageCreator
     {
-        private readonly FontFamily headerFontFamily = new FontFamily("Neuzeit Grotesk"); //TODO
+        private static readonly FontFamily headerFontFamily = new FontFamily("Neuzeit Grotesk"); //TODO
         private const int orderCardHeaderFontSize = (int)(19 * GraphicsUtilities.dpiFactor); //TODO
         private const int orderCardTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
         private const float influenceImagePercentage = .13f;
@@ -18,6 +20,9 @@ namespace GtR
         private int CardNameWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
         private int CardTextWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
         private int RoleIconWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * RoleIconPercentage);
+
+        private readonly Font CardTextFont = new Font(headerFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+        private readonly Font BoldCardTextFont = new Font(headerFontFamily, orderCardTextFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
         public CardImage CreateOrderCardFront(OrderCard orderCard, int index)
         {
@@ -90,7 +95,7 @@ namespace GtR
                 iconImageHeight);
 
             var text = new string(roleName.ToUpper().ToCharArray().SelectMany(character => character == 'M' ? new[] { character } : new[] { character, (char)0x2009 }).ToArray());
-            var brush = new SolidBrush(suit.Color());
+            var brush = BrushesByCardSuit[suit];
             var singleCharacterMeasurement = graphics.MeasureString("M", cardNameFont, new SizeF(usableRectangle.Width, usableRectangle.Height), GraphicsUtilities.HorizontalNearAlignment);
             var textBoxWidth = (int)singleCharacterMeasurement.Width;
             var xOffset = (int)(iconImageWidth/2.0f - textBoxWidth/2);
@@ -181,7 +186,6 @@ namespace GtR
         {
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
-            var cardNameFont = new Font(headerFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             var text = orderCard.CardText;
             var textBoxWidth = CardTextWidth(cardImage);
             var xOffset = RoleIconWidth(cardImage);
@@ -193,10 +197,62 @@ namespace GtR
                 textRectangleHeight = usableRectangle.Bottom - (influenceImageSide + bottomOfCardImage);
             }
             var rectangle = new Rectangle(usableRectangle.X + xOffset, bottomOfCardImage, textBoxWidth, textRectangleHeight);
-            //graphics.FillRectangle(new SolidBrush(Color.Blue), rectangle);
-            var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(rectangle.Width, rectangle.Height), GraphicsUtilities.FullCenterAlignment);
-            graphics.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.White)), new Rectangle(rectangle.X, (int)(rectangle.Y + rectangle.Height / 2 - textMeasurement.Height / 2), rectangle.Width, (int)textMeasurement.Height));
-            GraphicsUtilities.DrawString(graphics, text, cardNameFont, GraphicsUtilities.BlackBrush, rectangle, GraphicsUtilities.FullCenterAlignment);
+            var words = text.Split(new[] {" "}, StringSplitOptions.None);
+            var fragments = words
+                .Select(word => GetFragmentForWord(word))
+                .ToList();
+
+            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle);
         }
+
+        private TextFragment GetFragmentForWord(string word)
+        {
+            var text = word;
+            var forcesNewline = false;
+            if (text[0] == '|')
+            {
+                forcesNewline = true;
+                text = text.Substring(1);
+            }
+            var matchingSuitKeyword = SuitsByKeyword.Keys.FirstOrDefault(keyword => text.Contains(keyword));
+            var isSuitKeyword = matchingSuitKeyword != null;
+            var isNonSuitKeyword = NonSuitKeywords.Any(keyword => text.Contains(keyword));
+            return new TextFragment
+            {
+                Text = $"{text}",
+                Font = isSuitKeyword || isNonSuitKeyword ? BoldCardTextFont : CardTextFont,
+                Brush = isSuitKeyword ? BrushesByCardSuit[SuitsByKeyword[matchingSuitKeyword]] : GraphicsUtilities.BlackBrush,
+                ForcesNewline = forcesNewline
+            };
+        }
+
+        private readonly IDictionary<CardSuit, SolidBrush> BrushesByCardSuit = Enum.GetValues(typeof(CardSuit))
+            .Cast<CardSuit>()
+            .ToDictionary(suit => suit, suit => new SolidBrush(suit.Color()));
+
+        private readonly IList<string> NonSuitKeywords = new List<string>
+        {
+            "THINKER",
+            "JACK",
+            "JACKS",
+            "x2",
+            "+1",
+            "+2",
+            "+3",
+            "+4"
+        };
+
+        private readonly Dictionary<string, CardSuit> SuitsByKeyword = new Dictionary<string, CardSuit>
+        {
+            ["LEGIONARY"] = CardSuit.RedLegionaryBrick,
+            ["CRAFTSMAN"] = CardSuit.GreenCraftsmanWood,
+            ["PATRON"] = CardSuit.PurplePatronMarble,
+            ["MERCHANT"] = CardSuit.BlueMerchantStone,
+            ["ARCHITECT"] = CardSuit.GreyArchitectConcrete,
+            ["LABORER"] = CardSuit.YellowLaborerRubble,
+            ["MARBLE"] = CardSuit.PurplePatronMarble,
+            ["STONE"] = CardSuit.BlueMerchantStone,
+            ["RUBBLE"] = CardSuit.YellowLaborerRubble
+        };
     }
 }
