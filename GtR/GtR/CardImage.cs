@@ -1,4 +1,5 @@
-﻿using System.Drawing;
+﻿using System;
+using System.Drawing;
 
 namespace GtR
 {
@@ -10,14 +11,14 @@ namespace GtR
         private const float borderThicknessInInches = 0f;
         private const float borderPaddingInInches = .0f;
 
-        private const int cardShortSideInPixels = (int)(GraphicsUtilities.dpi * cardShortSideInInches);
-        private const int cardLongSideInPixels = (int)(GraphicsUtilities.dpi * cardLongSideInInches);
-        private const int bleedSizeInPixels = (int)(GraphicsUtilities.dpi * bleedSizeInInches);
+        private const int cardShortSideInPixels = (int)(GraphicsUtilities.dpi * cardShortSideInInches) - 1;
+        private const int cardLongSideInPixels = (int)(GraphicsUtilities.dpi * cardLongSideInInches) - 1;
+        private static readonly int bleedSizeInPixels = (int)Math.Round(GraphicsUtilities.dpi * bleedSizeInInches);
         private const int borderThicknessInPixels = (int)(GraphicsUtilities.dpi * borderThicknessInInches);
         private const int borderPaddingInPixels = (int)(GraphicsUtilities.dpi * borderPaddingInInches);
 
-        private const int cardShortSideInPixelsWithBleed = cardShortSideInPixels + bleedSizeInPixels * 2;
-        private const int cardLongSideInPixelsWithBleed = cardLongSideInPixels + bleedSizeInPixels * 2;
+        private static readonly int cardShortSideInPixelsWithBleed = cardShortSideInPixels + bleedSizeInPixels * 2;
+        private static readonly int cardLongSideInPixelsWithBleed = cardLongSideInPixels + bleedSizeInPixels * 2;
 
         public Point Origin => new Point(bleedSizeInPixels + borderThicknessInPixels, bleedSizeInPixels + borderThicknessInPixels);
 
