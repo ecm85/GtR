@@ -323,6 +323,7 @@ namespace GtR
             var setIndicatorImageSide = (int)(setIndicatorCircleWidth * .7f);
             var suit = orderCard.CardSuit;
             var brush = new SolidBrush(suit.Color());
+            var haloBrush = new SolidBrush(Color.FromArgb(200, Color.White));
             var set = orderCard.CardSet;
 
             for (var i = 0; i < suit.Points(); i++)
@@ -332,7 +333,14 @@ namespace GtR
                     usableRectangle.Y + (i * setIndicatorCircleWidth) + (i > 0 ? i * (int)(setIndicatorCircleWidth * .2f) : 0),
                     setIndicatorCircleWidth,
                     setIndicatorCircleWidth);
+                var haloSize = (int)(circleRectangle.Width * 1.2f);
+                var haloRectangle = new Rectangle(
+                    circleRectangle.X - (haloSize - circleRectangle.Width)/2,
+                    circleRectangle.Y - (haloSize - circleRectangle.Width)/2,
+                    haloSize,
+                    haloSize);
 
+                graphics.FillEllipse(haloBrush, haloRectangle);
                 graphics.FillEllipse(brush, circleRectangle);
                 if (set.HasSetImage())
                     GraphicsUtilities.PrintScaledPng(
