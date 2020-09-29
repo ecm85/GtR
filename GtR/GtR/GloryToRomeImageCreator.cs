@@ -29,9 +29,9 @@ namespace GtR
         private int SiteCoinWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * SiteCoinWidthPercentage);
         private int SiteCoinPadding(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * SiteCoinPaddingPercentage);
 
-        internal CardImage CreateSiteFront(CardSuit suit, int index)
+        internal CardImage CreateSiteFront(CardSuit suit)
         {
-            var name = $"{suit.ResourceName()}_Site_{index}";
+            var name = $"{suit.ResourceName()}_Site";
             var cardImage = new CardImage(name, ImageOrientation.Portrait);
             var graphics = cardImage.Graphics;
             var fullRectangle = cardImage.FullRectangle;

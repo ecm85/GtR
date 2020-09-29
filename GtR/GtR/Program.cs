@@ -22,7 +22,7 @@ namespace GtR
             var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
             var orderCardBackImage = new [] {imageCreator.CreateOrderCardBack()};
 
-            var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 2).Select(index => imageCreator.CreateSiteFront(suit, index))).ToList();
+            var siteFrontImages = allSuits.Select(suit => imageCreator.CreateSiteFront(suit)).ToList();
 
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
