@@ -23,6 +23,7 @@ namespace GtR
             var orderCardBackImage = new [] {imageCreator.CreateOrderCardBack()};
 
             var siteFrontImages = allSuits.Select(suit => imageCreator.CreateSiteFront(suit)).ToList();
+            var siteBackImages = allSuits.Select(suit => imageCreator.CreateSiteBack(suit)).ToList();
 
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
@@ -30,6 +31,7 @@ namespace GtR
             var allImages = orderCardFrontImages
                 .Concat(orderCardBackImage)
                 .Concat(siteFrontImages)
+                .Concat(siteBackImages)
                 .ToList();
 
             if (useOverlay)

@@ -21,6 +21,7 @@ namespace GtR
         private const float CenteredImageOffsetPercentage = (RoleIconPercentage - SetIndicatorPercentage)/2;
         private const float SiteCoinWidthPercentage = .2f;
         private const float SiteCoinPaddingPercentage = .05f;
+        private const int diagonalLinesPerCard = 16;
 
 
         private int InfluenceImageSide(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * InfluenceImagePercentage);
@@ -29,7 +30,7 @@ namespace GtR
         private int SiteCoinWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * SiteCoinWidthPercentage);
         private int SiteCoinPadding(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * SiteCoinPaddingPercentage);
 
-        internal CardImage CreateSiteFront(CardSuit suit)
+        public CardImage CreateSiteFront(CardSuit suit)
         {
             var name = $"{suit.ResourceName()}_Site";
             var cardImage = new CardImage(name, ImageOrientation.Portrait);
@@ -37,13 +38,6 @@ namespace GtR
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
-
-            //var thickness = (int)(fullRectangle.Width / 15f);
-            //var width = (int)Math.Sqrt(Math.Pow(thickness, 2) / 2);
-            //var pen = new Pen(suit.Color(), width);
-            //const int extra = 25;
-            //for (var xOffset = -2 * fullRectangle.Width + 10; xOffset < fullRectangle.Width; xOffset += thickness * 2)
-            //    graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Top - extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Bottom + extra);
 
             DrawSiteCost(cardImage, suit);
 
@@ -116,6 +110,48 @@ namespace GtR
             return cardImage;
         }
 
+        public CardImage CreateSiteBack(CardSuit suit)
+        {
+            var name = $"{suit.ResourceName()}_SiteBack";
+            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var graphics = cardImage.Graphics;
+            var fullRectangle = cardImage.FullRectangle;
+            var usableRectangle = cardImage.UsableRectangle;
+            cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
+
+            var thickness = (int)(fullRectangle.Width / diagonalLinesPerCard);
+            var width = (int)Math.Sqrt(Math.Pow(thickness, 2) / 2);
+            var pen = new Pen(suit.Color(), width);
+            const int extra = 25;
+            for (var xOffset = -2 * fullRectangle.Width + 10; xOffset < fullRectangle.Width; xOffset += thickness * 2)
+                graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Top - extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Bottom + extra);
+
+            var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var resourceNameText = string.Join(
+                " ",
+                suit.ResourceName().ToUpper()
+                    .Split(' ')
+                    .Select(token =>
+                        string.Join(((char)0x202f).ToString(), token.ToCharArray())))
+                        .Replace(" ", "  ");
+            var outOfTownSiteText = "out of town site";
+            var maxTextBoxWidth = usableRectangle.Width;
+            var initialRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
+            var resourceNameTextMeasurement = graphics.MeasureString(outOfTownSiteText, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
+            var outOfTownSiteTextMeasurement = graphics.MeasureString(outOfTownSiteText, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
+            var resourceNameTextHeight = (int)Math.Ceiling(resourceNameTextMeasurement.Height);
+            var outOfTownSiteTextHeight = (int)Math.Ceiling(outOfTownSiteTextMeasurement.Height);
+            var textHeight = resourceNameTextHeight + outOfTownSiteTextHeight;
+            var yOffset = usableRectangle.Height/2 - textHeight/2;
+            var resourceNameTextRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y + yOffset - resourceNameTextHeight, maxTextBoxWidth, textHeight);
+            var outOfTownSiteTextRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y + yOffset, maxTextBoxWidth, textHeight);
+            //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
+            GraphicsUtilities.DrawString(graphics, resourceNameText, cardNameFont, GraphicsUtilities.BlackBrush, resourceNameTextRectangle, GraphicsUtilities.HorizontalCenterAlignment);
+            GraphicsUtilities.DrawString(graphics, outOfTownSiteText, CardTextFont, GraphicsUtilities.BlackBrush, outOfTownSiteTextRectangle, GraphicsUtilities.HorizontalCenterAlignment);
+
+            return cardImage;
+        }
+
         private void DrawSiteCost(CardImage cardImage, CardSuit suit)
         {
             var graphics = cardImage.Graphics;
@@ -126,7 +162,7 @@ namespace GtR
             var costRegion = new Region(costRectangle);
             var oldClip = graphics.Clip;
             graphics.Clip = costRegion;
-            var barThickness = (int)(fullRectangle.Width / 16f);
+            var barThickness = (int)(fullRectangle.Width / diagonalLinesPerCard);
             var strokeWidth = (int)Math.Sqrt(Math.Pow(barThickness, 2) / 2);
             var pen = new Pen(suit.Color(), strokeWidth);
             const int extra = 25;
