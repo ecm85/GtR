@@ -9,7 +9,7 @@ namespace GtR
         private const float cardLongSideInInches = 3.5f;
         private const float bleedSizeInInches = (1.0f / 8.0f);
         private const float borderThicknessInInches = 0f;
-        private const float borderPaddingInInches = .0f;
+        private const float borderPaddingInInches = (1.0f/16.0f);
 
         private const int cardShortSideInPixels = (int)(GraphicsUtilities.dpi * cardShortSideInInches) - 1;
         private const int cardLongSideInPixels = (int)(GraphicsUtilities.dpi * cardLongSideInInches) - 1;

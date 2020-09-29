@@ -8,7 +8,7 @@ namespace GtR
     public class GloryToRomeImageCreator
     {
         private static readonly FontFamily headerFontFamily = new FontFamily("Neuzeit Grotesk"); //TODO
-        private const int orderCardHeaderFontSize = (int)(19 * GraphicsUtilities.dpiFactor); //TODO
+        private const int orderCardHeaderFontSize = (int)(18.5 * GraphicsUtilities.dpiFactor); //TODO
         private const int orderCardTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
         private const int siteCardCostTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
         
@@ -194,10 +194,10 @@ namespace GtR
             var bottomOfImage = PrintCardImage(orderCard, cardImage);
             PrintRoleIconAndName(orderCard, cardImage);
             PrintCardName(orderCard, cardImage);
-            PrintInfluence(orderCard, cardImage);
             PrintResourceType(orderCard, cardImage);
             PrintSetIndicator(orderCard, cardImage);
             PrintCardText(orderCard, cardImage, bottomOfImage);
+            PrintInfluence(orderCard, cardImage);
             return cardImage;
         }
 
