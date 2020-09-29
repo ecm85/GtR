@@ -15,15 +15,19 @@ namespace GtR
         private const float InfluenceImagePercentage = .13f;
         private const float RoleIconPercentage = .18f;
         private const float SiteCostRegionHeightPercentage = .36f;
-        private const float SiteResourceHeightPercentage = .30f;
-        private const float SiteResourceSectionPaddingPercentage = .10f;
+        private const float SiteResourceHeightPercentage = .35f;
+        private const float SiteResourceSectionPaddingPercentage = .15f;
         private const float SetIndicatorPercentage = .10f;
         private const float CenteredImageOffsetPercentage = (RoleIconPercentage - SetIndicatorPercentage)/2;
+        private const float SiteCoinWidthPercentage = .2f;
+        private const float SiteCoinPaddingPercentage = .05f;
 
 
         private int InfluenceImageSide(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * InfluenceImagePercentage);
         private int CardNameWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
         private int CenteredImageOffset(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * CenteredImageOffsetPercentage);
+        private int SiteCoinWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * SiteCoinWidthPercentage);
+        private int SiteCoinPadding(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * SiteCoinPaddingPercentage);
 
         internal CardImage CreateSiteFront(CardSuit suit, int index)
         {
@@ -81,6 +85,34 @@ namespace GtR
             //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
             GraphicsUtilities.DrawString(graphics, text, cardNameFont, GraphicsUtilities.BlackBrush, textRectangle, GraphicsUtilities.HorizontalCenterAlignment);
 
+            var centerPoint = usableRectangle.X + usableRectangle.Width / 2;
+
+            var coinOffsetCount = 0f;
+            switch(suit.Cost())
+            {
+                case 1:
+                    coinOffsetCount = -.5f;
+                    break;
+                case 2:
+                    coinOffsetCount = -1;
+                    break;
+                case 3:
+                    coinOffsetCount = -1.5f;
+                    break;
+            }
+            var siteCoinPadding = SiteCoinPadding(cardImage);
+            var siteCoinWidth = SiteCoinWidth(cardImage);
+            var xOffset = (int)(coinOffsetCount * siteCoinWidth + (coinOffsetCount + .5f) * siteCoinPadding);
+
+            for(var i = 0; i < suit.Cost(); i++)
+                GraphicsUtilities.PrintScaledPng(
+                    graphics,
+                    $@"Misc\Coin",
+                    centerPoint + xOffset + (i * (siteCoinWidth + siteCoinPadding)),
+                    usableRectangle.Y,
+                    siteCoinWidth,
+                    siteCoinWidth);
+
             return cardImage;
         }
 
@@ -94,7 +126,7 @@ namespace GtR
             var costRegion = new Region(costRectangle);
             var oldClip = graphics.Clip;
             graphics.Clip = costRegion;
-            var barThickness = (int)(fullRectangle.Width / 15f);
+            var barThickness = (int)(fullRectangle.Width / 16f);
             var strokeWidth = (int)Math.Sqrt(Math.Pow(barThickness, 2) / 2);
             var pen = new Pen(suit.Color(), strokeWidth);
             const int extra = 25;
