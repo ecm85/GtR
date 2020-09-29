@@ -21,6 +21,7 @@ namespace GtR
 
         private const float textOutlineWidth = .5f * dpiFactor;
 
+        //Note: does not maintain original image aspect ratio!
         public static void PrintImageWithText(
             Graphics graphics,
             string fileName,
@@ -48,6 +49,7 @@ namespace GtR
             graphics.DrawPath(new Pen(Color.Black, textOutlineWidth), path);
         }
 
+        //Note: does not maintain original image aspect ratio!
         public static void PrintImageWithTextCentered(
             Graphics graphics,
             string fileName,
@@ -71,6 +73,7 @@ namespace GtR
             graphics.DrawPath(new Pen(Color.Black, textOutlineWidth), path);
         }
 
+        //Note: does not maintain original image aspect ratio!
         public static void PrintScaledPng(Graphics graphics, string fileName, int x, int y, int width, int height, RotateFlipType? rotateFlipType = null)
         {
             using (var srcImage = Image.FromFile($"Images\\{fileName}.png"))
@@ -81,7 +84,33 @@ namespace GtR
             }
         }
 
-        public static int PrintFullWidthPng(Graphics graphics, string fileName, int x, int y, int width)
+        public static void PrintScaledAndCenteredPng(Graphics graphics, string fileName, int x, int y, int maxWidth, int maxHeight, RotateFlipType? rotateFlipType = null)
+        {
+            using (var image = Image.FromFile($"Images\\{fileName}.png"))
+            {
+                if (rotateFlipType != null)
+                    image.RotateFlip(rotateFlipType.Value);
+                var originalAspectRatio = (float)image.Width / image.Height;
+                var shouldFitToWidth = ShouldFitToWidth(maxWidth, maxHeight, originalAspectRatio);
+                var width = shouldFitToWidth ? maxWidth : Math.Round(maxHeight * originalAspectRatio);
+                var height = shouldFitToWidth ? Math.Round(maxWidth / originalAspectRatio) : maxHeight;
+                var xOffset = (int)Math.Round((maxWidth - width) / 2);
+                var yOffset = (int)Math.Round((maxHeight - height) / 2);
+
+                PrintScaledImage(graphics, image, x + xOffset, y + yOffset, (int)width, (int)height);
+            }
+        }
+
+        private static bool ShouldFitToWidth(
+            int maxWidth,
+            int  maxHeight,
+            float originalAspectRatio)
+        {
+            var maxAllowedAspectRatio = maxWidth / maxHeight;
+            return maxAllowedAspectRatio <= originalAspectRatio;
+        }
+
+            public static int PrintFullWidthPng(Graphics graphics, string fileName, int x, int y, int width)
         {
             using (var srcImage = Image.FromFile($"Images\\{fileName}.png"))
             {

@@ -13,17 +13,23 @@ namespace GtR
 
         static void Main(string[] args)
         {
+            var allSuits = Enum.GetValues(typeof(CardSuit))
+                .Cast<CardSuit>()
+                .ToList();
             var imageCreator = new GloryToRomeImageCreator();
 
             var orderCards = ReadOrderCards();
             var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
             var orderCardBackImage = new [] {imageCreator.CreateOrderCardBack()};
 
+            var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 6).Select(index => imageCreator.CreateSiteFront(suit, index))).ToList();
+
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
 
             var allImages = orderCardFrontImages
                 .Concat(orderCardBackImage)
+                .Concat(siteFrontImages)
                 .ToList();
 
             if (useOverlay)
@@ -72,7 +78,8 @@ namespace GtR
                     CardName = tokens[0],
                     CardSuit = GetCardSuitFromMaterialText(tokens[1]),
                     CardText = tokens[2],
-                    CardSet = GetCardSetFromText(tokens[3])
+                    CardSet = GetCardSetFromText(tokens[3]),
+                    ImageIsRoughlyCentered = bool.Parse(tokens[4])
                 })
                 .ToList();
         }

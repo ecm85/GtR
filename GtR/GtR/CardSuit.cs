@@ -15,7 +15,7 @@ namespace GtR
 
     public static class CardSuitExtensions
     {
-        public static int InfluenceAndPoints(this CardSuit cardSuit)
+        private static int Value(this CardSuit cardSuit)
         {
             switch (cardSuit)
             {
@@ -32,6 +32,10 @@ namespace GtR
                     throw new InvalidOperationException($"Invalid card suit encountered: {cardSuit}");
             }
         }
+
+        public static int Points(this CardSuit cardSuit) => Value(cardSuit);
+        public static int Influence(this CardSuit cardSuit) => Value(cardSuit);
+        public static int Cost(this CardSuit cardSuit) => Value(cardSuit);
 
         public static int CardCountPerDeck(this CardSuit cardSuit)
         {
@@ -97,17 +101,17 @@ namespace GtR
             switch (cardSuit)
             {
                 case CardSuit.YellowLaborerRubble:
-                    return System.Drawing.Color.FromArgb(238, 159, 46);
+                    return System.Drawing.Color.FromArgb(251, 166, 28);
                 case CardSuit.GreenCraftsmanWood:
-                    return System.Drawing.Color.FromArgb(62, 164, 70);
+                    return System.Drawing.Color.FromArgb(61, 173, 72);
                 case CardSuit.GreyArchitectConcrete:
-                    return System.Drawing.Color.FromArgb(148, 148, 137);
+                    return System.Drawing.Color.FromArgb(155, 155, 147);
                 case CardSuit.RedLegionaryBrick:
-                    return System.Drawing.Color.FromArgb(217, 35, 43);
+                    return System.Drawing.Color.FromArgb(238, 28, 37);
                 case CardSuit.PurplePatronMarble:
-                    return System.Drawing.Color.FromArgb(140, 55, 111);
+                    return System.Drawing.Color.FromArgb(158, 47, 116);
                 case CardSuit.BlueMerchantStone:
-                    return System.Drawing.Color.FromArgb(0, 176, 203);
+                    return System.Drawing.Color.FromArgb(0, 184, 223);
                 default:
                     throw new InvalidOperationException($"Invalid card suit encountered: {cardSuit}");
             }

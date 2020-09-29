@@ -10,13 +10,112 @@ namespace GtR
         private static readonly FontFamily headerFontFamily = new FontFamily("Neuzeit Grotesk"); //TODO
         private const int orderCardHeaderFontSize = (int)(19 * GraphicsUtilities.dpiFactor); //TODO
         private const int orderCardTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
-        private const float influenceImagePercentage = .13f;
+        private const int siteCardCostTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
+        
+        private const float InfluenceImagePercentage = .13f;
         private const float RoleIconPercentage = .18f;
-
+        private const float SiteCostRegionHeightPercentage = .36f;
+        private const float SiteResourceHeightPercentage = .30f;
+        private const float SiteResourceSectionPaddingPercentage = .10f;
         private const float SetIndicatorPercentage = .10f;
+        private const float CenteredImageOffsetPercentage = (RoleIconPercentage - SetIndicatorPercentage)/2;
 
-        private int InfluenceImageSide(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * influenceImagePercentage);
+
+        private int InfluenceImageSide(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * InfluenceImagePercentage);
         private int CardNameWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
+        private int CenteredImageOffset(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * CenteredImageOffsetPercentage);
+
+        internal CardImage CreateSiteFront(CardSuit suit, int index)
+        {
+            var name = $"{suit.ResourceName()}_Site_{index}";
+            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var graphics = cardImage.Graphics;
+            var fullRectangle = cardImage.FullRectangle;
+            var usableRectangle = cardImage.UsableRectangle;
+            cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
+
+            //var thickness = (int)(fullRectangle.Width / 15f);
+            //var width = (int)Math.Sqrt(Math.Pow(thickness, 2) / 2);
+            //var pen = new Pen(suit.Color(), width);
+            //const int extra = 25;
+            //for (var xOffset = -2 * fullRectangle.Width + 10; xOffset < fullRectangle.Width; xOffset += thickness * 2)
+            //    graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Top - extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Bottom + extra);
+
+            DrawSiteCost(cardImage, suit);
+
+            var costRegionHeight = (int)(fullRectangle.Height * SiteCostRegionHeightPercentage);
+            var costImagePaddingHeight = (int)(fullRectangle.Height * SiteResourceSectionPaddingPercentage);
+            var costImageTopPaddingHeight = costImagePaddingHeight / 2;
+            var costImageBottomPaddingHeight = costImagePaddingHeight / 2;
+            var costImageSectionHeight = (int)(fullRectangle.Height * SiteResourceHeightPercentage);
+            var costImageHeight = costImageSectionHeight - costImagePaddingHeight;
+            var costImageRectangle = new Rectangle(
+                usableRectangle.X,
+                fullRectangle.Y + (fullRectangle.Bottom - (costRegionHeight + costImageBottomPaddingHeight + costImageHeight)),
+                usableRectangle.Width,
+                costImageHeight);
+            //graphics.FillRectangle(new SolidBrush(Color.Blue), costImageRectangle);
+            GraphicsUtilities.PrintScaledAndCenteredPng(
+                graphics,
+                $@"Resources\{suit.ResourceName()}",
+                costImageRectangle.X,
+                costImageRectangle.Y,
+                costImageRectangle.Width,
+                costImageRectangle.Height);
+
+            var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var text = string.Join(
+                " ",
+                suit.ResourceName().ToUpper()
+                    .Split(' ')
+                    .Select(token =>
+                        string.Join(((char)0x202f).ToString(), token.ToCharArray())))
+                        .Replace(" ", "  ");
+            var maxTextBoxWidth = usableRectangle.Width;
+            var initialRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
+            var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
+            var textHeight = (int)Math.Ceiling(textMeasurement.Height);
+            var yOffset = fullRectangle.Bottom - (costRegionHeight + costImageSectionHeight + textHeight);
+            var textRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y + yOffset, maxTextBoxWidth, textHeight);
+            graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.White)), textRectangle);
+            //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
+            GraphicsUtilities.DrawString(graphics, text, cardNameFont, GraphicsUtilities.BlackBrush, textRectangle, GraphicsUtilities.HorizontalCenterAlignment);
+
+            return cardImage;
+        }
+
+        private void DrawSiteCost(CardImage cardImage, CardSuit suit)
+        {
+            var graphics = cardImage.Graphics;
+            var fullRectangle = cardImage.FullRectangle;
+            var usableRectangle = cardImage.UsableRectangle;
+            var costRegionHeight = (int)(fullRectangle.Height * SiteCostRegionHeightPercentage);
+            var costRectangle = new Rectangle(fullRectangle.Left, fullRectangle.Bottom - costRegionHeight, fullRectangle.Width, costRegionHeight);
+            var costRegion = new Region(costRectangle);
+            var oldClip = graphics.Clip;
+            graphics.Clip = costRegion;
+            var barThickness = (int)(fullRectangle.Width / 15f);
+            var strokeWidth = (int)Math.Sqrt(Math.Pow(barThickness, 2) / 2);
+            var pen = new Pen(suit.Color(), strokeWidth);
+            const int extra = 25;
+            for (var xOffset = -2 * fullRectangle.Width + 10; xOffset < fullRectangle.Width; xOffset += barThickness * 2)
+                graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Bottom + extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Top - extra);
+            graphics.Clip = oldClip;
+
+            var costText = $"foundation +{suit.Cost()} material";
+            var costFont = new Font(headerFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            var costTextMeasurement = graphics.MeasureString(costText, costFont, fullRectangle.Width);
+            var costTextWidth = (int)Math.Ceiling(costTextMeasurement.Width);
+            var costTextHeight = (int)costTextMeasurement.Height;
+            var costTextRectangle = new Rectangle(
+                fullRectangle.Width / 2 - costTextWidth / 2,
+                (int)(costRectangle.Top + costRectangle.Height * .1f),
+                costTextWidth,
+                costTextHeight);
+            graphics.FillRectangle(new SolidBrush(Color.White), costTextRectangle);
+            GraphicsUtilities.DrawString(graphics, costText, costFont, GraphicsUtilities.BlackBrush, costTextRectangle);
+        }
+
         private int CardTextWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
         private int RoleIconWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * RoleIconPercentage);
 
@@ -82,14 +181,16 @@ namespace GtR
                     .Select(token =>
                         string.Join(((char)0x202f).ToString(), token.ToCharArray())))
                         .Replace(" ", "  ");
-            var textBoxWidth = CardNameWidth(cardImage);
+            var maxTextBoxWidth = CardNameWidth(cardImage);
             var xOffset = RoleIconWidth(cardImage);
+            var initialRectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
+            var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
+            var textHeight = (int)Math.Ceiling(textMeasurement.Height);
             var yOffset = (int)(usableRectangle.Width * .05f);
-            var rectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y + yOffset, textBoxWidth, usableRectangle.Height);
-            var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(rectangle.Width, rectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
-            graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.White)), new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, (int)textMeasurement.Height));
-            //graphics.FillRectangle(new SolidBrush(Color.Blue), new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, (int)textMeasurement.Height));
-            GraphicsUtilities.DrawString(graphics, text, cardNameFont, GraphicsUtilities.BlackBrush, rectangle, GraphicsUtilities.HorizontalCenterAlignment);
+            var textRectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y + yOffset, maxTextBoxWidth, textHeight);
+            graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.White)), textRectangle);
+            //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
+            GraphicsUtilities.DrawString(graphics, text, cardNameFont, GraphicsUtilities.BlackBrush, textRectangle, GraphicsUtilities.HorizontalCenterAlignment);
         }
 
         private int PrintCardImage(OrderCard orderCard, CardImage cardImage)
@@ -100,7 +201,7 @@ namespace GtR
             var imageHeight = GraphicsUtilities.PrintFullWidthPng(
                 graphics,
                 $@"CardImages\{orderCard.CardName}",
-                fullRectangle.X,
+                fullRectangle.X + (orderCard.ImageIsRoughlyCentered ? CenteredImageOffset(cardImage) : 0),
                 fullRectangle.Y,
                 imageWidth);
             return fullRectangle.Y + imageHeight;
@@ -144,7 +245,7 @@ namespace GtR
             
             var suit = orderCard.CardSuit;
 
-            for (var i = 0; i < suit.InfluenceAndPoints(); i++)
+            for (var i = 0; i < suit.Influence(); i++)
             {
                 GraphicsUtilities.PrintScaledPng(
                     graphics,
@@ -192,7 +293,7 @@ namespace GtR
             var brush = new SolidBrush(suit.Color());
             var set = orderCard.CardSet;
 
-            for (var i = 0; i < suit.InfluenceAndPoints(); i++)
+            for (var i = 0; i < suit.Points(); i++)
             {
                 var circleRectangle = new Rectangle(
                     usableRectangle.Right - setIndicatorCircleWidth,

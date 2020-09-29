@@ -6,5 +6,6 @@
         public string CardName { get; set; }
         public string CardText { get; set; }
         public CardSet CardSet { get; set; }
+        public bool ImageIsRoughlyCentered { get; set; }
     }
 }
