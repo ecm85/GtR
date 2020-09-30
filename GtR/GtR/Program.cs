@@ -25,6 +25,8 @@ namespace GtR
 
             var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
             var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
+            foreach (var siteBackImage in siteBackImages)
+                siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
