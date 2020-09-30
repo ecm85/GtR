@@ -18,25 +18,44 @@ namespace GtR
                 .ToList();
             var imageCreator = new GloryToRomeImageCreator();
 
+
             var orderCards = ReadOrderCards();
             var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
-            var orderCardBackImage = new [] {imageCreator.CreateOrderCardBack()};
+            var orderCardBackImage = imageCreator.CreateOrderCardBack();
 
-            var siteFrontImages = allSuits.Select(suit => imageCreator.CreateSiteFront(suit)).ToList();
-            var siteBackImages = allSuits.Select(suit => imageCreator.CreateSiteBack(suit)).ToList();
+            var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
+            var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
 
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
 
-            var allImages = orderCardFrontImages
-                .Concat(orderCardBackImage)
-                .Concat(siteFrontImages)
-                .Concat(siteBackImages)
-                .ToList();
+            var pages = new List<Page>();
+
+            var remainingOrderCards = orderCardFrontImages.ToList();
+            while(remainingOrderCards.Any())
+            {
+                var page = new Page($"OrderCards_{pages.Count}");
+                var cardsAdded = page.AddCardsToPage(remainingOrderCards);
+                remainingOrderCards = remainingOrderCards.Skip(cardsAdded).ToList();
+                pages.Add(page);
+            }
+
+            var pageOfOrderBackImages = Enumerable.Repeat(orderCardBackImage, Page.cardsPerColumn * Page.cardsPerRow).ToList();
+            var orderBackPage = new Page("OrderCardBack");
+            orderBackPage.AddCardsToPage(pageOfOrderBackImages);
+            pages.Add(orderBackPage);
+
+            var siteFrontPage = new Page("SiteFront");
+            siteFrontPage.AddCardsToPage(siteFrontImages);
+            pages.Add(siteFrontPage);
+
+            var siteBackPage = new Page("SiteBack");
+            siteBackPage.AddCardsToPage(siteBackImages);
+            pages.Add(siteBackPage);
 
             if (useOverlay)
             {
-                var overlay = new Bitmap("c:\\delete\\poker-card.png");
+                var overlay = new Bitmap(@"Images\Misc\Poker Cards (2-5x3-5) 18 per sheet.png");
                 overlay.SetResolution(300, 300);
                 var landscapeOverlay = new Bitmap(overlay);
                 landscapeOverlay.RotateFlip(RotateFlipType.Rotate90FlipNone);
@@ -44,10 +63,10 @@ namespace GtR
                 var attributes = new ImageAttributes();
                 attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                foreach (var image in allImages)
+                foreach (var page in pages)
                 {
-                    var graphics = Graphics.FromImage(image.Bitmap);
-                    if (image.Bitmap.Width < image.Bitmap.Height)
+                    var graphics = Graphics.FromImage(page.Bitmap);
+                    if (page.Bitmap.Width < page.Bitmap.Height)
                     {
                         graphics.DrawImage(overlay, new Rectangle(0, 0, overlay.Width, overlay.Height), 0, 0, overlay.Width, overlay.Height, GraphicsUnit.Pixel, attributes);
                     }
@@ -58,8 +77,8 @@ namespace GtR
                 }
             }
 
-            foreach (var image in allImages)
-                image.Bitmap.Save($"c:\\delete\\images\\{dateStamp}\\{image.Name}.png", ImageFormat.Png);
+            foreach (var page in pages)
+                page.Bitmap.Save($"c:\\delete\\images\\{dateStamp}\\{page.Name}.png", ImageFormat.Png);
         }
 
         private static IEnumerable<CardImage> CreateCardsForOrderCard(GloryToRomeImageCreator imageCreator, OrderCard orderCard)

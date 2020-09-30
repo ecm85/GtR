@@ -136,9 +136,9 @@ namespace GtR
             graphics.DrawImage(image, new Rectangle(x, y, width, height));
         }
 
-        public static Bitmap CreateBitmap(int width, int height)
+        public static Bitmap CreateBitmap(int widthInPixels, int heightInPixels)
         {
-            var bitmap = new Bitmap(width, height);
+            var bitmap = new Bitmap(widthInPixels, heightInPixels);
             bitmap.SetResolution(dpi, dpi);
             return bitmap;
         }
