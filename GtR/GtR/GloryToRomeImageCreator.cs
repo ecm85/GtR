@@ -10,7 +10,7 @@ namespace GtR
         private static readonly FontFamily headerFontFamily = new FontFamily("Neuzeit Grotesk"); //TODO
         private const int orderCardHeaderFontSize = (int)(18.5 * GraphicsUtilities.dpiFactor); //TODO
         private const int orderCardTextFontSize = (int)(11 * GraphicsUtilities.dpiFactor); //TODO
-        private const int siteCardCostTextFontSize = (int)(16 * GraphicsUtilities.dpiFactor); //TODO
+        private const int siteCardCostTextFontSize = (int)(13 * GraphicsUtilities.dpiFactor); //TODO
         
         private const float InfluenceImagePercentage = .13f;
         private const float RoleIconPercentage = .18f;
