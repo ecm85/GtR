@@ -530,7 +530,7 @@ namespace GtR
             if (textRectangleHeight < 0)
             {
                 top -= usableRectangle.Height / 2;
-                textRectangleHeight = usableRectangle.Bottom - (influenceImageSide + bottomOfCardImage);
+                textRectangleHeight = usableRectangle.Bottom - (influenceImageSide + top);
             }
             var xOffset = RoleIconWidth(cardImage);
             PrintCardText(orderCard.CardText, cardImage, top, textBoxWidth, textRectangleHeight, xOffset, true, GraphicsUtilities.BlackBrush);
