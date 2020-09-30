@@ -60,6 +60,38 @@ namespace GtR
             return cardImage;
         }
 
+        public CardImage CreateLeaderImage()
+        {
+            var name = "Leader";
+            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
+            var graphics = cardImage.Graphics;
+            var fullRectangle = cardImage.FullRectangle;
+            var imageWidth = fullRectangle.Width;
+            var imageHeight = GraphicsUtilities.PrintFullWidthPng(
+                graphics,
+                @"Misc\Leader",
+                fullRectangle.X + CenteredImageOffset(cardImage),
+                fullRectangle.Y,
+                imageWidth);
+            var bottomOfImage = fullRectangle.Y + imageHeight;
+
+            var imageXOffset = RoleIconWidth(cardImage);
+            var maxTextBoxWidth = CardNameWidth(cardImage);
+            var yOffset = (int)(cardImage.UsableRectangle.Width * .05f);
+            PrintCardName("Leader", cardImage, GraphicsUtilities.BlackBrush, true, imageXOffset, maxTextBoxWidth, yOffset);
+
+            var usableRectangle = cardImage.UsableRectangle;
+            var textBoxWidth = CardTextWidth(cardImage);
+            var influenceImageSide = InfluenceImageSide(cardImage);
+            var textRectangleHeight = usableRectangle.Bottom - (influenceImageSide + bottomOfImage);
+            var top = bottomOfImage;
+            var textXOffset = RoleIconWidth(cardImage);
+            PrintCardText("LEAD |a role from your hand |or |THINK |and draw new cards", cardImage, top, textBoxWidth, textRectangleHeight, textXOffset, true, GraphicsUtilities.BlackBrush);
+
+            return cardImage;
+        }
+
         internal CardImage CreateMerchantBonusImage(CardSuit suit)
         {
             var cardImage = new CardImage($"MerchantBonus_{suit.ResourceName()}", ImageOrientation.Portrait);
@@ -544,6 +576,8 @@ namespace GtR
 
         private readonly IList<string> NonSuitKeywords = new List<string>
         {
+            "LEAD",
+            "THINK",
             "THINKER",
             "JACK",
             "JACKS",

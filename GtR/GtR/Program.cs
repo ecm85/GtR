@@ -37,6 +37,10 @@ namespace GtR
             foreach (var merchantBonusBackCard in merchantBonusBackCards)
                 merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
+            var leaderImageFront = imageCreator.CreateLeaderImage();
+            var leaderImageBack = imageCreator.CreateLeaderImage();
+            leaderImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
 
@@ -66,6 +70,7 @@ namespace GtR
 
             var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
                 .Concat(merchantBonusFrontCards)
+                .Concat(new [] { leaderImageFront })
                 .ToList();
 
             var miscFrontPage = new Page("MiscFront");
@@ -74,6 +79,7 @@ namespace GtR
 
             var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
                 .Concat(merchantBonusBackCards)
+                .Concat(new [] { leaderImageBack })
                 .ToList();
 
             var miscBackPage = new Page("MiscBack");
