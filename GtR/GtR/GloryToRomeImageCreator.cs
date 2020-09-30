@@ -71,22 +71,22 @@ namespace GtR
             var imageHeight = GraphicsUtilities.PrintFullWidthPng(
                 graphics,
                 @"Misc\Leader",
-                fullRectangle.X + CenteredImageOffset(cardImage),
+                fullRectangle.X,
                 fullRectangle.Y,
                 imageWidth);
             var bottomOfImage = fullRectangle.Y + imageHeight;
 
-            var imageXOffset = RoleIconWidth(cardImage);
-            var maxTextBoxWidth = CardNameWidth(cardImage);
+            var imageXOffset = 0;
+            var maxTextBoxWidth = cardImage.UsableRectangle.Width;
             var yOffset = (int)(cardImage.UsableRectangle.Width * .05f);
             PrintCardName("Leader", cardImage, GraphicsUtilities.BlackBrush, true, imageXOffset, maxTextBoxWidth, yOffset);
 
             var usableRectangle = cardImage.UsableRectangle;
-            var textBoxWidth = CardTextWidth(cardImage);
+            var textBoxWidth = cardImage.UsableRectangle.Width;
             var influenceImageSide = InfluenceImageSide(cardImage);
             var textRectangleHeight = usableRectangle.Bottom - (influenceImageSide + bottomOfImage);
             var top = bottomOfImage;
-            var textXOffset = RoleIconWidth(cardImage);
+            var textXOffset = 0;
             PrintCardText("LEAD |a role from your hand |or |THINK |and draw new cards", cardImage, top, textBoxWidth, textRectangleHeight, textXOffset, true, GraphicsUtilities.BlackBrush);
 
             return cardImage;

@@ -70,7 +70,7 @@ namespace GtR
 
             var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
                 .Concat(merchantBonusFrontCards)
-                .Concat(new [] { leaderImageFront })
+                .Concat(Enumerable.Repeat(leaderImageFront, 3))
                 .ToList();
 
             var miscFrontPage = new Page("MiscFront");
@@ -78,8 +78,9 @@ namespace GtR
             pages.Add(miscFrontPage);
 
             var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
-                .Concat(merchantBonusBackCards)
-                .Concat(new [] { leaderImageBack })
+                .Concat(merchantBonusBackCards.Take(3).Reverse())
+                .Concat(merchantBonusBackCards.Skip(3).Take(3).Reverse())
+                .Concat(Enumerable.Repeat(leaderImageBack, 3))
                 .ToList();
 
             var miscBackPage = new Page("MiscBack");
