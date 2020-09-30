@@ -60,6 +60,63 @@ namespace GtR
             return cardImage;
         }
 
+        internal CardImage CreateMerchantBonusImage(CardSuit suit)
+        {
+            var cardImage = new CardImage($"MerchantBonus_{suit.ResourceName()}", ImageOrientation.Portrait);
+            var graphics = cardImage.Graphics;
+            cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
+            var fullRectangle = cardImage.FullRectangle;
+            var usableRectangle = cardImage.UsableRectangle;
+            var xOffset = usableRectangle.Width / 5;
+            var yOffset = (int)(usableRectangle.Width * .05f);
+            PrintCardName("Merchant Bonus", cardImage, GraphicsUtilities.BlackBrush, false, xOffset, 3 * usableRectangle.Width / 5, yOffset);
+            var costImagePaddingHeight = (int)(fullRectangle.Height * SiteResourceSectionPaddingPercentage);
+            var costImageTopPaddingHeight = costImagePaddingHeight / 2;
+            var costImageBottomPaddingHeight = costImagePaddingHeight / 2;
+            var costImageSectionHeight = (int)(fullRectangle.Height * SiteResourceHeightPercentage);
+            var costImageHeight = costImageSectionHeight - costImagePaddingHeight;
+            var costImageRectangle = new Rectangle(
+                usableRectangle.X,
+                fullRectangle.Y + (fullRectangle.Bottom - ((int)(fullRectangle.Height * .30f) + costImageBottomPaddingHeight + costImageHeight)),
+                usableRectangle.Width,
+                costImageHeight);
+            //graphics.FillRectangle(new SolidBrush(Color.Blue), costImageRectangle);
+            GraphicsUtilities.PrintScaledAndCenteredPng(
+                graphics,
+                $@"Resources\{suit.ResourceName()}",
+                costImageRectangle.X,
+                costImageRectangle.Y,
+                costImageRectangle.Width,
+                costImageRectangle.Height);
+            PrintCardText(
+                $"+3 victory points for |the player with the most |{suit.ResourceName().ToUpper()} in his vault at |the end of the game.",
+                cardImage,
+                fullRectangle.Bottom - ((int)(fullRectangle.Height * .35f)),
+                usableRectangle.Width,
+                (int)(fullRectangle.Height * .25f),
+                0,
+                false,
+                GraphicsUtilities.BlackBrush);
+
+            var centerPoint = usableRectangle.X + usableRectangle.Width / 2;
+
+            var coinOffsetCount = -1.5f;
+            var siteCoinPadding = SiteCoinPadding(cardImage);
+            var siteCoinWidth = SiteCoinWidth(cardImage);
+            var coinXOffset = (int)(coinOffsetCount * siteCoinWidth + (coinOffsetCount + .5f) * siteCoinPadding);
+
+            for (var i = 0; i < 3; i++)
+                GraphicsUtilities.PrintScaledPng(
+                    graphics,
+                    $@"Misc\Coin",
+                    centerPoint + coinXOffset + (i * (siteCoinWidth + siteCoinPadding)),
+                    usableRectangle.Y + (int)(usableRectangle.Width * .26f),
+                    siteCoinWidth,
+                    siteCoinWidth);
+
+            return cardImage;
+        }
+
         private int InfluenceImageSide(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * InfluenceImagePercentage);
         private int CardNameWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
         private int CenteredImageOffset(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * CenteredImageOffsetPercentage);
@@ -505,8 +562,11 @@ namespace GtR
             ["MERCHANT"] = CardSuit.BlueMerchantStone,
             ["ARCHITECT"] = CardSuit.GreyArchitectConcrete,
             ["LABORER"] = CardSuit.YellowLaborerRubble,
-            ["MARBLE"] = CardSuit.PurplePatronMarble,
             ["STONE"] = CardSuit.BlueMerchantStone,
+            ["WOOD"] = CardSuit.GreenCraftsmanWood,
+            ["CONCRETE"] = CardSuit.GreyArchitectConcrete,
+            ["MARBLE"] = CardSuit.PurplePatronMarble,
+            ["BRICK"] = CardSuit.RedLegionaryBrick,
             ["RUBBLE"] = CardSuit.YellowLaborerRubble
         };
     }

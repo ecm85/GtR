@@ -28,12 +28,14 @@ namespace GtR
             foreach (var siteBackImage in siteBackImages)
                 siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
-            var jackImage1Front = imageCreator.CreateJackImage1();
-            var jackImage1Back = imageCreator.CreateJackImage1();
-            jackImage1Back.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-            var jackImage2Front = imageCreator.CreateJackImage2();
-            var jackImage2Back = imageCreator.CreateJackImage2();
-            jackImage2Back.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            var jackImageFront = imageCreator.CreateJackImage1();
+            var jackImageBack = imageCreator.CreateJackImage2();
+            jackImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+            var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+            var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+            foreach (var merchantBonusBackCard in merchantBonusBackCards)
+                merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
@@ -62,16 +64,16 @@ namespace GtR
             siteBackPage.AddCardsToPage(siteBackImages);
             pages.Add(siteBackPage);
 
-            var miscImagesFront = Enumerable.Repeat(jackImage1Front, 3)
-                .Concat(Enumerable.Repeat(jackImage2Front, 3))
+            var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
+                .Concat(merchantBonusFrontCards)
                 .ToList();
 
             var miscFrontPage = new Page("MiscFront");
             miscFrontPage.AddCardsToPage(miscImagesFront);
             pages.Add(miscFrontPage);
 
-            var miscImagesBack = Enumerable.Repeat(jackImage1Back, 3)
-                .Concat(Enumerable.Repeat(jackImage2Back, 3))
+            var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
+                .Concat(merchantBonusBackCards)
                 .ToList();
 
             var miscBackPage = new Page("MiscBack");
