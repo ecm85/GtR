@@ -9,8 +9,8 @@ namespace GtR
     {
         private static readonly FontFamily headerFontFamily = new FontFamily("Neuzeit Grotesk"); //TODO
         private const int orderCardHeaderFontSize = (int)(18.5 * GraphicsUtilities.dpiFactor); //TODO
-        private const int orderCardTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
-        private const int siteCardCostTextFontSize = (int)(14 * GraphicsUtilities.dpiFactor); //TODO
+        private const int orderCardTextFontSize = (int)(11 * GraphicsUtilities.dpiFactor); //TODO
+        private const int siteCardCostTextFontSize = (int)(16 * GraphicsUtilities.dpiFactor); //TODO
         
         private const float InfluenceImagePercentage = .13f;
         private const float RoleIconPercentage = .18f;
@@ -62,13 +62,7 @@ namespace GtR
                 costImageRectangle.Height);
 
             var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-            var text = string.Join(
-                " ",
-                suit.ResourceName().ToUpper()
-                    .Split(' ')
-                    .Select(token =>
-                        string.Join(((char)0x202f).ToString(), token.ToCharArray())))
-                        .Replace(" ", "  ");
+            var text = AddHairSpaces(suit.ResourceName().ToUpper());
             var maxTextBoxWidth = usableRectangle.Width;
             var initialRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
             var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
@@ -110,6 +104,18 @@ namespace GtR
             return cardImage;
         }
 
+        private string AddHairSpaces(string value)
+        {
+            var hairSpace = (char)0x200a;
+            var withSpaces = string.Join(hairSpace.ToString(), value.ToCharArray());
+            return $"{hairSpace}{withSpaces}{hairSpace}";
+        }
+
+        private string AddNonBreakingNarrowSpaces(string value)
+        {
+            return string.Join(((char)0x202f).ToString(), value.ToCharArray());
+        }
+
         public CardImage CreateSiteBack(CardSuit suit)
         {
             var name = $"{suit.ResourceName()}_SiteBack";
@@ -119,7 +125,7 @@ namespace GtR
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
 
-            var thickness = (int)(fullRectangle.Width / diagonalLinesPerCard);
+            var thickness = fullRectangle.Width / diagonalLinesPerCard;
             var width = (int)Math.Sqrt(Math.Pow(thickness, 2) / 2);
             var pen = new Pen(suit.Color(), width);
             const int extra = 25;
@@ -127,14 +133,9 @@ namespace GtR
                 graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Top - extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Bottom + extra);
 
             var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-            var resourceNameText = string.Join(
-                " ",
-                suit.ResourceName().ToUpper()
-                    .Split(' ')
-                    .Select(token =>
-                        string.Join(((char)0x202f).ToString(), token.ToCharArray())))
-                        .Replace(" ", "  ");
-            var outOfTownSiteText = "out of town site";
+            var costFont = new Font(headerFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            var resourceNameText = AddHairSpaces(suit.ResourceName().ToUpper());
+            var outOfTownSiteText = AddHairSpaces("out of town site");
             var maxTextBoxWidth = usableRectangle.Width;
             var initialRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
             var resourceNameTextMeasurement = graphics.MeasureString(outOfTownSiteText, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
@@ -147,7 +148,7 @@ namespace GtR
             var outOfTownSiteTextRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y + yOffset, maxTextBoxWidth, textHeight);
             //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
             GraphicsUtilities.DrawString(graphics, resourceNameText, cardNameFont, GraphicsUtilities.BlackBrush, resourceNameTextRectangle, GraphicsUtilities.HorizontalCenterAlignment);
-            GraphicsUtilities.DrawString(graphics, outOfTownSiteText, CardTextFont, GraphicsUtilities.BlackBrush, outOfTownSiteTextRectangle, GraphicsUtilities.HorizontalCenterAlignment);
+            GraphicsUtilities.DrawString(graphics, outOfTownSiteText, costFont, GraphicsUtilities.BlackBrush, outOfTownSiteTextRectangle, GraphicsUtilities.HorizontalCenterAlignment);
 
             return cardImage;
         }
@@ -169,8 +170,8 @@ namespace GtR
             for (var xOffset = -2 * fullRectangle.Width + 10; xOffset < fullRectangle.Width; xOffset += barThickness * 2)
                 graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Bottom + extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Top - extra);
             graphics.Clip = oldClip;
-
-            var costText = $"foundation +{suit.Cost()} material";
+            var material = suit.Cost() > 1 ? "materials" : "material";
+            var costText = AddHairSpaces($"foundation +{suit.Cost()} {material}");
             var costFont = new Font(headerFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             var costTextMeasurement = graphics.MeasureString(costText, costFont, fullRectangle.Width);
             var costTextWidth = (int)Math.Ceiling(costTextMeasurement.Width);
@@ -243,12 +244,11 @@ namespace GtR
             var usableRectangle = cardImage.UsableRectangle;
             var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var text = string.Join(
-                " ",
+                "  ",
                 orderCard.CardName.ToUpper()
                     .Split(' ')
-                    .Select(token =>
-                        string.Join(((char)0x202f).ToString(), token.ToCharArray())))
-                        .Replace(" ", "  ");
+                    .Select(token => AddNonBreakingNarrowSpaces(token))
+                    .ToList());
             var maxTextBoxWidth = CardNameWidth(cardImage);
             var xOffset = RoleIconWidth(cardImage);
             var initialRectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
@@ -310,7 +310,7 @@ namespace GtR
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
             var influenceImageSide = InfluenceImageSide(cardImage);
-            
+
             var suit = orderCard.CardSuit;
 
             for (var i = 0; i < suit.Influence(); i++)
@@ -332,7 +332,7 @@ namespace GtR
             var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var suit = orderCard.CardSuit;
             var resourceName = suit.ResourceName().ToUpper();
-            var text = string.Join(((char)0x202f).ToString(), resourceName.ToCharArray());
+            var text = AddHairSpaces(resourceName);
             var brush = new SolidBrush(suit.Color());
             var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(usableRectangle.Width, usableRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
             var textBoxHeight = (int)textMeasurement.Height;
@@ -426,7 +426,7 @@ namespace GtR
             var isNonSuitKeyword = NonSuitKeywords.Any(keyword => text.Contains(keyword));
             return new TextFragment
             {
-                Text = $"{text}",
+                Text = AddHairSpaces($"{text}"),
                 Font = isSuitKeyword || isNonSuitKeyword ? BoldCardTextFont : CardTextFont,
                 Brush = isSuitKeyword ? BrushesByCardSuit[SuitsByKeyword[matchingSuitKeyword]] : GraphicsUtilities.BlackBrush,
                 ForcesNewline = forcesNewline
