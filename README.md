@@ -44,7 +44,7 @@ This guide will attempt to walk through the steps needed to generate files for G
   * Box: You can put a lot of effort into a great box. I didn't and just used a box from Stonemaier Realistic Resources I had lying around.
   * Rome Demands mat: This seemed even more useless to me than the reverse side of the player boards, so I ignored it.
   * Rules: They're available at https://cdn.1j1ju.com/medias/e2/0b/89-glory-to-rome-rulebook.pdf. I didn't bother printing them, but you can probably just do regular paper or something fancy if you feel up to it.
-  * Small rome demands cards: These seemed like the least useful component in the box, so I skipped them entirely.
+  * Small Player Mat cards: These seemed like the least useful component in the box, so I skipped them entirely.
 
 Good luck and Glory to Rome!
 
@@ -58,6 +58,7 @@ My thanks to:
   * My wife for letting me spend hours just tinkering with a card generator for no reason (and for beating me with a Catacomb-ending on her first play).
 
 
-* Future updates:
+
+Future updates:
 * Promo cards
 * Supporting Macs? (Involves converting to .net Core and retesting)
