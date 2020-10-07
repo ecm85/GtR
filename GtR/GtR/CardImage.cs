@@ -1,21 +1,39 @@
 ﻿using System;
+using System.Configuration;
 using System.Drawing;
+using System.Linq;
 
 namespace GtR
 {
     public class CardImage : ISaveableImage
     {
-        private const float cardShortSideInInches = 2.5f;
-        private const float cardLongSideInInches = 3.5f;
-        private const float bleedSizeInInches = (1.0f / 8.0f);
-        private const float borderThicknessInInches = 0f;
-        private const float borderPaddingInInches = (1.0f/16.0f);
+        public static readonly float cardShortSideInInches = LoadFloatFromConfigurationManager("cardShortSideInInches");
+        public static readonly float cardLongSideInInches = LoadFloatFromConfigurationManager("cardLongSideInInches");
+        public static readonly float bleedSizeInInches = LoadFloatFromConfigurationManager("bleedSizeInInches");
+        public static readonly float borderPaddingInInches = LoadFloatFromConfigurationManager("borderPaddingInInches");
 
-        private const int cardShortSideInPixels = (int)(GraphicsUtilities.dpi * cardShortSideInInches) - 1;
-        private const int cardLongSideInPixels = (int)(GraphicsUtilities.dpi * cardLongSideInInches) - 1;
+        private static float LoadFloatFromConfigurationManager(string name)
+        {
+            if (!ConfigurationManager.AppSettings.HasKeys())
+                throw new InvalidOperationException("Invalid configuration file - missing app settings!");
+            if (!ConfigurationManager.AppSettings.AllKeys.Contains(name))
+                throw new InvalidOperationException($"Invalid configuration file - missing {name}");
+            var value = ConfigurationManager.AppSettings[name];
+            if (string.IsNullOrWhiteSpace(value))
+                throw new InvalidOperationException($"Invalid configuration file - {name} is '{value}'");
+            var isFloat = float.TryParse(value, out var result);
+            if (!isFloat)
+                throw new InvalidOperationException($"Invalid configuration file - {name} is '{value}'");
+            return result;
+        }
+
+        private const float borderThicknessInInches = 0f;
+
+        private static readonly int cardShortSideInPixels = (int)(GraphicsUtilities.dpi * cardShortSideInInches) - 1;
+        private static readonly int cardLongSideInPixels = (int)(GraphicsUtilities.dpi * cardLongSideInInches) - 1;
         private static readonly int bleedSizeInPixels = (int)Math.Round(GraphicsUtilities.dpi * bleedSizeInInches);
-        private const int borderThicknessInPixels = (int)(GraphicsUtilities.dpi * borderThicknessInInches);
-        private const int borderPaddingInPixels = (int)(GraphicsUtilities.dpi * borderPaddingInInches);
+        private static readonly int borderThicknessInPixels = (int)(GraphicsUtilities.dpi * borderThicknessInInches);
+        private static readonly int borderPaddingInPixels = (int)(GraphicsUtilities.dpi * borderPaddingInInches);
 
         private static readonly int cardShortSideInPixelsWithBleed = cardShortSideInPixels + bleedSizeInPixels * 2;
         private static readonly int cardLongSideInPixelsWithBleed = cardLongSideInPixels + bleedSizeInPixels * 2;
