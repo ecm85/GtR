@@ -4,11 +4,12 @@ using System.Drawing;
 
 namespace GtR
 {
-    public class Page
+    public class Page : ISaveableImage
     {
         public Bitmap Bitmap { get; private set; }
         public Graphics Graphics { get; private set; }
         public string Name { get; private set; }
+        public string Subfolder { get; private set; }
 
         private const float pageWidthInInches = 12f;
         private const float pageHeightInInches = 18f;
@@ -22,12 +23,13 @@ namespace GtR
         public const int cardsPerRow = 3;
         public const int cardsPerColumn = 6;
 
-        public Page(string name)
+        public Page(string name, string subfolder)
         {
             var bitmap = GraphicsUtilities.CreateBitmap(pageWidthInPixels, pageHeightInPixels);
             Bitmap = bitmap;
             Graphics = Graphics.FromImage(bitmap);
             Name = name;
+            Subfolder = subfolder;
         }
 
         public int AddCardsToPage(IList<CardImage> cards)

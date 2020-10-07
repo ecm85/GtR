@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace GtR
 {
-    public class CardImage
+    public class CardImage : ISaveableImage
     {
         private const float cardShortSideInInches = 2.5f;
         private const float cardLongSideInInches = 3.5f;
@@ -50,16 +50,18 @@ namespace GtR
         private ImageOrientation Orientation { get; set; }
 
         public string Name { get; private set; }
+        public string Subfolder { get; private set; }
 
         private const int borderRadius = 40;
 
-        public CardImage(string name, ImageOrientation orientation)
+        public CardImage(string name, string subfolder, ImageOrientation orientation)
         {
             var bitmap = CreateBitmap(orientation);
             Bitmap = bitmap;
             Orientation = orientation;
             Graphics = Graphics.FromImage(bitmap);
             Name = name;
+            Subfolder = subfolder;
         }
 
         private static Bitmap CreateBitmap(ImageOrientation orientation)

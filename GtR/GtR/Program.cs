@@ -9,83 +9,12 @@ namespace GtR
 {
     class Program
     {
-		private static bool useOverlay = false;
+        private static readonly bool useOverlay = false;
+        private static readonly SaveConfiguration SaveConfiguration = SaveConfiguration.Page;
 
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            var allSuits = Enum.GetValues(typeof(CardSuit))
-                .Cast<CardSuit>()
-                .ToList();
-            var imageCreator = new GloryToRomeImageCreator();
-
-
-            var orderCards = ReadOrderCards();
-            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
-            var orderCardBackImage = imageCreator.CreateOrderCardBack();
-
-            var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
-            var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
-            foreach (var siteBackImage in siteBackImages)
-                siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-
-            var jackImageFront = imageCreator.CreateJackImage1();
-            var jackImageBack = imageCreator.CreateJackImage2();
-            jackImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-
-            var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
-            var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
-            foreach (var merchantBonusBackCard in merchantBonusBackCards)
-                merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-
-            var leaderImageFront = imageCreator.CreateLeaderImage();
-            var leaderImageBack = imageCreator.CreateLeaderImage();
-            leaderImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-
-            var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
-            Directory.CreateDirectory($"c:\\delete\\images\\{dateStamp}");
-
-            var pages = new List<Page>();
-
-            var remainingOrderCards = orderCardFrontImages.ToList();
-            while(remainingOrderCards.Any())
-            {
-                var page = new Page($"OrderCards_{pages.Count}");
-                var cardsAdded = page.AddCardsToPage(remainingOrderCards);
-                remainingOrderCards = remainingOrderCards.Skip(cardsAdded).ToList();
-                pages.Add(page);
-            }
-
-            var pageOfOrderBackImages = Enumerable.Repeat(orderCardBackImage, Page.cardsPerColumn * Page.cardsPerRow).ToList();
-            var orderBackPage = new Page("OrderCardBack");
-            orderBackPage.AddCardsToPage(pageOfOrderBackImages);
-            pages.Add(orderBackPage);
-
-            var siteFrontPage = new Page("SiteFront");
-            siteFrontPage.AddCardsToPage(siteFrontImages);
-            pages.Add(siteFrontPage);
-
-            var siteBackPage = new Page("SiteBack");
-            siteBackPage.AddCardsToPage(siteBackImages);
-            pages.Add(siteBackPage);
-
-            var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
-                .Concat(merchantBonusFrontCards)
-                .Concat(Enumerable.Repeat(leaderImageFront, 3))
-                .ToList();
-
-            var miscFrontPage = new Page("MiscFront");
-            miscFrontPage.AddCardsToPage(miscImagesFront);
-            pages.Add(miscFrontPage);
-
-            var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
-                .Concat(merchantBonusBackCards.Take(3).Reverse())
-                .Concat(merchantBonusBackCards.Skip(3).Take(3).Reverse())
-                .Concat(Enumerable.Repeat(leaderImageBack, 3))
-                .ToList();
-
-            var miscBackPage = new Page("MiscBack");
-            miscBackPage.AddCardsToPage(miscImagesBack);
-            pages.Add(miscBackPage);
+            var images = CreateImages(SaveConfiguration);
 
             if (useOverlay)
             {
@@ -97,10 +26,10 @@ namespace GtR
                 var attributes = new ImageAttributes();
                 attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                foreach (var page in pages)
+                foreach (var image in images)
                 {
-                    var graphics = Graphics.FromImage(page.Bitmap);
-                    if (page.Bitmap.Width < page.Bitmap.Height)
+                    var graphics = Graphics.FromImage(image.Bitmap);
+                    if (image.Bitmap.Width < image.Bitmap.Height)
                     {
                         graphics.DrawImage(overlay, new Rectangle(0, 0, overlay.Width, overlay.Height), 0, 0, overlay.Width, overlay.Height, GraphicsUnit.Pixel, attributes);
                     }
@@ -111,8 +40,140 @@ namespace GtR
                 }
             }
 
-            foreach (var page in pages)
-                page.Bitmap.Save($"c:\\delete\\images\\{dateStamp}\\{page.Name}.png", ImageFormat.Png);
+            var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
+            var directory = $"c:\\delete\\images\\{dateStamp}";
+            Directory.CreateDirectory(directory);
+
+            var subdirectories = images
+                .Select(image => image.Subfolder)
+                .Distinct()
+                .ToList();
+            foreach(var subdirectory in subdirectories)
+            {
+                Directory.CreateDirectory(Path.Combine(directory, subdirectory));
+            }
+
+            foreach (var image in images)
+                image.Bitmap.Save($"{Path.Combine(directory, image.Subfolder)}\\{image.Name}.png", ImageFormat.Png);
+        }
+
+        private static IEnumerable<ISaveableImage> CreateImages(SaveConfiguration saveConfiguration)
+        {
+            switch(saveConfiguration)
+            {
+                case SaveConfiguration.Page:
+                    return CreatePages();
+                case SaveConfiguration.SingleImage:
+                    return CreateIndividualImages();
+                default:
+                    throw new InvalidOperationException($"Invalid save configuration encountered: {saveConfiguration}.");
+            }
+        }
+
+        private static IEnumerable<ISaveableImage> CreateIndividualImages()
+        {
+            var allSuits = Enum.GetValues(typeof(CardSuit))
+                .Cast<CardSuit>()
+                .ToList();
+            var imageCreator = new GloryToRomeImageCreator();
+
+            var orderCards = ReadOrderCards();
+            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
+            var orderCardBackImage = imageCreator.CreateOrderCardBack();
+
+            var siteFrontImages = allSuits.Select(suit => imageCreator.CreateSiteFront(suit)).ToList();
+            var siteBackImages = allSuits.Select(suit => imageCreator.CreateSiteBack(suit)).ToList();
+
+            var jackImageFront = imageCreator.CreateJackImageSword();
+            var jackImageBack = imageCreator.CreateJackImageQuill();
+
+            var merchantBonusCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+
+            var leaderImage = imageCreator.CreateLeaderImage();
+
+            return orderCardFrontImages
+                .Concat(new[] { orderCardBackImage })
+                .Concat(siteFrontImages)
+                .Concat(siteBackImages)
+                .Concat(new [] { jackImageFront, jackImageBack})
+                .Concat(merchantBonusCards)
+                .Concat(new [] { leaderImage })
+                .ToList();
+        }
+
+        private static IEnumerable<ISaveableImage> CreatePages()
+        {
+            var allSuits = Enum.GetValues(typeof(CardSuit))
+                .Cast<CardSuit>()
+                .ToList();
+            var imageCreator = new GloryToRomeImageCreator();
+
+            var orderCards = ReadOrderCards();
+            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
+            var orderCardBackImage = imageCreator.CreateOrderCardBack();
+
+            var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
+            var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
+            foreach (var siteBackImage in siteBackImages)
+                siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+            var jackImageFront = imageCreator.CreateJackImageSword();
+            var jackImageBack = imageCreator.CreateJackImageQuill();
+            jackImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+            var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+            var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+            foreach (var merchantBonusBackCard in merchantBonusBackCards)
+                merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+            var leaderImageFront = imageCreator.CreateLeaderImage();
+            var leaderImageBack = imageCreator.CreateLeaderImage();
+            leaderImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+
+            var pages = new List<Page>();
+
+            var remainingOrderCards = orderCardFrontImages.ToList();
+            while (remainingOrderCards.Any())
+            {
+                var page = new Page($"OrderCards_{pages.Count}", "Pages");
+                var cardsAdded = page.AddCardsToPage(remainingOrderCards);
+                remainingOrderCards = remainingOrderCards.Skip(cardsAdded).ToList();
+                pages.Add(page);
+            }
+
+            var pageOfOrderBackImages = Enumerable.Repeat(orderCardBackImage, Page.cardsPerColumn * Page.cardsPerRow).ToList();
+            var orderBackPage = new Page("OrderCardBack", "Pages");
+            orderBackPage.AddCardsToPage(pageOfOrderBackImages);
+            pages.Add(orderBackPage);
+
+            var siteFrontPage = new Page("SiteFront", "Pages");
+            siteFrontPage.AddCardsToPage(siteFrontImages);
+            pages.Add(siteFrontPage);
+
+            var siteBackPage = new Page("SiteBack", "Pages");
+            siteBackPage.AddCardsToPage(siteBackImages);
+            pages.Add(siteBackPage);
+
+            var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
+                .Concat(merchantBonusFrontCards)
+                .Concat(Enumerable.Repeat(leaderImageFront, 3))
+                .ToList();
+
+            var miscFrontPage = new Page("MiscFront", "Pages");
+            miscFrontPage.AddCardsToPage(miscImagesFront);
+            pages.Add(miscFrontPage);
+
+            var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
+                .Concat(merchantBonusBackCards.Take(3).Reverse())
+                .Concat(merchantBonusBackCards.Skip(3).Take(3).Reverse())
+                .Concat(Enumerable.Repeat(leaderImageBack, 3))
+                .ToList();
+
+            var miscBackPage = new Page("MiscBack", "Pages");
+            miscBackPage.AddCardsToPage(miscImagesBack);
+            pages.Add(miscBackPage);
+
+            return pages;
         }
 
         private static IEnumerable<CardImage> CreateCardsForOrderCard(GloryToRomeImageCreator imageCreator, OrderCard orderCard)

@@ -24,19 +24,19 @@ namespace GtR
         private const int diagonalLinesPerCard = 16;
         private const float JackImageHeightOffsetPercentage = .30f;
 
-        public CardImage CreateJackImage1()
+        public CardImage CreateJackImageSword()
         {
-            return CreateJackImage(@"Misc\Jack1");
+            return CreateJackImage(@"Misc\JackSword", "JackSword");
         }
 
-        public CardImage CreateJackImage2()
+        public CardImage CreateJackImageQuill()
         {
-            return CreateJackImage(@"Misc\Jack2");
+            return CreateJackImage(@"Misc\JackQuill", "JackQuill");
         }
 
-        private CardImage CreateJackImage(string path)
+        private CardImage CreateJackImage(string path, string fileName)
         {
-            var cardImage = new CardImage("JackImage", ImageOrientation.Portrait);
+            var cardImage = new CardImage(fileName, "Misc", ImageOrientation.Portrait);
             var graphics = cardImage.Graphics;
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
@@ -63,7 +63,7 @@ namespace GtR
         public CardImage CreateLeaderImage()
         {
             var name = "Leader";
-            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var cardImage = new CardImage(name, "Misc", ImageOrientation.Portrait);
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
             var graphics = cardImage.Graphics;
             var fullRectangle = cardImage.FullRectangle;
@@ -94,7 +94,7 @@ namespace GtR
 
         internal CardImage CreateMerchantBonusImage(CardSuit suit)
         {
-            var cardImage = new CardImage($"MerchantBonus_{suit.ResourceName()}", ImageOrientation.Portrait);
+            var cardImage = new CardImage($"MerchantBonus_{suit.ResourceName()}", "Misc", ImageOrientation.Portrait);
             var graphics = cardImage.Graphics;
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
             var fullRectangle = cardImage.FullRectangle;
@@ -158,7 +158,7 @@ namespace GtR
         public CardImage CreateSiteFront(CardSuit suit)
         {
             var name = $"{suit.ResourceName()}_Site";
-            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var cardImage = new CardImage(name, "Sites", ImageOrientation.Portrait);
             var graphics = cardImage.Graphics;
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
@@ -244,7 +244,7 @@ namespace GtR
         public CardImage CreateSiteBack(CardSuit suit)
         {
             var name = $"{suit.ResourceName()}_SiteBack";
-            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var cardImage = new CardImage(name, "Sites", ImageOrientation.Portrait);
             var graphics = cardImage.Graphics;
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
@@ -319,7 +319,7 @@ namespace GtR
         public CardImage CreateOrderCardBack()
         {
             var name = "OrderCardBack";
-            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var cardImage = new CardImage(name, "OrderCards", ImageOrientation.Portrait);
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.Black, Color.Black);
@@ -351,7 +351,7 @@ namespace GtR
         public CardImage CreateOrderCardFront(OrderCard orderCard, int index)
         {
             var name = $"{orderCard.CardName}_{index}";
-            var cardImage = new CardImage(name, ImageOrientation.Portrait);
+            var cardImage = new CardImage(name, "OrderCards", ImageOrientation.Portrait);
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
             var bottomOfImage = PrintCardImage(orderCard, cardImage);
             PrintRoleIconAndName(orderCard, cardImage);
