@@ -4,16 +4,29 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace GtR
 {
-    class Program
+    public class Program
     {
+        [DllImport("kernel32.dll")]
+        static extern IntPtr GetConsoleWindow();
+        [DllImport("kernel32.dll")]
+        static extern uint GetCurrentProcessId();
+        [DllImport("user32.dll")]
+        static extern int GetWindowThreadProcessId(IntPtr hWnd, out uint ProcessId);
+
         private static readonly bool useOverlay = false;
         private static readonly SaveConfiguration SaveConfiguration = SaveConfiguration.Page;
 
         public static void Main(string[] args)
         {
+            Console.WriteLine($"Creating images.");
+
+            var hConsole = GetConsoleWindow();
+            GetWindowThreadProcessId(hConsole, out var hProcessId);
+
             var images = CreateImages(SaveConfiguration);
 
             if (useOverlay)
@@ -42,6 +55,9 @@ namespace GtR
 
             var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
             var directory = $"c:\\delete\\images\\{dateStamp}";
+
+            Console.WriteLine($"Saving images to {directory}.");
+
             Directory.CreateDirectory(directory);
 
             var subdirectories = images
@@ -55,6 +71,14 @@ namespace GtR
 
             foreach (var image in images)
                 image.Bitmap.Save($"{Path.Combine(directory, image.Subfolder)}\\{image.Name}.png", ImageFormat.Png);
+
+            Console.WriteLine("Done!");
+
+            if (GetCurrentProcessId().Equals(hProcessId))
+            {
+                Console.WriteLine("Press any key to exit.");
+                Console.ReadKey();
+            }
         }
 
         private static IEnumerable<ISaveableImage> CreateImages(SaveConfiguration saveConfiguration)
