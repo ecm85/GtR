@@ -6,7 +6,7 @@ This guide will attempt to walk through the steps needed to generate files for G
   * For the printer, PrintPlayGames (https://www.printplaygames.com/) takes the cards in sheets of 18 cards, where other sites like Gamecrafter take them as individual cards.
 * Step 2: Download the latest release of the app.
 * Step 3: Install the fonts included in the release.
-  * NeuzeitGro-Reg.ttx
+  * NeuzeitGro-RegModified.ttf
   * NeuzeitGro-Bol.ttf
 * Step 4: Open Gtr.exe.config and change the values as needed.
   * You can change the following values:
