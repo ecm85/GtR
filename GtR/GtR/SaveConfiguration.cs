@@ -4,6 +4,7 @@ namespace GtR
 {
     public enum SaveConfiguration
     {
+        Unknown,
         SingleImage,
         Page
     }

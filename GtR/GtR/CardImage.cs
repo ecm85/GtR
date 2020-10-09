@@ -1,31 +1,15 @@
 ﻿using System;
-using System.Configuration;
 using System.Drawing;
-using System.Linq;
 
 namespace GtR
 {
     public class CardImage : ISaveableImage
     {
-        public static readonly float cardShortSideInInches = LoadFloatFromConfigurationManager("cardShortSideInInches");
-        public static readonly float cardLongSideInInches = LoadFloatFromConfigurationManager("cardLongSideInInches");
-        public static readonly float bleedSizeInInches = LoadFloatFromConfigurationManager("bleedSizeInInches");
-        public static readonly float borderPaddingInInches = LoadFloatFromConfigurationManager("borderPaddingInInches");
 
-        private static float LoadFloatFromConfigurationManager(string name)
-        {
-            if (!ConfigurationManager.AppSettings.HasKeys())
-                throw new InvalidOperationException("Invalid configuration file - missing app settings!");
-            if (!ConfigurationManager.AppSettings.AllKeys.Contains(name))
-                throw new InvalidOperationException($"Invalid configuration file - missing {name}");
-            var value = ConfigurationManager.AppSettings[name];
-            if (string.IsNullOrWhiteSpace(value))
-                throw new InvalidOperationException($"Invalid configuration file - {name} is '{value}'");
-            var isFloat = float.TryParse(value, out var result);
-            if (!isFloat)
-                throw new InvalidOperationException($"Invalid configuration file - {name} is '{value}'");
-            return result;
-        }
+        public static readonly float cardShortSideInInches = GtrConfig.Current.CardShortSideInInches;
+        public static readonly float cardLongSideInInches = GtrConfig.Current.CardLongSideInInches;
+        public static readonly float bleedSizeInInches = GtrConfig.Current.BleedSizeInInches;
+        public static readonly float borderPaddingInInches = GtrConfig.Current.BorderPaddingInInches;
 
         private const float borderThicknessInInches = 0f;
 

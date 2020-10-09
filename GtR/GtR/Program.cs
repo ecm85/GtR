@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -20,18 +19,32 @@ namespace GtR
 
         private static readonly bool useOverlay = false;
 
+        private static readonly IDictionary<OSPlatform, string> RootDirectoryByPlatform = new Dictionary<OSPlatform, string>
+        {
+            [OSPlatform.Windows] = "c:",
+            [OSPlatform.OSX] = @"\tmp"
+        };
+
         public static void Main(string[] args)
         {
             try
             {
-                var saveConfiguration = LoadSaveConfigurationFromConfigurationManager();
-                Console.WriteLine($"Cards will be {CardImage.cardShortSideInInches} inches x {CardImage.cardShortSideInInches} inches.");
+                var allPlatforms = new[] { OSPlatform.Windows, OSPlatform.Linux, OSPlatform.OSX, OSPlatform.FreeBSD };
+                var currentPlatforms = allPlatforms
+                    .Where(platform => RuntimeInformation.IsOSPlatform(platform))
+                    .ToList();
+                if (currentPlatforms.Count != 1)
+                    throw new InvalidOperationException("Cannot determine OS.");
+                var currentPlatform = currentPlatforms.Single();
+                var supportedPlatforms = RootDirectoryByPlatform.Keys;
+                if (!RootDirectoryByPlatform.Keys.Contains(currentPlatform))
+                    throw new InvalidOperationException("Current OS is not supported.");
+
+                var saveConfiguration = GtrConfig.Current.SaveConfiguration;
+                Console.WriteLine($"Cards will be {CardImage.cardShortSideInInches} inches x {CardImage.cardLongSideInInches} inches.");
                 Console.WriteLine($"Cards will have a bleed size of {CardImage.bleedSizeInInches} inches and margin of {CardImage.borderPaddingInInches} inches.");
                 Console.WriteLine($"Saving images as {saveConfiguration.GetDisplayValue()}.");
                 Console.WriteLine($"Creating images.");
-
-                var hConsole = GetConsoleWindow();
-                GetWindowThreadProcessId(hConsole, out var hProcessId);
 
                 var images = CreateImages(saveConfiguration);
 
@@ -60,7 +73,8 @@ namespace GtR
                 }
 
                 var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
-                var directory = $"c:\\delete\\images\\{dateStamp}";
+                var root = RootDirectoryByPlatform[currentPlatform];
+                var directory = @$"{root}\delete\images\{dateStamp}";
 
                 Console.WriteLine($"Saving images to {directory}.");
 
@@ -79,39 +93,37 @@ namespace GtR
                     image.Bitmap.Save($"{Path.Combine(directory, image.Subfolder)}\\{image.Name}.png", ImageFormat.Png);
 
                 Console.WriteLine("Done!");
+                HandleAppExiting();
+            }
+            catch (InvalidOperationException exception)
+            {
+                Console.WriteLine(exception.Message);
+                HandleAppExiting();
+            }
+            catch (TypeInitializationException exception)
+            {
+                Console.WriteLine(exception.InnerException.Message);
+                HandleAppExiting();
+            }
+        }
 
+        private static void HandleAppExiting()
+        {
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+            {
+                var hConsole = GetConsoleWindow();
+                GetWindowThreadProcessId(hConsole, out var hProcessId);
                 if (GetCurrentProcessId().Equals(hProcessId))
                 {
                     Console.WriteLine("Press any key to exit.");
                     Console.ReadKey();
                 }
             }
-            catch (InvalidOperationException exception)
+            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                Console.WriteLine(exception.Message);
+                Console.WriteLine("Press any key to exit.");
+                Console.ReadKey();
             }
-            catch (TypeInitializationException exception)
-            {
-                Console.WriteLine(exception.InnerException.Message);
-            }
-        }
-
-        private static SaveConfiguration LoadSaveConfigurationFromConfigurationManager()
-        {
-            var name = "saveConfiguration";
-            if (!ConfigurationManager.AppSettings.HasKeys())
-                throw new InvalidOperationException("Invalid configuration file - missing app settings!");
-            if (!ConfigurationManager.AppSettings.AllKeys.Contains(name))
-                throw new InvalidOperationException($"Invalid configuration file - missing {name}");
-            var value = ConfigurationManager.AppSettings[name];
-            if (string.IsNullOrWhiteSpace(value))
-                throw new InvalidOperationException($"Invalid configuration file - {name} is '{value}'");
-            var isValid = Enum.TryParse<SaveConfiguration>(value, out var result);
-            if (!isValid)
-                throw new InvalidOperationException($"Invalid configuration file - {name} is '{value}'");
-            if (!Enum.IsDefined(typeof(SaveConfiguration), result))
-                throw new InvalidOperationException($"Invalid configuration file - {name} is '{value}'");
-            return result;
         }
 
         private static IEnumerable<ISaveableImage> CreateImages(SaveConfiguration saveConfiguration)
