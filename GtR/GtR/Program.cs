@@ -21,8 +21,8 @@ namespace GtR
 
         private static readonly IDictionary<OSPlatform, string> RootDirectoryByPlatform = new Dictionary<OSPlatform, string>
         {
-            [OSPlatform.Windows] = "c:",
-            [OSPlatform.OSX] = @"\tmp"
+            [OSPlatform.Windows] = $"c:{Path.DirectorySeparatorChar}",
+            [OSPlatform.OSX] = $@"{Path.DirectorySeparatorChar}tmp"
         };
 
         public static void Main(string[] args)
@@ -74,7 +74,7 @@ namespace GtR
 
                 var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
                 var root = RootDirectoryByPlatform[currentPlatform];
-                var directory = @$"{root}\delete\images\{dateStamp}";
+                var directory = Path.Combine(root, "delete", "images", dateStamp);
 
                 Console.WriteLine($"Saving images to {directory}.");
 
@@ -90,7 +90,7 @@ namespace GtR
                 }
 
                 foreach (var image in images)
-                    image.Bitmap.Save($"{Path.Combine(directory, image.Subfolder)}\\{image.Name}.png", ImageFormat.Png);
+                    image.Bitmap.Save(Path.Combine(directory, image.Subfolder, $"{image.Name}.png"), ImageFormat.Png);
 
                 Console.WriteLine("Done!");
                 HandleAppExiting();

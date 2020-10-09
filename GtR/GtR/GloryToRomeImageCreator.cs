@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 
 namespace GtR
@@ -26,12 +27,12 @@ namespace GtR
 
         public CardImage CreateJackImageSword()
         {
-            return CreateJackImage(@"Misc\JackSword", "JackSword");
+            return CreateJackImage("JackSword", "JackSword");
         }
 
         public CardImage CreateJackImageQuill()
         {
-            return CreateJackImage(@"Misc\JackQuill", "JackQuill");
+            return CreateJackImage("JackQuill", "JackQuill");
         }
 
         private CardImage CreateJackImage(string path, string fileName)
@@ -42,7 +43,7 @@ namespace GtR
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.Black, Color.Black);
             var imageOffset = (int)(fullRectangle.Height * JackImageHeightOffsetPercentage);
-            var imageHeight = GraphicsUtilities.PrintFullWidthPng(graphics, path, fullRectangle.X, fullRectangle.Y + imageOffset, fullRectangle.Width);
+            var imageHeight = GraphicsUtilities.PrintFullWidthPng(graphics, "Misc", path, fullRectangle.X, fullRectangle.Y + imageOffset, fullRectangle.Width);
             var xOffset = 0;
             var yOffset = (int)(usableRectangle.Width * .15f);
             var brush = new SolidBrush(Color.FromArgb(208, 208, 208));
@@ -70,7 +71,8 @@ namespace GtR
             var imageWidth = fullRectangle.Width;
             var imageHeight = GraphicsUtilities.PrintFullWidthPng(
                 graphics,
-                @"Misc\Leader",
+                "Misc",
+                "Leader",
                 fullRectangle.X,
                 fullRectangle.Y,
                 imageWidth);
@@ -115,7 +117,8 @@ namespace GtR
             //graphics.FillRectangle(new SolidBrush(Color.Blue), costImageRectangle);
             GraphicsUtilities.PrintScaledAndCenteredPng(
                 graphics,
-                $@"Resources\{suit.ResourceName()}",
+                "Resources",
+                suit.ResourceName(),
                 costImageRectangle.X,
                 costImageRectangle.Y,
                 costImageRectangle.Width,
@@ -140,7 +143,8 @@ namespace GtR
             for (var i = 0; i < 3; i++)
                 GraphicsUtilities.PrintScaledPng(
                     graphics,
-                    $@"Misc\Coin",
+                    "Misc",
+                    "Coin",
                     centerPoint + coinXOffset + (i * (siteCoinWidth + siteCoinPadding)),
                     usableRectangle.Y + (int)(usableRectangle.Width * .26f),
                     siteCoinWidth,
@@ -180,7 +184,8 @@ namespace GtR
             //graphics.FillRectangle(new SolidBrush(Color.Blue), costImageRectangle);
             GraphicsUtilities.PrintScaledAndCenteredPng(
                 graphics,
-                $@"Resources\{suit.ResourceName()}",
+                "Resources",
+                suit.ResourceName(),
                 costImageRectangle.X,
                 costImageRectangle.Y,
                 costImageRectangle.Width,
@@ -220,7 +225,8 @@ namespace GtR
             for(var i = 0; i < suit.Cost(); i++)
                 GraphicsUtilities.PrintScaledPng(
                     graphics,
-                    $@"Misc\Coin",
+                    "Misc",
+                    "Coin",
                     centerPoint + xOffset + (i * (siteCoinWidth + siteCoinPadding)),
                     usableRectangle.Y,
                     siteCoinWidth,
@@ -325,14 +331,16 @@ namespace GtR
             cardImage.PrintCardBorderAndBackground(Color.Black, Color.Black);
             GraphicsUtilities.PrintScaledPng(
                 graphics,
-                $@"Misc\GloryToRome",
+                "Misc",
+                "GloryToRome",
                 usableRectangle.X + (int)(usableRectangle.Width * .07f),
                 usableRectangle.Y + (int)(usableRectangle.Height * .15f),
                 (int)(usableRectangle.Width * (1 - (.07f * 2))),
                 (int)(usableRectangle.Height * .3f));
             GraphicsUtilities.PrintScaledPng(
                 graphics,
-                $@"Misc\GloryToRome",
+                "Misc",
+                "GloryToRome",
                 usableRectangle.X + (int)(usableRectangle.Width * .07f),
                 usableRectangle.Bottom - (int)(usableRectangle.Height * (.15f + .3f)),
                 (int)(usableRectangle.Width * (1 - (.07f * 2))),
@@ -340,7 +348,8 @@ namespace GtR
                 RotateFlipType.Rotate180FlipNone);
             GraphicsUtilities.PrintScaledPng(
                 graphics,
-                $@"Misc\OrderBackSeparator",
+                "Misc",
+                "OrderBackSeparator",
                 usableRectangle.X + (usableRectangle.Width/2 - (int)((usableRectangle.Width * .4f)/2)),
                 usableRectangle.Y + (usableRectangle.Height/2 - (int)((usableRectangle.Height* .05f)/2)),
                 (int)(usableRectangle.Width * .4f),
@@ -399,7 +408,8 @@ namespace GtR
             var imageWidth = fullRectangle.Width;
             var imageHeight = GraphicsUtilities.PrintFullWidthPng(
                 graphics,
-                $@"CardImages\{orderCard.CardName}",
+                "CardImages",
+                orderCard.CardName,
                 fullRectangle.X + (orderCard.ImageIsRoughlyCentered ? CenteredImageOffset(cardImage) : 0),
                 fullRectangle.Y,
                 imageWidth);
@@ -418,7 +428,8 @@ namespace GtR
             var iconImageHeight = (int)(iconImageWidth * 190f / 140f);
             GraphicsUtilities.PrintScaledPng(
                 graphics,
-                $@"RoleIcons\{roleName}",
+                "RoleIcons",
+                roleName,
                 usableRectangle.X,
                 usableRectangle.Y,
                 iconImageWidth,
@@ -448,7 +459,8 @@ namespace GtR
             {
                 GraphicsUtilities.PrintScaledPng(
                     graphics,
-                    $@"Influence\{suit.ColorText()}Influence",
+                    "Influence",
+                    $"{suit.ColorText()}Influence",
                     usableRectangle.X + influenceImageSide * i,
                     usableRectangle.Bottom - influenceImageSide,
                     influenceImageSide,
@@ -512,7 +524,8 @@ namespace GtR
                 if (set.HasSetImage())
                     GraphicsUtilities.PrintScaledPng(
                         graphics,
-                        $@"Misc\{set.SetText()}",
+                        "Misc",
+                        set.SetText(),
                         circleRectangle.X + (int)(circleRectangle.Width * ((1 - .7f)/2)),
                         circleRectangle.Y + (int)(circleRectangle.Height * ((1 - .7f)/2)),
                         setIndicatorImageSide,
