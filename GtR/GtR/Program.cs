@@ -254,7 +254,7 @@ namespace GtR
 
         private static IList<OrderCard> ReadOrderCards()
         {
-            var strings = File.ReadAllLines("OrderCardData.txt");
+            var strings = File.ReadAllLines($".{Path.DirectorySeparatorChar}OrderCardData.txt");
             return strings
                 .Where(line => !string.IsNullOrWhiteSpace(line))
                 .Select(line => line.Split('\t'))

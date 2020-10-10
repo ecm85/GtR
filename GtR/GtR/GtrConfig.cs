@@ -16,7 +16,7 @@ namespace GtR
 
         private static GtrConfig LoadGtrConfig()
         {
-            var configurationFile = "GtRConfig.json";
+            var configurationFile = $".{Path.DirectorySeparatorChar}GtRConfig.json";
             var config = LoadConfigFromFile(configurationFile);
             if (config == null)
                 throw new InvalidOperationException("Invalid configuration file!");
