@@ -35,9 +35,14 @@ namespace GtR
 
         private static GtrConfig LoadConfigFromFile(string configurationFile)
         {
+            if (!File.Exists(configurationFile))
+                throw new InvalidOperationException($"Configuration file does not exist, looked for {configurationFile}.");
+            var text = File.ReadAllText(configurationFile);
+            Console.WriteLine("Loaded configuration text: ");
+            Console.WriteLine(text);
             try
             {
-                return JsonConvert.DeserializeObject<GtrConfig>(File.ReadAllText(configurationFile));
+                return JsonConvert.DeserializeObject<GtrConfig>(text);
             }
             catch (Exception)
             {
