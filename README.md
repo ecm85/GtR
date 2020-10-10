@@ -8,15 +8,19 @@ This guide will attempt to walk through the steps needed to generate files for G
 * Step 3: Install the fonts included in the release.
   * NeuzeitGro-RegModified.ttf
   * NeuzeitGro-Bol.ttf
-* Step 4: Open Gtr.exe.config and change the values as needed.
+* Step 4: Open GtrConfig.json and change the values as needed.
   * You can change the following values:
     * cardShortSideInInches - This is the smaller dimension of the cards in inches. Default value (already in app.config): 2.5
     * cardLongSideInInches - This is larger dimension of the cards, in inches. Default value (already in app.config): 3.5
     * bleedSizeInInches - This is the amount of bleed to include outside the bounds of the card image. Default value (already in app.config): .125
     * borderPaddingInInches - This is the extra padding -inside the valid printing area- to leave blank. Default value (already in app.config): .0625
     * saveConfiguration - This is the output type, can be SingleImage or Page. Default value (already in app.config): Page
-* Step 5: Run Gtr.exe.
-  * Note for power users: You can run this via double-click in Windows and it will prompt for input when complete; if run via a CLI it will not prompt.
+* Step 5: Run the app.
+  * Windows: Run Gtr.exe. 
+    * Note for power users: You can run this via double-click in Windows and it will prompt for input when complete; if run via a CLI it will not prompt.
+  * OSX:
+    * chmod a+x GtR
+    * Run GtR
 * Step 6: Open the image directory (the app tells you where it put them).
 * Step 7: Upload the images to the site of your choice, pay them, and wait for GtR to arrive on your doorstep!
   * The various printers will usually require you to give them a front image and a back image for each card to be printed.
