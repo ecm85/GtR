@@ -19,6 +19,9 @@ This guide will attempt to walk through the steps needed to generate files for G
   * Windows: Run Gtr.exe. 
     * Note for power users: You can run this via double-click in Windows and it will prompt for input when complete; if run via a CLI it will not prompt.
   * OSX:
+    * You will need Homebrew. If you don't have it, run:
+      *  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+    * brew install mono-libgdiplus
     * chmod a+x GtR
     * Run GtR
 * Step 6: Open the image directory (the app tells you where it put them).

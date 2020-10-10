@@ -7,11 +7,11 @@
   
 
   <ItemGroup>
-    <None Remove="images\*\*.png" />
+    <None Remove="Images\*\*.png" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="images\*\*.png">
+    <Content Include="Images\*\*.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
       <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
