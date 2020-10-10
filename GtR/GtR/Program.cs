@@ -95,14 +95,15 @@ namespace GtR
                 Console.WriteLine("Done!");
                 HandleAppExiting();
             }
-            catch (InvalidOperationException exception)
+            catch (Exception exception)
             {
                 Console.WriteLine(exception.Message);
-                HandleAppExiting();
-            }
-            catch (TypeInitializationException exception)
-            {
-                Console.WriteLine(exception.InnerException.Message);
+                Console.WriteLine("Debug Info:");
+                Console.WriteLine(exception);
+                if (exception.InnerException != null)
+                    Console.WriteLine(exception.InnerException);
+                if (exception.InnerException?.InnerException != null)
+                    Console.WriteLine(exception.InnerException.InnerException);
                 HandleAppExiting();
             }
         }
