@@ -5,6 +5,9 @@ This guide will attempt to walk through the steps needed to generate files for G
   * For example, if you want standard size cards (Poker card sized, used for MTG and tons of other games) you will want the images to be 2.5" by 3.5".
   * For the printer, PrintPlayGames (https://www.printplaygames.com/) takes the cards in sheets of 18 cards, where other sites like Gamecrafter take them as individual cards.
 * Step 2: Download the latest release of the app.
+  * If on OSX, make sure to unzip from the terminal (using the 'unzip' command).
+  * You will need to see the actual folder structure inside the unzipped files.
+    * If you are on OSX and unzip with finder, you may just have a bunch of files with Images\ as the start of the filename. This will not work.
 * Step 3: Install the fonts included in the release.
   * NeuzeitGro-RegModified.ttf
   * NeuzeitGro-Bol.ttf
@@ -23,7 +26,7 @@ This guide will attempt to walk through the steps needed to generate files for G
       *  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
     * brew install mono-libgdiplus
     * chmod a+x GtR
-    * Run GtR
+    * Run GtR (Note: Do not run from Finder, run from terminal.)
 * Step 6: Open the image directory (the app tells you where it put them).
 * Step 7: Upload the images to the site of your choice, pay them, and wait for GtR to arrive on your doorstep!
   * The various printers will usually require you to give them a front image and a back image for each card to be printed.
