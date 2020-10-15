@@ -13,7 +13,7 @@ Circus Maximus	Stone	Each of your clients may perform its action twice when you 
 Colosseum	Stone	When performing |LEGIONARY action, you |may additionally take one matching client from each opponent and place it in your vault.	Imperium	True
 Crane	Wood	You may use any card to lead or follow ARCHITECT.	Republic	True
 Dock	Wood	When performing |LABORER action, you |may take one additional material from your hand.	Standard	True
-Domus Aurea	Stone	When performing |LEGIONARY action, you |may addtionally tear down one matching incomplete building with no material of each victim. |Place foundation in your |stockpile and site |in your influence.	Republic	True
+Domus Aurea	Stone	When performing |LEGIONARY action, you |may additionally tear down one matching incomplete building with no material of each victim. |Place foundation in your |stockpile and site |in your influence.	Republic	True
 Forum	Marble	You win immediately |whenever you have |a client of each type |in your clientele.	Imperium	True
 Forum Romanum	Marble	You win immediately |whenever you have |a client of each role |in your clientele and |one material of each |type in your stockpile.	Republic	True
 Foundry	Brick	Upon completion, |you may perform one LABORER action |for each influence.	Standard	True
