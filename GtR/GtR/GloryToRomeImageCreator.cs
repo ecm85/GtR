@@ -8,10 +8,11 @@ namespace GtR
 {
     public class GloryToRomeImageCreator
     {
-        private static readonly FontFamily headerFontFamily = new FontFamily("Neuzeit Grotesk"); //TODO
-        private const int orderCardHeaderFontSize = (int)(18.5 * GraphicsUtilities.dpiFactor); //TODO
-        private const int orderCardTextFontSize = (int)(11 * GraphicsUtilities.dpiFactor); //TODO
-        private const int siteCardCostTextFontSize = (int)(13 * GraphicsUtilities.dpiFactor); //TODO
+        private static readonly FontFamily boldFontFamily = new FontFamily("Neuzeit Grotesk Bold");
+        private static readonly FontFamily regularFontFamily = new FontFamily("Neuzeit Grotesk");
+        private const int orderCardHeaderFontSize = (int)(18.5 * GraphicsUtilities.dpiFactor);
+        private const int orderCardTextFontSize = (int)(11 * GraphicsUtilities.dpiFactor);
+        private const int siteCardCostTextFontSize = (int)(13 * GraphicsUtilities.dpiFactor);
         
         private const float InfluenceImagePercentage = .13f;
         private const float RoleIconPercentage = .18f;
@@ -194,7 +195,7 @@ namespace GtR
                 costImageRectangle.Width,
                 costImageRectangle.Height);
 
-            var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var text = suit.ResourceName().ToUpper();
             var maxTextBoxWidth = usableRectangle.Width;
             var initialRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
@@ -253,8 +254,8 @@ namespace GtR
             for (var xOffset = -2 * fullRectangle.Width + 10; xOffset < fullRectangle.Width; xOffset += thickness * 2)
                 graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Top - extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Bottom + extra);
 
-            var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-            var costFont = new Font(headerFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var costFont = new Font(regularFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             var resourceNameText = suit.ResourceName().ToUpper();
             var outOfTownSiteText = "out of town site";
             var maxTextBoxWidth = usableRectangle.Width;
@@ -294,7 +295,7 @@ namespace GtR
             graphics.Clip = oldClip;
             var material = suit.Cost() > 1 ? "materials" : "material";
             var costText = $"foundation +{suit.Cost()} {material}";
-            var costFont = new Font(headerFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            var costFont = new Font(regularFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             var costTextMeasurement = graphics.MeasureString(costText, costFont, fullRectangle.Width);
             var costTextHeight = (int)costTextMeasurement.Height;
             var costTextRectangle = new Rectangle(
@@ -309,8 +310,8 @@ namespace GtR
         private int CardTextWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
         private int RoleIconWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * RoleIconPercentage);
 
-        private readonly Font CardTextFont = new Font(headerFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-        private readonly Font BoldCardTextFont = new Font(headerFontFamily, orderCardTextFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+        private readonly Font CardTextFont = new Font(regularFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+        private readonly Font BoldCardTextFont = new Font(boldFontFamily, orderCardTextFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
         public CardImage CreateOrderCardBack()
         {
@@ -374,7 +375,7 @@ namespace GtR
         {
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
-            var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var fragments = name.ToUpper().Split(" ")
                 .Select((word, index) => new TextFragment
                 {
@@ -408,7 +409,7 @@ namespace GtR
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
 
-            var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var suit = orderCard.CardSuit;
             var roleName = suit.RoleName();
             var iconImageWidth = RoleIconWidth(cardImage);
@@ -466,7 +467,7 @@ namespace GtR
         {
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
-            var cardNameFont = new Font(headerFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
+            var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var suit = orderCard.CardSuit;
             var resourceName = suit.ResourceName().ToUpper();
             var text = resourceName;

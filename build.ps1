@@ -33,8 +33,8 @@ Copy-Item -Path "GtR\GtR\bin\Release\netcoreapp3.1\$windowsVersion\publish\*" -D
 Copy-Item -Path "GtR\GtR\bin\Release\netcoreapp3.1\$osxVersion\publish\*" -Destination $osxReleaseDirectory -recurse
 Copy-Item readme.md -Destination $windowsReleaseDirectory
 Copy-Item readme.md -Destination $osxReleaseDirectory
-Copy-Item NeuzeitGro-Bol.ttf -Destination $windowsReleaseDirectory
-Copy-Item NeuzeitGro-Bol.ttf -Destination $osxReleaseDirectory
+Copy-Item NeuzeitGro-BolModified.ttf -Destination $windowsReleaseDirectory
+Copy-Item NeuzeitGro-BolModified.ttf -Destination $osxReleaseDirectory
 Copy-Item NeuzeitGro-RegModified.ttf -Destination $windowsReleaseDirectory
 Copy-Item NeuzeitGro-RegModified.ttf -Destination $osxReleaseDirectory
 
