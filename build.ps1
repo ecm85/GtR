@@ -67,5 +67,5 @@ $params = @{
 $response = Invoke-RestMethod -Uri "https://api.github.com/repos/ecm85/GtR/releases" -Headers $Headers -Method Post -Body ($params|ConvertTo-Json) -ContentType "application/json"
 $responseId = $response.Id
 
-Invoke-RestMethod -Uri "https://uploads.github.com/repos/ecm85/GtR/releases/$responseId/assets?name=windowsReleaseArchiveName"  -Headers $Headers -Method Post -ContentType "application/zip" -Infile $windowsReleaseArchive
-Invoke-RestMethod -Uri "https://uploads.github.com/repos/ecm85/GtR/releases/$responseId/assets?name=osxReleaseArchiveName"  -Headers $Headers -Method Post -ContentType "application/zip" -Infile $osxReleaseArchive
+Invoke-RestMethod -Uri "https://uploads.github.com/repos/ecm85/GtR/releases/$responseId/assets?name=$windowsReleaseArchiveName"  -Headers $Headers -Method Post -ContentType "application/zip" -Infile $windowsReleaseArchive
+Invoke-RestMethod -Uri "https://uploads.github.com/repos/ecm85/GtR/releases/$responseId/assets?name=$osxReleaseArchiveName"  -Headers $Headers -Method Post -ContentType "application/zip" -Infile $osxReleaseArchive
