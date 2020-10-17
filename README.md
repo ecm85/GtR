@@ -10,7 +10,7 @@ This guide will attempt to walk through the steps needed to generate files for G
     * If you are on OSX and unzip with finder, you may just have a bunch of files with Images\ as the start of the filename. This will not work.
 * Step 3: Install the fonts included in the release.
   * NeuzeitGro-RegModified.ttf
-  * NeuzeitGro-Bol.ttf
+  * NeuzeitGro-BolModified.ttf
 * Step 4: Open GtrConfig.json and change the values as needed.
   * You can change the following values:
     * cardShortSideInInches - This is the smaller dimension of the cards in inches. Default value (already in app.config): 2.5
