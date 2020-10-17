@@ -1,6 +1,6 @@
 param (
 	[Parameter(Mandatory=$true)]
-	[string]$releaseVersion
+	[string]$releaseVersion,
 
 	[Parameter(Mandatory=$true)]
 	[string]$githubApiToken
