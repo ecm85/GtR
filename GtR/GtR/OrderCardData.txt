@@ -1,5 +1,5 @@
 ﻿Academy	Brick	You may perform one THINKER action after any turn during which you performed at least one CRAFTSMAN action.	Standard	True
-Amphitheatre	Concrete	Upon completion, |you may perform one CRAFTSMAN action for each influence.	Standard	True
+Amphitheatre	Concrete	Upon completion, |you may perform one |CRAFTSMAN action for |each influence.	Standard	True
 Aqueduct	Concrete	When performing |PATRON action, you |may take one additional client from your hand. |Maximum clientele size x2	Standard	False
 Archway	Brick	When performing |ARCHITECT action, you |may take a material |from the pool |instead of your stockpile.	Standard	True
 Atrium	Brick	When performing |MERCHANT action, you |may take a card |from the deck |instead of your stockpile |(Don't look at it).	Standard	True
@@ -24,7 +24,7 @@ Insula	Rubble	Maximum clientele size +2	Standard	True
 Latrine	Rubble	Before performing |THINKER action, you may discard one card to pool.	Standard	True
 Ludus Magnus	Marble	Each MERCHANT client |in your clientele |counts as any role.	Standard	True
 Market	Wood	Maximum vault size +2	Standard	True
-Palace	Marble	You may play multiple cards of same role to perform additional actions.	Standard	True
+Palace	Marble	You may play multiple |cards of the same role to |perform additional actions.	Standard	True
 Palisade	Wood	Immune to |LEGIONARY	Standard	False
 Prison	Stone	Upon completion, |you may exchange the prison's site (and thus influence) for an opponent's completed structure.	Standard	True
 Road	Rubble	You may use any material towards the completion of STONE structures.	Standard	False
@@ -34,7 +34,7 @@ Senate	Concrete	At the end of each turn, |you may take |into your hand |any JACK
 Sewer	Stone	You may place order cards you used to lead or follow into your stockpile at the end of your turn.	Standard	True
 Shrine	Brick	Hand refill size +2	Standard	True
 Stairway	Marble	When performing |ARCHITECT action, you |may additionally add a material to an opponent's completed structure to make its function available |to all players.	Standard	False
-Statue	Marble	+3 VP |You may place the statue on any site.	Standard	True
+Statue	Marble	+3 VP |You may place the statue |on any site.	Standard	True
 Storeroom	Concrete	Each client |in your clientele also |counts as a LABORER.	Standard	True
 Temple	Marble	Hand refill size +4	Standard	True
 Tower	Concrete	You may use RUBBLE |in any structure. |You may lay foundations onto out of town sites |at no extra cost.	Standard	True
