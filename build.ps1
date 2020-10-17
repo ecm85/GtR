@@ -1,6 +1,9 @@
 param (
 	[Parameter(Mandatory=$true)]
 	[string]$releaseVersion
+
+	[Parameter(Mandatory=$true)]
+	[string]$githubApiToken
 )
 
 $ErrorActionPreference = 'Stop'
@@ -10,19 +13,21 @@ $osxVersion = 'osx.10.14-x64'
 $dateStamp = [DateTime]::Now.ToString("yyyyMMdd-HHmmss")
 $windowsReleaseDirectory = "Releases\v$releaseVersion-windows_$dateStamp"
 $osxReleaseDirectory = "Releases\v$releaseVersion-osx_$dateStamp"
-$windowsReleaseArchive = "Releases\v$releaseVersion-windows.zip"
-$osxReleaseArchive = "Releases\v$releaseVersion-osx.zip"
+$windowsReleaseArchiveName = "v$releaseVersion-windows.zip"
+$osxReleaseArchiveName = "v$releaseVersion-osx.zip"
+$windowsReleaseArchive = "Releases\$windowsReleaseArchiveName"
+$osxReleaseArchive = "Releases\$osxReleaseArchiveName"
 
 Push-Location GtR
 & dotnet publish -r $windowsVersion -c Release /p:PublishSingleFile=true /p:CopyOutputSymbolsToPublishDirectory=false /p:PublishTrimmed=true
 if ($lastExitCode -ne 0) {
-    Pop-Location
-    exit $lastExitCode
+	Pop-Location
+	exit $lastExitCode
 }
 & dotnet publish -r $osxVersion -c Release /p:PublishSingleFile=true /p:CopyOutputSymbolsToPublishDirectory=false /p:PublishTrimmed=true
 if ($lastExitCode -ne 0) {
-    Pop-Location
-    exit $lastExitCode
+	Pop-Location
+	exit $lastExitCode
 }
 Pop-Location
 
@@ -40,3 +45,27 @@ Copy-Item NeuzeitGro-RegModified.ttf -Destination $osxReleaseDirectory
 
 Compress-Archive -Path "$windowsReleaseDirectory\*" -DestinationPath $windowsReleaseArchive -Force
 Compress-Archive -Path "$osxReleaseDirectory\*" -DestinationPath $osxReleaseArchive -Force
+
+$user = 'ecm85'
+$pass = $githubApiToken
+
+$pair = "$($user):$($pass)"
+
+$encodedCreds = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($pair))
+
+$basicAuthValue = "Basic $encodedCreds"
+
+$Headers = @{
+	Authorization = $basicAuthValue
+}
+
+$params = @{
+	tag_name = "$releaseVersion"
+	name = "$releaseVersion"
+}
+
+$response = Invoke-RestMethod -Uri "https://api.github.com/repos/ecm85/GtR/releases" -Headers $Headers -Method Post -Body ($params|ConvertTo-Json) -ContentType "application/json"
+$responseId = $response.Id
+
+Invoke-RestMethod -Uri "https://uploads.github.com/repos/ecm85/GtR/releases/$responseId/assets?name=windowsReleaseArchiveName"  -Headers $Headers -Method Post -ContentType "application/zip" -Infile $windowsReleaseArchive
+Invoke-RestMethod -Uri "https://uploads.github.com/repos/ecm85/GtR/releases/$responseId/assets?name=osxReleaseArchiveName"  -Headers $Headers -Method Post -ContentType "application/zip" -Infile $osxReleaseArchive
