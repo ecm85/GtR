@@ -156,7 +156,7 @@ namespace GtR
             graphics.DrawString(text, font, brush, rectangle, stringFormat);
         }
 
-        public static void DrawFragmentsCentered(Graphics graphics, IList<TextFragment> fragments, Rectangle rectangle, bool addTranslucentBackground)
+        public static void DrawFragmentsCentered(Graphics graphics, IList<TextFragment> fragments, Rectangle rectangle, int backgroundOpacity, bool centerVertically)
         {
             var measuredFragments = fragments
                 .Select(fragment => MeasureTextFragment(graphics, fragment, rectangle.Width))
@@ -165,9 +165,8 @@ namespace GtR
             var totalHeight = fragmentsGroupedByLine.Sum(group => group.Max(measuredFragment => measuredFragment.Height));
             var totalWidth = fragmentsGroupedByLine.Max(group => group.Sum(measuredFragment => measuredFragment.Width));
             var minX = rectangle.X + (rectangle.Width / 2 - totalWidth / 2);
-            var minY = rectangle.Y + (rectangle.Height / 2 - totalHeight / 2);
-            if (addTranslucentBackground)
-                graphics.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.White)), new Rectangle(minX, minY, totalWidth, totalHeight));
+            var minY = rectangle.Y + (centerVertically ? (rectangle.Height / 2 - totalHeight / 2) : 0);
+            graphics.FillRectangle(new SolidBrush(Color.FromArgb(backgroundOpacity, Color.White)), new Rectangle(minX, minY, totalWidth, totalHeight));
             var currentY = minY;
             foreach(var fragmentGroup in fragmentsGroupedByLine)
             {

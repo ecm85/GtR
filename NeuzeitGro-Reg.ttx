@@ -338,8 +338,12 @@
     <GlyphID id="332" name="Fdotaccent"/>
     <GlyphID id="333" name="Wacute"/>
     <GlyphID id="334" name="Wdieresis"/>
-    <GlyphID id="335" name="uni2006"/>
-    <GlyphID id="336" name="uni2007"/>
+    <GlyphID id="3351" name="uni2004"/>
+    <GlyphID id="3352" name="uni2005"/>
+    <GlyphID id="3353" name="uni2006"/>
+    <GlyphID id="3354" name="uni2007"/>
+    <GlyphID id="3355" name="uni2009"/>
+    <GlyphID id="3356" name="uni200A"/>
     <GlyphID id="337" name="uni2011"/>
     <GlyphID id="338" name="figuredash"/>
     <GlyphID id="339" name="endash"/>
@@ -1110,8 +1114,12 @@
     <mtx name="uni021B" width="531" lsb="34"/>
     <mtx name="uni02C9" width="1024" lsb="234"/>
     <mtx name="uni0387" width="472" lsb="129"/>
+    <mtx name="uni2004" width="274" lsb="0"/>
+    <mtx name="uni2005" width="206" lsb="0"/>
     <mtx name="uni2006" width="137" lsb="0"/>
     <mtx name="uni2007" width="1139" lsb="0"/>
+    <mtx name="uni2009" width="164" lsb="0"/>
+    <mtx name="uni200A" width="67" lsb="0"/>
     <mtx name="uni2011" width="425" lsb="0"/>
     <mtx name="uni203E" width="1024" lsb="0"/>
     <mtx name="uni2101" width="1843" lsb="43"/>
@@ -1488,8 +1496,12 @@
       <map code="0x1e1e" name="Fdotaccent"/><!-- LATIN CAPITAL LETTER F WITH DOT ABOVE -->
       <map code="0x1e82" name="Wacute"/><!-- LATIN CAPITAL LETTER W WITH ACUTE -->
       <map code="0x1e84" name="Wdieresis"/><!-- LATIN CAPITAL LETTER W WITH DIAERESIS -->
+      <map code="0x2004" name="uni2004"/><!-- THREE-PER-EM SPACE -->
+      <map code="0x2005" name="uni2005"/><!-- FOUR-PER-EM SPACE -->
       <map code="0x2006" name="uni2006"/><!-- SIX-PER-EM SPACE -->
       <map code="0x2007" name="uni2007"/><!-- FIGURE SPACE -->
+      <map code="0x2009" name="uni2009"/><!-- THIN SPACE -->
+      <map code="0x200a" name="uni200A"/><!-- HAIR SPACE -->
       <map code="0x2011" name="uni2011"/><!-- NON-BREAKING HYPHEN -->
       <map code="0x2012" name="figuredash"/><!-- FIGURE DASH -->
       <map code="0x2013" name="endash"/><!-- EN DASH -->
@@ -2179,8 +2191,12 @@
       <map code="0x1e1e" name="Fdotaccent"/><!-- LATIN CAPITAL LETTER F WITH DOT ABOVE -->
       <map code="0x1e82" name="Wacute"/><!-- LATIN CAPITAL LETTER W WITH ACUTE -->
       <map code="0x1e84" name="Wdieresis"/><!-- LATIN CAPITAL LETTER W WITH DIAERESIS -->
+      <map code="0x2004" name="uni2004"/><!-- THREE-PER-EM SPACE -->
+      <map code="0x2005" name="uni2005"/><!-- FOUR-PER-EM SPACE -->
       <map code="0x2006" name="uni2006"/><!-- SIX-PER-EM SPACE -->
       <map code="0x2007" name="uni2007"/><!-- FIGURE SPACE -->
+      <map code="0x2009" name="uni2009"/><!-- THIN SPACE -->
+      <map code="0x200a" name="uni200A"/><!-- HAIR SPACE -->
       <map code="0x2011" name="uni2011"/><!-- NON-BREAKING HYPHEN -->
       <map code="0x2012" name="figuredash"/><!-- FIGURE DASH -->
       <map code="0x2013" name="endash"/><!-- EN DASH -->
@@ -20533,9 +20549,17 @@
       <instructions/>
     </TTGlyph>
 
+    <TTGlyph name="uni2004"/><!-- contains no outline data -->
+
+    <TTGlyph name="uni2005"/><!-- contains no outline data -->
+
     <TTGlyph name="uni2006"/><!-- contains no outline data -->
 
     <TTGlyph name="uni2007"/><!-- contains no outline data -->
+
+    <TTGlyph name="uni2009"/><!-- contains no outline data -->
+
+    <TTGlyph name="uni200A"/><!-- contains no outline data -->
 
     <TTGlyph name="uni2011" xMin="0" yMin="426" xMax="425" yMax="568">
       <contour>
@@ -22006,8 +22030,12 @@
       <psName name="Fdotaccent"/>
       <psName name="Wacute"/>
       <psName name="Wdieresis"/>
+      <psName name="uni2004"/>
+      <psName name="uni2005"/>
       <psName name="uni2006"/>
       <psName name="uni2007"/>
+      <psName name="uni2009"/>
+      <psName name="uni200A"/>
       <psName name="uni2011"/>
       <psName name="figuredash"/>
       <psName name="afii00208"/>
@@ -22646,8 +22674,12 @@
       <ClassDef glyph="uni021B" class="1"/>
       <ClassDef glyph="uni02C9" class="1"/>
       <ClassDef glyph="uni0387" class="1"/>
+      <ClassDef glyph="uni2004" class="1"/>
+      <ClassDef glyph="uni2005" class="1"/>
       <ClassDef glyph="uni2006" class="1"/>
       <ClassDef glyph="uni2007" class="1"/>
+      <ClassDef glyph="uni2009" class="1"/>
+      <ClassDef glyph="uni200A" class="1"/>
       <ClassDef glyph="uni2011" class="1"/>
       <ClassDef glyph="uni203E" class="1"/>
       <ClassDef glyph="uni2101" class="1"/>

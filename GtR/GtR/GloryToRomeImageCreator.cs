@@ -48,7 +48,7 @@ namespace GtR
             var xOffset = 0;
             var yOffset = (int)(usableRectangle.Width * .15f);
             var brush = new SolidBrush(Color.FromArgb(208, 208, 208));
-            PrintCardName("Jack", cardImage, brush, false, xOffset, usableRectangle.Width, yOffset);
+            PrintCardName("Jack", cardImage, brush, 0, xOffset, usableRectangle.Width, yOffset);
             var bottomOfImage = fullRectangle.Top + imageOffset + imageHeight;
             PrintCardText(
                 "Lead or follow any role",
@@ -57,7 +57,7 @@ namespace GtR
                 usableRectangle.Width,
                 usableRectangle.Bottom - bottomOfImage,
                 xOffset,
-                false,
+                0,
                 brush);
             return cardImage;
         }
@@ -82,7 +82,7 @@ namespace GtR
             var imageXOffset = 0;
             var maxTextBoxWidth = cardImage.UsableRectangle.Width;
             var yOffset = (int)(cardImage.UsableRectangle.Width * .05f);
-            PrintCardName("Leader", cardImage, GraphicsUtilities.BlackBrush, true, imageXOffset, maxTextBoxWidth, yOffset);
+            PrintCardName("Leader", cardImage, GraphicsUtilities.BlackBrush, 100, imageXOffset, maxTextBoxWidth, yOffset);
 
             var usableRectangle = cardImage.UsableRectangle;
             var textBoxWidth = cardImage.UsableRectangle.Width;
@@ -90,7 +90,7 @@ namespace GtR
             var textRectangleHeight = usableRectangle.Bottom - (influenceImageSide + bottomOfImage);
             var top = bottomOfImage;
             var textXOffset = 0;
-            PrintCardText("LEAD |a role from your hand |or |THINK |and draw new cards", cardImage, top, textBoxWidth, textRectangleHeight, textXOffset, true, GraphicsUtilities.BlackBrush);
+            PrintCardText("LEAD |a role from your hand |or |THINK |and draw new cards", cardImage, top, textBoxWidth, textRectangleHeight, textXOffset, 200, GraphicsUtilities.BlackBrush);
 
             return cardImage;
         }
@@ -104,7 +104,7 @@ namespace GtR
             var usableRectangle = cardImage.UsableRectangle;
             var xOffset = usableRectangle.Width / 5;
             var yOffset = (int)(usableRectangle.Width * .05f);
-            PrintCardName("Merchant Bonus", cardImage, GraphicsUtilities.BlackBrush, false, xOffset, 3 * usableRectangle.Width / 5, yOffset);
+            PrintCardName("Merchant Bonus", cardImage, GraphicsUtilities.BlackBrush, 0, xOffset, 3 * usableRectangle.Width / 5, yOffset);
             var costImagePaddingHeight = (int)(fullRectangle.Height * SiteResourceSectionPaddingPercentage);
             var costImageTopPaddingHeight = costImagePaddingHeight / 2;
             var costImageBottomPaddingHeight = costImagePaddingHeight / 2;
@@ -131,7 +131,7 @@ namespace GtR
                 usableRectangle.Width,
                 (int)(fullRectangle.Height * .25f),
                 0,
-                false,
+                0,
                 GraphicsUtilities.BlackBrush);
 
             var centerPoint = usableRectangle.X + usableRectangle.Width / 2;
@@ -193,7 +193,7 @@ namespace GtR
                 costImageRectangle.Height);
 
             var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-            var text = AddHairSpaces(suit.ResourceName().ToUpper());
+            var text = AddFourPerEmSpaces(suit.ResourceName().ToUpper());
             var maxTextBoxWidth = usableRectangle.Width;
             var initialRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
             var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
@@ -236,17 +236,44 @@ namespace GtR
             return cardImage;
         }
 
-        private string AddHairSpaces(string value)
+        private string AddThreePerEmSpaces(string value)
+        {
+            var hairSpace = (char)0x2004;
+            var withSpaces = string.Join(hairSpace.ToString(), value.ToCharArray());
+            return $"{hairSpace}{withSpaces}{hairSpace}";
+        }
+
+        private string AddFourPerEmSpaces(string value)
+        {
+            var hairSpace = (char)0x2005;
+            var withSpaces = string.Join(hairSpace.ToString(), value.ToCharArray());
+            return $"{withSpaces}{hairSpace}";
+        }
+
+        //Thin
+        private string AddFivePerEmSpaces(string value)
+        {
+            var hairSpace = (char)0x2009;
+            var withSpaces = string.Join(hairSpace.ToString(), value.ToCharArray());
+            return $"{hairSpace}{withSpaces}{hairSpace}";
+        }
+
+        //SixPerEm
+        private string AddSixPerEmSpaces(string value)
+        {
+            var hairSpace = (char)0x2006;
+            var withSpaces = string.Join(hairSpace.ToString(), value.ToCharArray());
+            return $"{hairSpace}{withSpaces}{hairSpace}";
+        }
+
+        //Hair
+        private string AddTwelvePerEmSpaces(string value)
         {
             var hairSpace = (char)0x200a;
             var withSpaces = string.Join(hairSpace.ToString(), value.ToCharArray());
             return $"{hairSpace}{withSpaces}{hairSpace}";
         }
 
-        private string AddNonBreakingNarrowSpaces(string value)
-        {
-            return string.Join(((char)0x202f).ToString(), value.ToCharArray());
-        }
 
         public CardImage CreateSiteBack(CardSuit suit)
         {
@@ -266,8 +293,8 @@ namespace GtR
 
             var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var costFont = new Font(regularFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-            var resourceNameText = AddHairSpaces(suit.ResourceName().ToUpper());
-            var outOfTownSiteText = AddHairSpaces("out of town site");
+            var resourceNameText = AddFourPerEmSpaces(suit.ResourceName().ToUpper());
+            var outOfTownSiteText = AddFourPerEmSpaces("out of town site");
             var maxTextBoxWidth = usableRectangle.Width;
             var initialRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
             var resourceNameTextMeasurement = graphics.MeasureString(outOfTownSiteText, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
@@ -303,7 +330,7 @@ namespace GtR
                 graphics.DrawLine(pen, fullRectangle.Left + xOffset - extra, fullRectangle.Bottom + extra, fullRectangle.Left + fullRectangle.Height + xOffset + extra, fullRectangle.Top - extra);
             graphics.Clip = oldClip;
             var material = suit.Cost() > 1 ? "materials" : "material";
-            var costText = AddHairSpaces($"foundation +{suit.Cost()} {material}");
+            var costText = AddFourPerEmSpaces($"foundation +{suit.Cost()} {material}");
             var costFont = new Font(regularFontFamily, siteCardCostTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             var costTextMeasurement = graphics.MeasureString(costText, costFont, fullRectangle.Width);
             var costTextWidth = (int)Math.Ceiling(costTextMeasurement.Width);
@@ -378,28 +405,25 @@ namespace GtR
             var xOffset = RoleIconWidth(cardImage);
             var maxTextBoxWidth = CardNameWidth(cardImage);
             var yOffset = (int)(cardImage.UsableRectangle.Width * .05f);
-            PrintCardName(orderCard.CardName, cardImage, GraphicsUtilities.BlackBrush, true, xOffset, maxTextBoxWidth, yOffset);
+            PrintCardName(orderCard.CardName, cardImage, GraphicsUtilities.BlackBrush, 100, xOffset, maxTextBoxWidth, yOffset);
         }
 
-        private void PrintCardName(string name, CardImage cardImage, Brush brush, bool addTranslucentBackground, int xOffset, int maxTextBoxWidth, int yOffset)
+        private void PrintCardName(string name, CardImage cardImage, Brush brush, int translucentBackgroundOpacity, int xOffset, int maxTextBoxWidth, int yOffset)
         {
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
             var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
-            var text = string.Join(
-                "  ",
-                name.ToUpper()
-                    .Split(' ')
-                    .Select(token => AddNonBreakingNarrowSpaces(token))
-                    .ToList());
-            var initialRectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y, maxTextBoxWidth, usableRectangle.Height);
-            var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(initialRectangle.Width, initialRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
-            var textHeight = (int)Math.Ceiling(textMeasurement.Height);
-            var textRectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y + yOffset, maxTextBoxWidth, textHeight);
-            if (addTranslucentBackground)
-                graphics.FillRectangle(new SolidBrush(Color.FromArgb(100, Color.White)), textRectangle);
-            //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
-            GraphicsUtilities.DrawString(graphics, text, cardNameFont, brush, textRectangle, GraphicsUtilities.HorizontalCenterAlignment);
+            var fragments = name.ToUpper().Split(" ")
+               .Select((word, index) => new TextFragment
+               {
+                   Brush = brush,
+                   Font = cardNameFont,
+                   ForcesNewline = index > 0,
+                   Text = AddThreePerEmSpaces(word)
+               })
+               .ToList();
+            var textRectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y + yOffset, maxTextBoxWidth, usableRectangle.Height);
+            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, textRectangle, translucentBackgroundOpacity, false);
         }
 
         private int PrintCardImage(OrderCard orderCard, CardImage cardImage)
@@ -436,7 +460,7 @@ namespace GtR
                 iconImageWidth,
                 iconImageHeight);
 
-            var text = new string(roleName.ToUpper().ToCharArray().SelectMany(character => character == 'M' ? new[] { character } : new[] { character, (char)0x2009 }).ToArray());
+            var text = new string(roleName.ToUpper().ToCharArray().SelectMany(character => character == 'I' ? new[] { character, (char)0x2009 } : new[] { character }).ToArray());
             var brush = BrushesByCardSuit[suit];
             var singleCharacterMeasurement = graphics.MeasureString("M", cardNameFont, new SizeF(usableRectangle.Width, usableRectangle.Height), GraphicsUtilities.HorizontalNearAlignment);
             var textBoxWidth = (int)singleCharacterMeasurement.Width;
@@ -476,7 +500,7 @@ namespace GtR
             var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var suit = orderCard.CardSuit;
             var resourceName = suit.ResourceName().ToUpper();
-            var text = AddHairSpaces(resourceName);
+            var text = AddFourPerEmSpaces(resourceName);
             var brush = new SolidBrush(suit.Color());
             var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(usableRectangle.Width, usableRectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
             var textBoxHeight = (int)textMeasurement.Height;
@@ -547,10 +571,10 @@ namespace GtR
                 textRectangleHeight = usableRectangle.Bottom - (influenceImageSide + top);
             }
             var xOffset = RoleIconWidth(cardImage);
-            PrintCardText(orderCard.CardText, cardImage, top, textBoxWidth, textRectangleHeight, xOffset, true, GraphicsUtilities.BlackBrush);
+            PrintCardText(orderCard.CardText, cardImage, top, textBoxWidth, textRectangleHeight, xOffset, 200, GraphicsUtilities.BlackBrush);
         }
 
-        private void PrintCardText(string text, CardImage cardImage, int top, int textBoxWidth, int textRectangleHeight, int xOffset, bool addTranslucentBackground, Brush defaultBrush)
+        private void PrintCardText(string text, CardImage cardImage, int top, int textBoxWidth, int textRectangleHeight, int xOffset, int backgroundOpacity, Brush defaultBrush)
         {
             var graphics = cardImage.Graphics;
             var usableRectangle = cardImage.UsableRectangle;
@@ -560,7 +584,7 @@ namespace GtR
                 .Select(word => GetFragmentForWord(word, defaultBrush))
                 .ToList();
 
-            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, addTranslucentBackground);
+            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, backgroundOpacity, true);
         }
 
         private TextFragment GetFragmentForWord(string word, Brush defaultBrush)
@@ -577,7 +601,7 @@ namespace GtR
             var isNonSuitKeyword = NonSuitKeywords.Any(keyword => text.Contains(keyword));
             return new TextFragment
             {
-                Text = AddHairSpaces($"{text}"),
+                Text = AddFourPerEmSpaces($"{text}"),
                 Font = isSuitKeyword || isNonSuitKeyword ? BoldCardTextFont : CardTextFont,
                 Brush = isSuitKeyword ? BrushesByCardSuit[SuitsByKeyword[matchingSuitKeyword]] : defaultBrush,
                 ForcesNewline = forcesNewline
