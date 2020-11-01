@@ -27,7 +27,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
           AWS_DEFAULT_REGION: us-east-2
         run: |
-          cd $GITHUB_WORKSPACE\GtR
+          cd $GITHUB_WORKSPACE/GtR
           dotnet build -c Release -nologo
           cd ./GtR.Web
           dotnet lambda package -o lambda.zip -c Release --no-build
