@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 
 namespace GtR
 {
@@ -107,6 +109,18 @@ namespace GtR
                 UsableRectangleWithoutPadding.Width,
                 UsableRectangleWithoutPadding.Height,
                 borderRadius);
+        }
+
+        public void RotateBitmap(RotateFlipType rotateFlipType)
+        {
+            using(var stream = new MemoryStream())
+            {
+                var originalBitmap = Bitmap;
+                originalBitmap.Save(stream, ImageFormat.Png);
+                var newBitmap = new Bitmap(stream);
+                newBitmap.RotateFlip(rotateFlipType);
+                Bitmap = newBitmap;
+            }
         }
     }
 }

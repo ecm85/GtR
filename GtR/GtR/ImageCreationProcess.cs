@@ -123,20 +123,20 @@ namespace GtR
             var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
             var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
             foreach (var siteBackImage in siteBackImages)
-                siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                siteBackImage.RotateBitmap(RotateFlipType.Rotate180FlipNone);
 
             var jackImageFront = imageCreator.CreateJackImageSword();
             var jackImageBack = imageCreator.CreateJackImageQuill();
-            jackImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            jackImageBack.RotateBitmap(RotateFlipType.Rotate180FlipNone);
 
             var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
             var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
             foreach (var merchantBonusBackCard in merchantBonusBackCards)
-                merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                merchantBonusBackCard.RotateBitmap(RotateFlipType.Rotate180FlipNone);
 
             var leaderImageFront = imageCreator.CreateLeaderImage();
             var leaderImageBack = imageCreator.CreateLeaderImage();
-            leaderImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+            leaderImageBack.RotateBitmap(RotateFlipType.Rotate180FlipNone);
 
             var pages = new List<Page>();
 
