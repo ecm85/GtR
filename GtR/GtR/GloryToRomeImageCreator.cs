@@ -482,19 +482,19 @@ namespace GtR
 
             var text = roleName.ToUpper();
             var brush = BrushesByCardSuit[suit];
-            var singleCharacterMeasurement = graphics.MeasureString("M", cardNameFont, new SizeF(usableRectangle.Width, usableRectangle.Height), GraphicsUtilities.HorizontalNearAlignment);
-            var textBoxWidth = (int)singleCharacterMeasurement.Width;
+            var letters = text.ToList().Select(letter => letter.ToString()).ToList(); ;
+            var singleCharacterMeasurement = letters.Max(letter =>  graphics.MeasureString(letter, cardNameFont, new SizeF(usableRectangle.Width, usableRectangle.Height), GraphicsUtilities.HorizontalNearAlignment).Width);
+            var textBoxWidth = (int)singleCharacterMeasurement;
             var xOffset = (int)(iconImageWidth/2.0f - textBoxWidth/2);
             var yOffset = iconImageHeight;
             var rectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y + yOffset, textBoxWidth, usableRectangle.Height);
-            var fragments = text
-                .ToList()
+            var fragments = letters
                 .Select(character => new TextFragment
                 {
                     Brush = brush,
                     Font = cardNameFont,
                     ForcesNewline = true,
-                    Text = character.ToString()
+                    Text = character
                 })
                 .ToList();
             GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, 200, false);
