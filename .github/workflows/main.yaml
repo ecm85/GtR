@@ -1,0 +1,34 @@
+name: CI-CD
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  # JobName
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Get Source
+        uses: actions/checkout@v2
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.301
+
+      - name: Get dotnet lambda tools
+        run: dotnet tool install -g Amazon.Lambda.Tools
+
+      - name: Build and upload to Lambda
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.aws_access_key_id }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.aws_secret_access_key }}
+          AWS_DEFAULT_REGION: us-east-2
+        run: |
+          cd $GITHUB_WORKSPACE\GtR
+          dotnet build -c Release -nologo
+          cd ./GtR.Web
+          dotnet lambda package -o lambda.zip -c Release --no-build
+          aws lambda update-function-code --function-name gtr --zip-file fileb://lambda.zip
