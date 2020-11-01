@@ -3,149 +3,87 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
-using System.Runtime.InteropServices;
+using System.Reflection;
 
 namespace GtR
 {
-    public class Program
+    public class ImageCreationProcess
     {
-        [DllImport("kernel32.dll")]
-        static extern IntPtr GetConsoleWindow();
-        [DllImport("kernel32.dll")]
-        static extern uint GetCurrentProcessId();
-        [DllImport("user32.dll")]
-        static extern int GetWindowThreadProcessId(IntPtr hWnd, out uint ProcessId);
+        public static string CurrentPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
         private static readonly bool useOverlay = false;
 
-        private static readonly IDictionary<OSPlatform, string> RootDirectoryByPlatform = new Dictionary<OSPlatform, string>
+        public byte[] Run(GtrConfig gtrConfig)
         {
-            [OSPlatform.Windows] = $"c:{Path.DirectorySeparatorChar}",
-            [OSPlatform.OSX] = $@"{Path.DirectorySeparatorChar}tmp"
-        };
+            var images = CreateImages(gtrConfig);
 
-        public static void Main(string[] args)
-        {
-            try
+            if (useOverlay)
             {
-                var allPlatforms = new[] { OSPlatform.Windows, OSPlatform.Linux, OSPlatform.OSX, OSPlatform.FreeBSD };
-                var currentPlatforms = allPlatforms
-                    .Where(platform => RuntimeInformation.IsOSPlatform(platform))
-                    .ToList();
-                if (currentPlatforms.Count != 1)
-                    throw new InvalidOperationException("Cannot determine OS.");
-                var currentPlatform = currentPlatforms.Single();
-                var supportedPlatforms = RootDirectoryByPlatform.Keys;
-                if (!RootDirectoryByPlatform.Keys.Contains(currentPlatform))
-                    throw new InvalidOperationException("Current OS is not supported.");
+                var overlay = new Bitmap(@"Images\Misc\Poker Cards (2-5x3-5) 18 per sheet.png");
+                overlay.SetResolution(300, 300);
+                var landscapeOverlay = new Bitmap(overlay);
+                landscapeOverlay.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                var matrix = new ColorMatrix { Matrix33 = .5f };
+                var attributes = new ImageAttributes();
+                attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
 
-                var saveConfiguration = GtrConfig.Current.SaveConfiguration;
-                Console.WriteLine($"Cards will be {CardImage.cardShortSideInInches} inches x {CardImage.cardLongSideInInches} inches.");
-                Console.WriteLine($"Cards will have a bleed size of {CardImage.bleedSizeInInches} inches and margin of {CardImage.borderPaddingInInches} inches.");
-                Console.WriteLine($"Saving images as {saveConfiguration.GetDisplayValue()}.");
-                Console.WriteLine($"Creating images.");
-
-                var images = CreateImages(saveConfiguration);
-
-                if (useOverlay)
+                foreach (var image in images)
                 {
-                    var overlay = new Bitmap(@"Images\Misc\Poker Cards (2-5x3-5) 18 per sheet.png");
-                    overlay.SetResolution(300, 300);
-                    var landscapeOverlay = new Bitmap(overlay);
-                    landscapeOverlay.RotateFlip(RotateFlipType.Rotate90FlipNone);
-                    var matrix = new ColorMatrix { Matrix33 = .5f };
-                    var attributes = new ImageAttributes();
-                    attributes.SetColorMatrix(matrix, ColorMatrixFlag.Default, ColorAdjustType.Bitmap);
+                    var graphics = Graphics.FromImage(image.Bitmap);
+                    if (image.Bitmap.Width < image.Bitmap.Height)
+                    {
+                        graphics.DrawImage(overlay, new Rectangle(0, 0, overlay.Width, overlay.Height), 0, 0, overlay.Width, overlay.Height, GraphicsUnit.Pixel, attributes);
+                    }
+                    else
+                    {
+                        graphics.DrawImage(landscapeOverlay, new Rectangle(0, 0, landscapeOverlay.Width, landscapeOverlay.Height), 0, 0, landscapeOverlay.Width, landscapeOverlay.Height, GraphicsUnit.Pixel, attributes);
+                    }
+                }
+            }
 
+            using (var memoryStream = new MemoryStream())
+            {
+                using (var zipArchive = new ZipArchive(memoryStream, ZipArchiveMode.Create, true))
+                {
                     foreach (var image in images)
                     {
-                        var graphics = Graphics.FromImage(image.Bitmap);
-                        if (image.Bitmap.Width < image.Bitmap.Height)
+                        var fileName = Path.Combine(image.Subfolder, $"{image.Name}.png");
+
+                        var entry = zipArchive.CreateEntry(fileName);
+
+                        using (var singleFileStream = new MemoryStream())
                         {
-                            graphics.DrawImage(overlay, new Rectangle(0, 0, overlay.Width, overlay.Height), 0, 0, overlay.Width, overlay.Height, GraphicsUnit.Pixel, attributes);
-                        }
-                        else
-                        {
-                            graphics.DrawImage(landscapeOverlay, new Rectangle(0, 0, landscapeOverlay.Width, landscapeOverlay.Height), 0, 0, landscapeOverlay.Width, landscapeOverlay.Height, GraphicsUnit.Pixel, attributes);
+                            image.Bitmap.Save(singleFileStream, ImageFormat.Png);
+                            using (var zipStream = entry.Open())
+                                zipStream.Write(singleFileStream.ToArray());
                         }
                     }
                 }
-
-                var dateStamp = DateTime.Now.ToString("yyyyMMddTHHmmss");
-                var root = RootDirectoryByPlatform[currentPlatform];
-                var directory = Path.Combine(root, "delete", "images", dateStamp);
-
-                Console.WriteLine($"Saving images to {directory}.");
-
-                Directory.CreateDirectory(directory);
-
-                var subdirectories = images
-                    .Select(image => image.Subfolder)
-                    .Distinct()
-                    .ToList();
-                foreach (var subdirectory in subdirectories)
-                {
-                    Directory.CreateDirectory(Path.Combine(directory, subdirectory));
-                }
-
-                foreach (var image in images)
-                    image.Bitmap.Save(Path.Combine(directory, image.Subfolder, $"{image.Name}.png"), ImageFormat.Png);
-
-                Console.WriteLine("Done!");
-                HandleAppExiting();
-            }
-            catch (Exception exception)
-            {
-                Console.WriteLine(exception.Message);
-                Console.WriteLine("Debug Info:");
-                Console.WriteLine(exception);
-                if (exception.InnerException != null)
-                    Console.WriteLine(exception.InnerException);
-                if (exception.InnerException?.InnerException != null)
-                    Console.WriteLine(exception.InnerException.InnerException);
-                HandleAppExiting();
+                return memoryStream.ToArray();
             }
         }
 
-        private static void HandleAppExiting()
+        private static IEnumerable<ISaveableImage> CreateImages(GtrConfig gtrConfig)
         {
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
-            {
-                var hConsole = GetConsoleWindow();
-                GetWindowThreadProcessId(hConsole, out var hProcessId);
-                if (GetCurrentProcessId().Equals(hProcessId))
-                {
-                    Console.WriteLine("Press any key to exit.");
-                    Console.ReadKey();
-                }
-            }
-            else if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                Console.WriteLine("Press any key to exit.");
-                Console.ReadKey();
-            }
-        }
-
-        private static IEnumerable<ISaveableImage> CreateImages(SaveConfiguration saveConfiguration)
-        {
-            switch(saveConfiguration)
+            switch(gtrConfig.SaveConfiguration)
             {
                 case SaveConfiguration.Page:
-                    return CreatePages();
+                    return CreatePages(gtrConfig);
                 case SaveConfiguration.SingleImage:
-                    return CreateIndividualImages();
+                    return CreateIndividualImages(gtrConfig);
                 default:
-                    throw new InvalidOperationException($"Invalid save configuration encountered: {saveConfiguration}.");
+                    throw new InvalidOperationException($"Invalid save configuration encountered: {gtrConfig.SaveConfiguration}.");
             }
         }
 
-        private static IEnumerable<ISaveableImage> CreateIndividualImages()
+        private static IEnumerable<ISaveableImage> CreateIndividualImages(GtrConfig gtrConfig)
         {
             var allSuits = Enum.GetValues(typeof(CardSuit))
                 .Cast<CardSuit>()
                 .ToList();
-            var imageCreator = new GloryToRomeImageCreator();
+            var imageCreator = new GloryToRomeImageCreator(gtrConfig);
 
             var orderCards = ReadOrderCards();
             var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
@@ -171,12 +109,12 @@ namespace GtR
                 .ToList();
         }
 
-        private static IEnumerable<ISaveableImage> CreatePages()
+        private static IEnumerable<ISaveableImage> CreatePages(GtrConfig gtrConfig)
         {
             var allSuits = Enum.GetValues(typeof(CardSuit))
                 .Cast<CardSuit>()
                 .ToList();
-            var imageCreator = new GloryToRomeImageCreator();
+            var imageCreator = new GloryToRomeImageCreator(gtrConfig);
 
             var orderCards = ReadOrderCards();
             var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
@@ -255,7 +193,7 @@ namespace GtR
 
         private static IList<OrderCard> ReadOrderCards()
         {
-            var strings = File.ReadAllLines($".{Path.DirectorySeparatorChar}OrderCardData.txt");
+            var strings = File.ReadAllLines(Path.Combine(CurrentPath, "OrderCardData.txt"));
             return strings
                 .Where(line => !string.IsNullOrWhiteSpace(line))
                 .Select(line => line.Split('\t'))

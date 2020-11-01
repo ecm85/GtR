@@ -5,29 +5,28 @@ namespace GtR
 {
     public class CardImage : ISaveableImage
     {
-
-        public static readonly float cardShortSideInInches = GtrConfig.Current.CardShortSideInInches;
-        public static readonly float cardLongSideInInches = GtrConfig.Current.CardLongSideInInches;
-        public static readonly float bleedSizeInInches = GtrConfig.Current.BleedSizeInInches;
-        public static readonly float borderPaddingInInches = GtrConfig.Current.BorderPaddingInInches;
+        public readonly float cardShortSideInInches;
+        public readonly float cardLongSideInInches;
+        public readonly float bleedSizeInInches;
+        public readonly float borderPaddingInInches;
 
         private const float borderThicknessInInches = 0f;
 
-        private static readonly int cardShortSideInPixels = (int)(GraphicsUtilities.dpi * cardShortSideInInches) - 1;
-        private static readonly int cardLongSideInPixels = (int)(GraphicsUtilities.dpi * cardLongSideInInches) - 1;
-        private static readonly int bleedSizeInPixels = (int)Math.Round(GraphicsUtilities.dpi * bleedSizeInInches);
-        private static readonly int borderThicknessInPixels = (int)(GraphicsUtilities.dpi * borderThicknessInInches);
-        private static readonly int borderPaddingInPixels = (int)(GraphicsUtilities.dpi * borderPaddingInInches);
+        private int CardShortSideInPixels => (int)(GraphicsUtilities.dpi * cardShortSideInInches) - 1;
+        private int CardLongSideInPixels => (int)(GraphicsUtilities.dpi * cardLongSideInInches) - 1;
+        private int BleedSizeInPixels => (int)Math.Round(GraphicsUtilities.dpi * bleedSizeInInches);
+        private int BorderThicknessInPixels => (int)(GraphicsUtilities.dpi * borderThicknessInInches);
+        private int BorderPaddingInPixels => (int)(GraphicsUtilities.dpi * borderPaddingInInches);
 
-        private static readonly int cardShortSideInPixelsWithBleed = cardShortSideInPixels + bleedSizeInPixels * 2;
-        private static readonly int cardLongSideInPixelsWithBleed = cardLongSideInPixels + bleedSizeInPixels * 2;
+        private int CardShortSideInPixelsWithBleed => CardShortSideInPixels + BleedSizeInPixels * 2;
+        private int CardLongSideInPixelsWithBleed => CardLongSideInPixels + BleedSizeInPixels * 2;
 
-        public Point Origin => new Point(bleedSizeInPixels + borderThicknessInPixels, bleedSizeInPixels + borderThicknessInPixels);
+        public Point Origin => new Point(BleedSizeInPixels + BorderThicknessInPixels, BleedSizeInPixels + BorderThicknessInPixels);
 
-        private int WidthInPixels => Orientation == ImageOrientation.Landscape ? cardLongSideInPixels : cardShortSideInPixels;
-        private int HeightInPixels => Orientation == ImageOrientation.Portrait ? cardLongSideInPixels : cardShortSideInPixels;
-        private int WidthInPixelsWithBleed => Orientation == ImageOrientation.Landscape ? cardLongSideInPixelsWithBleed : cardShortSideInPixelsWithBleed;
-        private int HeightInPixelsWithBleed => Orientation == ImageOrientation.Portrait ? cardLongSideInPixelsWithBleed : cardShortSideInPixelsWithBleed;
+        private int WidthInPixels => Orientation == ImageOrientation.Landscape ? CardLongSideInPixels : CardShortSideInPixels;
+        private int HeightInPixels => Orientation == ImageOrientation.Portrait ? CardLongSideInPixels : CardShortSideInPixels;
+        private int WidthInPixelsWithBleed => Orientation == ImageOrientation.Landscape ? CardLongSideInPixelsWithBleed : CardShortSideInPixelsWithBleed;
+        private int HeightInPixelsWithBleed => Orientation == ImageOrientation.Portrait ? CardLongSideInPixelsWithBleed : CardShortSideInPixelsWithBleed;
 
         public Rectangle FullRectangle => new Rectangle(
             0,
@@ -38,14 +37,14 @@ namespace GtR
         private Rectangle UsableRectangleWithoutPadding => new Rectangle(
             Origin.X,
             Origin.Y,
-            WidthInPixels - 2 * borderThicknessInPixels,
-            HeightInPixels - 2 * borderThicknessInPixels);
+            WidthInPixels - 2 * BorderThicknessInPixels,
+            HeightInPixels - 2 * BorderThicknessInPixels);
 
         public Rectangle UsableRectangle => new Rectangle(
-            UsableRectangleWithoutPadding.X + borderPaddingInPixels,
-            UsableRectangleWithoutPadding.Y + borderPaddingInPixels,
-            UsableRectangleWithoutPadding.Width - (borderPaddingInPixels * 2),
-            UsableRectangleWithoutPadding.Height - (borderPaddingInPixels * 2));
+            UsableRectangleWithoutPadding.X + BorderPaddingInPixels,
+            UsableRectangleWithoutPadding.Y + BorderPaddingInPixels,
+            UsableRectangleWithoutPadding.Width - (BorderPaddingInPixels * 2),
+            UsableRectangleWithoutPadding.Height - (BorderPaddingInPixels * 2));
 
         public Bitmap Bitmap { get; private set; }
         public Graphics Graphics { get; private set; }
@@ -56,8 +55,13 @@ namespace GtR
 
         private const int borderRadius = 40;
 
-        public CardImage(string name, string subfolder, ImageOrientation orientation)
+        public CardImage(GtrConfig config, string name, string subfolder, ImageOrientation orientation)
         {
+            cardShortSideInInches = config.CardShortSideInInches;
+            cardLongSideInInches = config.CardLongSideInInches;
+            bleedSizeInInches = config.BleedSizeInInches;
+            borderPaddingInInches = config.BorderPaddingInInches;
+
             var bitmap = CreateBitmap(orientation);
             Bitmap = bitmap;
             Orientation = orientation;
@@ -66,14 +70,14 @@ namespace GtR
             Subfolder = subfolder;
         }
 
-        private static Bitmap CreateBitmap(ImageOrientation orientation)
+        private Bitmap CreateBitmap(ImageOrientation orientation)
         {
             switch (orientation)
             {
                 case ImageOrientation.Landscape:
-                    return GraphicsUtilities.CreateBitmap(cardLongSideInPixelsWithBleed, cardShortSideInPixelsWithBleed);
+                    return GraphicsUtilities.CreateBitmap(CardLongSideInPixelsWithBleed, CardShortSideInPixelsWithBleed);
                 case ImageOrientation.Portrait:
-                    return GraphicsUtilities.CreateBitmap(cardShortSideInPixelsWithBleed, cardLongSideInPixelsWithBleed);
+                    return GraphicsUtilities.CreateBitmap(CardShortSideInPixelsWithBleed, CardLongSideInPixelsWithBleed);
             }
             return null;
         }
@@ -91,8 +95,8 @@ namespace GtR
             if (middleBorderColor.HasValue)
                 Graphics.FillRoundedRectangle(
                     new SolidBrush(middleBorderColor.Value),
-                    bleedSizeInPixels,
-                    bleedSizeInPixels,
+                    BleedSizeInPixels,
+                    BleedSizeInPixels,
                     WidthInPixels,
                     HeightInPixels,
                     borderRadius);

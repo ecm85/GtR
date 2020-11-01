@@ -4,12 +4,14 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Reflection;
 
 namespace GtR
 {
     public class GraphicsUtilities
     {
+        public static string CurrentPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
         public const float dpiFactor = 300.0f / 96;
         public const int dpi = (int)(96 * dpiFactor);
 
@@ -79,7 +81,7 @@ namespace GtR
         //Note: does not maintain original image aspect ratio!
         public static void PrintScaledPng(Graphics graphics, string subfolder, string fileName, int x, int y, int width, int height, RotateFlipType? rotateFlipType = null)
         {
-            using (var srcImage = Image.FromFile(Path.Combine($".{Path.DirectorySeparatorChar}Images", subfolder, $"{fileName}.png")))
+            using (var srcImage = Image.FromFile(Path.Combine(CurrentPath, "Images", subfolder, $"{fileName}.png")))
             {
                 if (rotateFlipType != null)
                     srcImage.RotateFlip(rotateFlipType.Value);
@@ -89,7 +91,7 @@ namespace GtR
 
         public static void PrintScaledAndCenteredPng(Graphics graphics, string subfolder, string fileName, int x, int y, int maxWidth, int maxHeight, RotateFlipType? rotateFlipType = null)
         {
-            using (var image = Image.FromFile(Path.Combine($".{Path.DirectorySeparatorChar}Images", subfolder, $"{fileName}.png")))
+            using (var image = Image.FromFile(Path.Combine(CurrentPath, "Images", subfolder, $"{fileName}.png")))
             {
                 if (rotateFlipType != null)
                     image.RotateFlip(rotateFlipType.Value);
@@ -115,7 +117,7 @@ namespace GtR
 
         public static int PrintFullWidthPng(Graphics graphics, string subfolder, string fileName, int x, int y, int width)
         {
-            using (var srcImage = Image.FromFile(Path.Combine($".{Path.DirectorySeparatorChar}Images", subfolder, $"{fileName}.png")))
+            using (var srcImage = Image.FromFile(Path.Combine(CurrentPath, "Images", subfolder, $"{fileName}.png")))
             {
                 var height = width * srcImage.Height / srcImage.Width;
                 PrintScaledImage(graphics, srcImage, x, y, width, height);
@@ -125,7 +127,7 @@ namespace GtR
 
         public static void PrintScaledJpg(Graphics graphics, string subfolder, string fileName, int x, int y, int width, int height)
         {
-            using (var srcImage = Image.FromFile(Path.Combine($".{Path.DirectorySeparatorChar}Images", subfolder, $"{fileName}.jpg")))
+            using (var srcImage = Image.FromFile(Path.Combine(CurrentPath, "Images", subfolder, $"{fileName}.jpg")))
             {
                 PrintScaledImage(graphics, srcImage, x, y, width, height);
             }
