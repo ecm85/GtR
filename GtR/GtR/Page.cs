@@ -54,7 +54,7 @@ namespace GtR
         private void AddCardToPage(CardImage card, int rowIndex, int columnIndex)
         {
             if (card.Bitmap.Width < card.Bitmap.Height)
-                card.Bitmap.RotateFlip(RotateFlipType.Rotate90FlipNone);
+                card.RotateBitmap(RotateFlipType.Rotate90FlipNone);
             Graphics.DrawImageUnscaled(card.Bitmap, xOffsetInPixels + rowIndex * card.FullRectangle.Height, yOffsetInPixels + columnIndex * card.FullRectangle.Width);
         }
     }
