@@ -1,7 +1,0 @@
-﻿{
-  "CardShortSideInInches": 2.5,
-  "CardLongSideInInches": 3.5,
-  "BleedSizeInInches": 0.125, // This is (1.0f / 8.0f)
-  "BorderPaddingInInches": 0.0625, // This is (1.0f / 16.0f)
-  "SaveConfiguration": "Page" // Accepted values: Page or SingleImage
-}
