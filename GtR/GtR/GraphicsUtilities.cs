@@ -158,10 +158,10 @@ namespace GtR
             graphics.DrawString(text, font, brush, rectangle, stringFormat);
         }
 
-        public static void DrawFragmentsCentered(Graphics graphics, IList<TextFragment> fragments, Rectangle rectangle, int backgroundOpacity, bool centerVertically)
+        public static void DrawFragmentsCentered(Graphics graphics, IList<TextFragment> fragments, Rectangle rectangle, int backgroundOpacity, bool centerVertically, bool includeExtraWidthAndHeight)
         {
             var measuredFragments = fragments
-                .Select(fragment => MeasureTextFragment(graphics, fragment, rectangle.Width))
+                .Select(fragment => MeasureTextFragment(graphics, fragment, rectangle.Width, includeExtraWidthAndHeight))
                 .ToList();
             var fragmentsGroupedByLine = GetFragmentsGroupedByLine(graphics, rectangle, measuredFragments).ToList();
             var totalHeight = fragmentsGroupedByLine.Sum(group => group.Max(measuredFragment => measuredFragment.Height));
@@ -184,10 +184,10 @@ namespace GtR
             }
         }
 
-        private static MeasuredTextFragment MeasureTextFragment(Graphics graphics, TextFragment textFragment, int maxWidth)
+        private static MeasuredTextFragment MeasureTextFragment(Graphics graphics, TextFragment textFragment, int maxWidth, bool includeExtraWidthAndHeight)
         {
-            const float extraWidth = 13f;
-            const float extraHeight = 8f;
+            var extraWidth = includeExtraWidthAndHeight ? 13f : 0f;
+            var extraHeight = includeExtraWidthAndHeight ? 8f : 0f;
             var measurement = graphics.MeasureString(textFragment.Text, textFragment.Font, maxWidth);
             return new MeasuredTextFragment((int)(measurement.Width + extraWidth), (int)(measurement.Height + extraHeight), textFragment);
         }

@@ -443,7 +443,7 @@ namespace GtR
                })
                .ToList();
             var textRectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y + yOffset, maxTextBoxWidth, usableRectangle.Height);
-            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, textRectangle, translucentBackgroundOpacity, false);
+            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, textRectangle, translucentBackgroundOpacity, false, false);
         }
 
         private int PrintCardImage(OrderCard orderCard, CardImage cardImage)
@@ -497,7 +497,7 @@ namespace GtR
                     Text = character
                 })
                 .ToList();
-            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, 200, false);
+            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, 200, false, false);
         }
 
         private void PrintInfluence(OrderCard orderCard, CardImage cardImage)
@@ -612,7 +612,7 @@ namespace GtR
                 .Select(word => GetFragmentForWord(word, defaultBrush))
                 .ToList();
 
-            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, backgroundOpacity, true);
+            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, backgroundOpacity, true, true);
         }
 
         private TextFragment GetFragmentForWord(string word, Brush defaultBrush)
