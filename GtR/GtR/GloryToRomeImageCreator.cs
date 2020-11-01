@@ -56,9 +56,8 @@ namespace GtR
             var fontCollection = new PrivateFontCollection();
             fontCollection.AddFontFile(Path.Combine(CurrentPath, "Fonts", "NeuzeitGro-BolModified.ttf"));
             fontCollection.AddFontFile(Path.Combine(CurrentPath, "Fonts", "NeuzeitGro-RegModified.ttf"));
-            Console.WriteLine(fontCollection.Families[0].Name);
-            regularFontFamily = new FontFamily("Neuzeit Grotesk", fontCollection);
-            boldFontFamily = new FontFamily("Neuzeit Grotesk Bold", fontCollection);
+            regularFontFamily = fontCollection.Families.Single(family => family.Name == "Neuzeit Grotesk");
+            boldFontFamily = fontCollection.Families.Single(family => family.Name == "Neuzeit Grotesk Bold");
             CardTextFont = new Font(regularFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
             BoldCardTextFont = new Font(boldFontFamily, orderCardTextFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
         }
