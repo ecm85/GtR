@@ -158,103 +158,45 @@ namespace GtR
             graphics.DrawString(text, font, brush, rectangle, stringFormat);
         }
 
-        public static void DrawFragmentsCentered(
-            Graphics graphics,
-            IList<TextFragment> fragments,
-            Rectangle rectangle,
-            int translucentBackgroundOpacity,
-            float characterSpacingPercentage,
-            StringAlignment horizontalAlignment,
-            StringAlignment verticalAlignment)
+        public static void DrawFragmentsCentered(Graphics graphics, IList<TextFragment> fragments, Rectangle rectangle, int backgroundOpacity, bool centerVertically)
         {
             var measuredFragments = fragments
-                .Select(fragment => MeasureTextFragment(graphics, fragment, rectangle.Width, characterSpacingPercentage))
+                .Select(fragment => MeasureTextFragment(graphics, fragment, rectangle.Width))
                 .ToList();
             var fragmentsGroupedByLine = GetFragmentsGroupedByLine(graphics, rectangle, measuredFragments).ToList();
             var totalHeight = fragmentsGroupedByLine.Sum(group => group.Max(measuredFragment => measuredFragment.Height));
             var totalWidth = fragmentsGroupedByLine.Max(group => group.Sum(measuredFragment => measuredFragment.Width));
-            var minX = GetMinX(horizontalAlignment, rectangle, totalWidth);
-            var minY = GetMinY(verticalAlignment, rectangle, totalHeight);
-            graphics.FillRectangle(new SolidBrush(Color.FromArgb(translucentBackgroundOpacity, Color.White)), new RectangleF(minX, minY, totalWidth, totalHeight));
+            var minX = rectangle.X + (rectangle.Width / 2 - totalWidth / 2);
+            var minY = rectangle.Y + (centerVertically ? (rectangle.Height / 2 - totalHeight / 2) : 0);
+            graphics.FillRectangle(new SolidBrush(Color.FromArgb(backgroundOpacity, Color.White)), new Rectangle(minX, minY, totalWidth, totalHeight));
             var currentY = minY;
-            foreach (var fragmentGroup in fragmentsGroupedByLine)
+            foreach(var fragmentGroup in fragmentsGroupedByLine)
             {
                 var groupWidth = fragmentGroup.Sum(fragment => fragment.Width);
                 var groupHeight = fragmentGroup.Max(fragment => fragment.Height);
-                var currentX = GetMinX(horizontalAlignment, rectangle, groupWidth);
-
-                if (horizontalAlignment == StringAlignment.Center)
-                    currentX += 5; //Hax!!!
-                foreach (var fragment in fragmentGroup)
+                var currentX = rectangle.X + (rectangle.Width / 2 - groupWidth / 2);
+                foreach(var fragment in fragmentGroup)
                 {
-                    var text = fragment.TextFragment.Text;
-                    var wordPosition = currentX;
-                    var font = fragment.TextFragment.Font;
-                    var characterRanges = Enumerable.Range(0, text.Length).Select(index => new CharacterRange(index, 1)).ToArray();
-                    var stringFormat = new StringFormat();
-                    stringFormat.SetMeasurableCharacterRanges(characterRanges);
-                    var regions = graphics.MeasureCharacterRanges(text, font, rectangle, stringFormat).Select(region => region.GetBounds(graphics)).ToList();
-                    for (var i = 0; i < text.Length; i++)
-                    {
-                        var character = text[i].ToString();
-
-                        var brush = fragment.TextFragment.Brush;
-                        graphics.DrawString(character, font, brush, new RectangleF(wordPosition, currentY, rectangle.Width, rectangle.Height));
-                        wordPosition += (regions[i].Width) + characterSpacingPercentage * font.Height;
-                    }
-                    currentX += fragment.Width + characterSpacingPercentage * font.Height;
+                    graphics.DrawString(fragment.TextFragment.Text, fragment.TextFragment.Font, fragment.TextFragment.Brush, new Rectangle(currentX, currentY, rectangle.Width, rectangle.Height));
+                    currentX += fragment.Width;
                 }
                 currentY += groupHeight;
             }
         }
 
-        private static float GetMinX(StringAlignment horizontalAlignment, Rectangle rectangle, float totalWidth)
+        private static MeasuredTextFragment MeasureTextFragment(Graphics graphics, TextFragment textFragment, int maxWidth)
         {
-            switch (horizontalAlignment)
-            {
-                case StringAlignment.Center:
-                    return rectangle.Left + (rectangle.Width / 2 - totalWidth / 2);
-                case StringAlignment.Near:
-                    return rectangle.Left;
-                case StringAlignment.Far:
-                    return rectangle.Right - totalWidth;
-                default:
-                    throw new InvalidOperationException($"Invalid alignment: {horizontalAlignment}");
-            }
-        }
-
-        private static int GetMinY(StringAlignment verticalAlignment, Rectangle rectangle, int totalHeight)
-        {
-            switch (verticalAlignment)
-            {
-                case StringAlignment.Center:
-                    return rectangle.Top + (rectangle.Height / 2 - totalHeight / 2);
-                case StringAlignment.Near:
-                    return rectangle.Top;
-                case StringAlignment.Far:
-                    return rectangle.Bottom - totalHeight;
-                default:
-                    throw new InvalidOperationException($"Invalid alignment: {verticalAlignment}");
-            }
-        }
-
-        private static MeasuredTextFragment MeasureTextFragment(Graphics graphics, TextFragment textFragment, int maxWidth, float characterSpacingPercentage)
-        {
-            var letters = textFragment.Text.ToList();
-            //var measuredWidth = textFragment.Text.ToList().Sum(character => graphics.MeasureString(character.ToString(), textFragment.Font, maxWidth).Width);
-            var measuredWidth = graphics.MeasureString(textFragment.Text, textFragment.Font, maxWidth).Width;
-            var width = measuredWidth + (characterSpacingPercentage * textFragment.Font.Height * (letters.Count));
-            var height = (int)graphics.MeasureString(textFragment.Text, textFragment.Font, maxWidth).Height;
-            return new MeasuredTextFragment(width, height, textFragment);
+            var measurement = graphics.MeasureString(textFragment.Text, textFragment.Font, maxWidth);
+            return new MeasuredTextFragment((int)measurement.Width, (int)measurement.Height, textFragment);
         }
 
         private static IEnumerable<IEnumerable<MeasuredTextFragment>> GetFragmentsGroupedByLine(Graphics graphics, Rectangle rectangle, IEnumerable<MeasuredTextFragment> original)
         {
             var remaining = original.ToList();
-            while (remaining.Any())
+            while(remaining.Any())
             {
                 var tokens = 0;
-                var currentWidth = 0f;
+                var currentWidth = 0;
                 do
                 {
                     currentWidth += remaining[tokens].Width;
