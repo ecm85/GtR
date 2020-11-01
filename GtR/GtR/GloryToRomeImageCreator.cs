@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace GtR
 {
     public class GloryToRomeImageCreator
     {
-        private static readonly FontFamily boldFontFamily = new FontFamily("Neuzeit Grotesk Bold");
-        private static readonly FontFamily regularFontFamily = new FontFamily("Neuzeit Grotesk");
         private const int orderCardHeaderFontSize = (int)(18.5 * GraphicsUtilities.dpiFactor);
         private const int orderCardTextFontSize = (int)(11 * GraphicsUtilities.dpiFactor);
         private const int siteCardCostTextFontSize = (int)(13 * GraphicsUtilities.dpiFactor);
@@ -26,7 +26,19 @@ namespace GtR
         private const int diagonalLinesPerCard = 16;
         private const float JackImageHeightOffsetPercentage = .30f;
 
+        private int CardTextWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
+        private int RoleIconWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * RoleIconPercentage);
+
+        private readonly Font CardTextFont;
+        private readonly Font BoldCardTextFont;
+
         private GtrConfig GtrConfig { get; }
+
+        public static string CurrentPath => Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+        private readonly FontFamily boldFontFamily;
+        private readonly FontFamily regularFontFamily;
+
 
         public CardImage CreateJackImageSword()
         {
@@ -41,6 +53,13 @@ namespace GtR
         public GloryToRomeImageCreator(GtrConfig gtrConfig)
         {
             GtrConfig = gtrConfig;
+            var fontCollection = new PrivateFontCollection();
+            fontCollection.AddFontFile(Path.Combine(CurrentPath, "Fonts", "NeuzeitGro-BolModified.ttf"));
+            fontCollection.AddFontFile(Path.Combine(CurrentPath, "Fonts", "NeuzeitGro-RegModified.ttf"));
+            regularFontFamily = new FontFamily("Neuzeit Grotesk", fontCollection);
+            boldFontFamily = new FontFamily("Neuzeit Grotesk Bold", fontCollection);
+            CardTextFont = new Font(regularFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
+            BoldCardTextFont = new Font(boldFontFamily, orderCardTextFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
         }
 
         private CardImage CreateJackImage(string path, string fileName)
@@ -350,12 +369,6 @@ namespace GtR
             graphics.FillRectangle(new SolidBrush(Color.White), costTextRectangle);
             GraphicsUtilities.DrawString(graphics, costText, costFont, GraphicsUtilities.BlackBrush, costTextRectangle);
         }
-
-        private int CardTextWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * (1 - (RoleIconPercentage + SetIndicatorPercentage)));
-        private int RoleIconWidth(CardImage cardImage) => (int)(cardImage.UsableRectangle.Width * RoleIconPercentage);
-
-        private readonly Font CardTextFont = new Font(regularFontFamily, orderCardTextFontSize, FontStyle.Regular, GraphicsUnit.Pixel);
-        private readonly Font BoldCardTextFont = new Font(boldFontFamily, orderCardTextFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
 
         public CardImage CreateOrderCardBack()
         {

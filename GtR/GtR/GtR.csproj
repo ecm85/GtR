@@ -18,10 +18,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="Fonts\NeuzeitGro-BolModified.ttf" />
+    <None Remove="Fonts\NeuzeitGro-RegModified.ttf" />
     <None Remove="OrderCardData.txt" />
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="Fonts\NeuzeitGro-BolModified.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
+    <Content Include="Fonts\NeuzeitGro-RegModified.ttf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToPublishDirectory>Always</CopyToPublishDirectory>
+    </Content>
     <Content Include="OrderCardData.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <CopyToPublishDirectory>Always</CopyToPublishDirectory>
