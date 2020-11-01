@@ -113,10 +113,14 @@ namespace GtR
 
         public void RotateBitmap(RotateFlipType rotateFlipType)
         {
-            var originalBitmap = Bitmap;
-            originalBitmap.RotateFlip(rotateFlipType);
             var fileName = Path.Combine($"/tmp", "imageToRotate.png");
+            var originalBitmap = Bitmap;
             originalBitmap.Save(fileName, ImageFormat.Png);
+
+            var bitmapToRotate = new Bitmap(fileName);
+            bitmapToRotate.RotateFlip(rotateFlipType);
+            bitmapToRotate.Save(fileName, ImageFormat.Png);
+
             var newBitmap = new Bitmap(fileName);
             Bitmap = newBitmap;
         }
