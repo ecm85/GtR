@@ -186,9 +186,9 @@ namespace GtR
 
         private static MeasuredTextFragment MeasureTextFragment(Graphics graphics, TextFragment textFragment, int maxWidth)
         {
-            const float spaceWidth = 20f;
+            const float extra = 15f;
             var measurement = graphics.MeasureString(textFragment.Text, textFragment.Font, maxWidth);
-            return new MeasuredTextFragment((int)(measurement.Width + spaceWidth), (int)measurement.Height, textFragment);
+            return new MeasuredTextFragment((int)(measurement.Width + extra), (int)(measurement.Height + extra), textFragment);
         }
 
         private static IEnumerable<IEnumerable<MeasuredTextFragment>> GetFragmentsGroupedByLine(Graphics graphics, Rectangle rectangle, IEnumerable<MeasuredTextFragment> original)

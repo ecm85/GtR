@@ -480,16 +480,24 @@ namespace GtR
                 iconImageWidth,
                 iconImageHeight);
 
-            var text = new string(roleName.ToUpper().ToCharArray().SelectMany(character => character == 'I' ? new[] { character, (char)0x2009 } : new[] { character }).ToArray());
+            var text = roleName.ToUpper();
             var brush = BrushesByCardSuit[suit];
             var singleCharacterMeasurement = graphics.MeasureString("M", cardNameFont, new SizeF(usableRectangle.Width, usableRectangle.Height), GraphicsUtilities.HorizontalNearAlignment);
             var textBoxWidth = (int)singleCharacterMeasurement.Width;
             var xOffset = (int)(iconImageWidth/2.0f - textBoxWidth/2);
             var yOffset = iconImageHeight;
             var rectangle = new Rectangle(usableRectangle.X + xOffset, usableRectangle.Y + yOffset, textBoxWidth, usableRectangle.Height);
-            var textMeasurement = graphics.MeasureString(text, cardNameFont, new SizeF(rectangle.Width, rectangle.Height), GraphicsUtilities.HorizontalCenterAlignment);
-            graphics.FillRectangle(new SolidBrush(Color.FromArgb(200, Color.White)), new Rectangle(rectangle.X, rectangle.Y, rectangle.Width, (int)textMeasurement.Height));
-            GraphicsUtilities.DrawString(graphics, text, cardNameFont, brush, rectangle);
+            var fragments = text
+                .ToList()
+                .Select(character => new TextFragment
+                {
+                    Brush = brush,
+                    Font = cardNameFont,
+                    ForcesNewline = true,
+                    Text = character.ToString()
+                })
+                .ToList();
+            GraphicsUtilities.DrawFragmentsCentered(graphics, fragments, rectangle, 200, false);
         }
 
         private void PrintInfluence(OrderCard orderCard, CardImage cardImage)
