@@ -51,15 +51,9 @@ namespace GtR
                     foreach (var image in images)
                     {
                         var fileName = Path.Combine(image.Subfolder, $"{image.Name}.png");
-
                         var entry = zipArchive.CreateEntry(fileName);
-
-                        using (var singleFileStream = new MemoryStream())
-                        {
-                            image.Bitmap.Save(singleFileStream, ImageFormat.Png);
-                            using (var zipStream = entry.Open())
-                                zipStream.Write(singleFileStream.ToArray());
-                        }
+                        using (var zipStream = entry.Open())
+                            image.Bitmap.Save(zipStream, ImageFormat.Png);
                     }
                 }
                 var bytes = memoryStream.ToArray();
