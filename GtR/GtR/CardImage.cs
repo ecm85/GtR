@@ -52,9 +52,13 @@ namespace GtR
         {
             Bitmap.Dispose();
             Bitmap = null;
+            if (BitmapStream != null)
+                BitmapStream.Dispose();
+            BitmapStream = null;
         }
 
         public Bitmap Bitmap { get; private set; }
+        private Stream BitmapStream { get; set; }
         private ImageOrientation Orientation { get; set; }
 
         public string Name { get; private set; }
@@ -120,18 +124,22 @@ namespace GtR
 
         public void RotateBitmap(RotateFlipType rotateFlipType)
         {
-            var fileName = Path.Combine($"/tmp", "imageToRotate.png");
+            var fileName = Path.Combine("/tmp", "imageToRotate.png");
             Bitmap.Save(fileName, ImageFormat.Png);
 
             Dispose();
 
-            Bitmap = new Bitmap(fileName);
+            var bytes = File.ReadAllBytes(fileName);
+            BitmapStream = new MemoryStream(bytes);
+            Bitmap = new Bitmap(BitmapStream);
             Bitmap.RotateFlip(rotateFlipType);
             Bitmap.Save(fileName, ImageFormat.Png);
 
             Dispose();
 
-            Bitmap = new Bitmap(fileName);
+            bytes = File.ReadAllBytes(fileName);
+            BitmapStream = new MemoryStream(bytes);
+            Bitmap = new Bitmap(BitmapStream);
         }
     }
 }

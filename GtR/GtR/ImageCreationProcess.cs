@@ -125,6 +125,8 @@ namespace GtR
             {
                 var page = new Page($"OrderCards_{pages.Count}", "Pages");
                 var cardsAdded = page.AddCardsToPage(remainingOrderCards);
+                foreach (var card in remainingOrderCards.Take(cardsAdded))
+                    card.Dispose();
                 remainingOrderCards = remainingOrderCards.Skip(cardsAdded).ToList();
                 pages.Add(page);
             }
@@ -133,11 +135,14 @@ namespace GtR
             var pageOfOrderBackImages = Enumerable.Repeat(orderCardBackImage, Page.cardsPerColumn * Page.cardsPerRow).ToList();
             var orderBackPage = new Page("OrderCardBack", "Pages");
             orderBackPage.AddCardsToPage(pageOfOrderBackImages);
+            orderCardBackImage.Dispose();
             pages.Add(orderBackPage);
 
             var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
             var siteFrontPage = new Page("SiteFront", "Pages");
             siteFrontPage.AddCardsToPage(siteFrontImages);
+            foreach (var card in siteFrontImages)
+                card.Dispose();
             pages.Add(siteFrontPage);
 
             var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
@@ -145,6 +150,8 @@ namespace GtR
                 siteBackImage.RotateBitmap(RotateFlipType.Rotate180FlipNone);
             var siteBackPage = new Page("SiteBack", "Pages");
             siteBackPage.AddCardsToPage(siteBackImages);
+            foreach (var card in siteBackImages)
+                card.Dispose();
             pages.Add(siteBackPage);
 
             var jackImageFront = imageCreator.CreateJackImageSword();
@@ -158,6 +165,10 @@ namespace GtR
 
             var miscFrontPage = new Page("MiscFront", "Pages");
             miscFrontPage.AddCardsToPage(miscImagesFront);
+            jackImageFront.Dispose();
+            foreach (var card in merchantBonusFrontCards)
+                card.Dispose();
+            leaderImageFront.Dispose();
             pages.Add(miscFrontPage);
 
             var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
@@ -176,6 +187,10 @@ namespace GtR
 
             var miscBackPage = new Page("MiscBack", "Pages");
             miscBackPage.AddCardsToPage(miscImagesBack);
+            jackImageBack.Dispose();
+            foreach (var card in merchantBonusBackCards)
+                card.Dispose();
+            leaderImageBack.Dispose();
             pages.Add(miscBackPage);
 
             return pages;
