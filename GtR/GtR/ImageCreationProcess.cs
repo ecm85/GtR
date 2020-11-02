@@ -119,7 +119,7 @@ namespace GtR
             var imageCreator = new GloryToRomeImageCreator(gtrConfig);
 
             var orderCards = ReadOrderCards();
-            var orderCardFrontImages = orderCards.AsParallel().SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
+            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
             var remainingOrderCards = orderCardFrontImages.ToList();
             while (remainingOrderCards.Any())
             {
@@ -138,14 +138,14 @@ namespace GtR
             orderCardBackImage.Dispose();
             pages.Add(orderBackPage);
 
-            var siteFrontImages = allSuits.AsParallel().SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
+            var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
             var siteFrontPage = new Page("SiteFront", "Pages");
             siteFrontPage.AddCardsToPage(siteFrontImages);
             foreach (var card in siteFrontImages)
                 card.Dispose();
             pages.Add(siteFrontPage);
 
-            var siteBackImages = allSuits.AsParallel().SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
+            var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
             foreach (var siteBackImage in siteBackImages)
                 siteBackImage.RotateBitmap(RotateFlipType.Rotate180FlipNone);
             var siteBackPage = new Page("SiteBack", "Pages");
@@ -155,7 +155,7 @@ namespace GtR
             pages.Add(siteBackPage);
 
             var jackImageFront = imageCreator.CreateJackImageSword();
-            var merchantBonusFrontCards = allSuits.AsParallel().Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+            var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
             var leaderImageFront = imageCreator.CreateLeaderImage();
 
             var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
@@ -171,7 +171,7 @@ namespace GtR
             leaderImageFront.Dispose();
             pages.Add(miscFrontPage);
 
-            var merchantBonusBackCards = allSuits.AsParallel().Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+            var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
             foreach (var merchantBonusBackCard in merchantBonusBackCards)
                 merchantBonusBackCard.RotateBitmap(RotateFlipType.Rotate180FlipNone);
             var jackImageBack = imageCreator.CreateJackImageQuill();
