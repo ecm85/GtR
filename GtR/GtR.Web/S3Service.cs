@@ -11,6 +11,7 @@ namespace GtR.Web
         private const string bucketName = "gtr-temp";
         public static string UploadZipToS3(byte[] bytes, string filenameWithoutExtension)
         {
+            Console.WriteLine($"{DateTime.Now:G}: Starting to upload to S3");
             var client = new AmazonS3Client(
                 Environment.GetEnvironmentVariable("S3_AWS_ACCESS_KEY_ID"),
                 Environment.GetEnvironmentVariable("S3_AWS_SECRET_ACCESS_KEY"),
@@ -30,6 +31,7 @@ namespace GtR.Web
                 };
                 transferUtility.Upload(request);
             }
+            Console.WriteLine($"{DateTime.Now:G}: Finished upload to S3");
             return $"https://{bucketName}.s3.us-east-2.amazonaws.com/{filename}";
         }
     }

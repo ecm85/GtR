@@ -42,6 +42,7 @@ namespace GtR
                     }
                 }
             }
+            Console.WriteLine($"{DateTime.Now:G}: Starting making zip");
 
             using (var memoryStream = new MemoryStream())
             {
@@ -61,7 +62,9 @@ namespace GtR
                         }
                     }
                 }
-                return memoryStream.ToArray();
+                var bytes = memoryStream.ToArray();
+                Console.WriteLine($"{DateTime.Now:G}: finished making zip");
+                return bytes;
             }
         }
 
@@ -111,6 +114,7 @@ namespace GtR
 
         private static IEnumerable<ISaveableImage> CreatePages(GtrConfig gtrConfig)
         {
+            Console.WriteLine($"{DateTime.Now:G}: Starting CreatePages");
             var pages = new List<Page>();
 
             var allSuits = Enum.GetValues(typeof(CardSuit))
@@ -120,6 +124,7 @@ namespace GtR
 
             var orderCards = ReadOrderCards();
             var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
+            Console.WriteLine($"{DateTime.Now:G}: Created order card front images");
             var remainingOrderCards = orderCardFrontImages.ToList();
             while (remainingOrderCards.Any())
             {
@@ -130,6 +135,7 @@ namespace GtR
                 remainingOrderCards = remainingOrderCards.Skip(cardsAdded).ToList();
                 pages.Add(page);
             }
+            Console.WriteLine($"{DateTime.Now:G}: Created order card front pages");
 
             var orderCardBackImage = imageCreator.CreateOrderCardBack();
             var pageOfOrderBackImages = Enumerable.Repeat(orderCardBackImage, Page.cardsPerColumn * Page.cardsPerRow).ToList();
@@ -137,6 +143,7 @@ namespace GtR
             orderBackPage.AddCardsToPage(pageOfOrderBackImages);
             orderCardBackImage.Dispose();
             pages.Add(orderBackPage);
+            Console.WriteLine($"{DateTime.Now:G}: Created order card back page");
 
             var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
             var siteFrontPage = new Page("SiteFront", "Pages");
@@ -144,6 +151,7 @@ namespace GtR
             foreach (var card in siteFrontImages)
                 card.Dispose();
             pages.Add(siteFrontPage);
+            Console.WriteLine($"{DateTime.Now:G}: Created site front page");
 
             var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
             foreach (var siteBackImage in siteBackImages)
@@ -153,6 +161,7 @@ namespace GtR
             foreach (var card in siteBackImages)
                 card.Dispose();
             pages.Add(siteBackPage);
+            Console.WriteLine($"{DateTime.Now:G}: Created site back page");
 
             var jackImageFront = imageCreator.CreateJackImageSword();
             var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
@@ -170,6 +179,7 @@ namespace GtR
                 card.Dispose();
             leaderImageFront.Dispose();
             pages.Add(miscFrontPage);
+            Console.WriteLine($"{DateTime.Now:G}: Created misc front page");
 
             var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
             foreach (var merchantBonusBackCard in merchantBonusBackCards)
@@ -192,6 +202,7 @@ namespace GtR
                 card.Dispose();
             leaderImageBack.Dispose();
             pages.Add(miscBackPage);
+            Console.WriteLine($"{DateTime.Now:G}: Created misc back page");
 
             return pages;
         }
