@@ -7,7 +7,6 @@ namespace GtR
     public class Page : ISaveableImage
     {
         public Bitmap Bitmap { get; private set; }
-        public Graphics Graphics { get; private set; }
         public string Name { get; private set; }
         public string Subfolder { get; private set; }
 
@@ -27,7 +26,6 @@ namespace GtR
         {
             var bitmap = GraphicsUtilities.CreateBitmap(pageWidthInPixels, pageHeightInPixels);
             Bitmap = bitmap;
-            Graphics = Graphics.FromImage(bitmap);
             Name = name;
             Subfolder = subfolder;
         }
@@ -55,7 +53,8 @@ namespace GtR
         {
             if (card.Bitmap.Width < card.Bitmap.Height)
                 card.RotateBitmap(RotateFlipType.Rotate90FlipNone);
-            Graphics.DrawImageUnscaled(card.Bitmap, xOffsetInPixels + rowIndex * card.FullRectangle.Height, yOffsetInPixels + columnIndex * card.FullRectangle.Width);
+            using (var graphics = Graphics.FromImage(Bitmap))
+                graphics.DrawImageUnscaled(card.Bitmap, xOffsetInPixels + rowIndex * card.FullRectangle.Height, yOffsetInPixels + columnIndex * card.FullRectangle.Width);
             card.Dispose();
         }
     }
