@@ -52,7 +52,7 @@ namespace GtR
                     {
                         var fileName = Path.Combine(image.Subfolder, $"{image.Name}.png");
 
-                        var entry = zipArchive.CreateEntry(fileName);
+                        var entry = zipArchive.CreateEntry(fileName, CompressionLevel.NoCompression);
 
                         using (var singleFileStream = new MemoryStream())
                         {
