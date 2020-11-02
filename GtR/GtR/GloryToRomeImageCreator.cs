@@ -65,7 +65,7 @@ namespace GtR
         private CardImage CreateJackImage(string path, string fileName)
         {
             var cardImage = new CardImage(GtrConfig, fileName, "Misc", ImageOrientation.Portrait);
-            var graphics = cardImage.Graphics;
+            var graphics = Graphics.FromImage(cardImage.Bitmap);
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.Black, Color.Black);
@@ -93,7 +93,7 @@ namespace GtR
             var name = "Leader";
             var cardImage = new CardImage(GtrConfig, name, "Misc", ImageOrientation.Portrait);
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
-            var graphics = cardImage.Graphics;
+            var graphics = Graphics.FromImage(cardImage.Bitmap);
             var fullRectangle = cardImage.FullRectangle;
             var imageWidth = fullRectangle.Width;
             var imageHeight = GraphicsUtilities.PrintFullWidthPng(
@@ -124,7 +124,7 @@ namespace GtR
         internal CardImage CreateMerchantBonusImage(CardSuit suit)
         {
             var cardImage = new CardImage(GtrConfig, $"MerchantBonus_{suit.ResourceName()}", "Misc", ImageOrientation.Portrait);
-            var graphics = cardImage.Graphics;
+            var graphics = Graphics.FromImage(cardImage.Bitmap);
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
@@ -190,7 +190,7 @@ namespace GtR
         {
             var name = $"{suit.ResourceName()}_Site";
             var cardImage = new CardImage(GtrConfig, name, "Sites", ImageOrientation.Portrait);
-            var graphics = cardImage.Graphics;
+            var graphics = Graphics.FromImage(cardImage.Bitmap);
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
@@ -305,7 +305,7 @@ namespace GtR
         {
             var name = $"{suit.ResourceName()}_SiteBack";
             var cardImage = new CardImage(GtrConfig, name, "Sites", ImageOrientation.Portrait);
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.White, Color.White);
@@ -340,7 +340,7 @@ namespace GtR
 
         private void DrawSiteCost(CardImage cardImage, CardSuit suit)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var fullRectangle = cardImage.FullRectangle;
             var usableRectangle = cardImage.UsableRectangle;
             var costRegionHeight = (int)(fullRectangle.Height * SiteCostRegionHeightPercentage);
@@ -374,7 +374,7 @@ namespace GtR
         {
             var name = "OrderCardBack";
             var cardImage = new CardImage(GtrConfig, name, "OrderCards", ImageOrientation.Portrait);
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var usableRectangle = cardImage.UsableRectangle;
             cardImage.PrintCardBorderAndBackground(Color.Black, Color.Black);
             GraphicsUtilities.PrintScaledPng(
@@ -430,7 +430,7 @@ namespace GtR
 
         private void PrintCardName(string name, CardImage cardImage, Brush brush, int translucentBackgroundOpacity, int xOffset, int maxTextBoxWidth, int yOffset)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var usableRectangle = cardImage.UsableRectangle;
             var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var fragments = name.ToUpper().Split(" ")
@@ -448,7 +448,7 @@ namespace GtR
 
         private int PrintCardImage(OrderCard orderCard, CardImage cardImage)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var fullRectangle = cardImage.FullRectangle;
             var imageWidth = fullRectangle.Width;
             var imageHeight = GraphicsUtilities.PrintFullWidthPng(
@@ -463,7 +463,7 @@ namespace GtR
 
         private void PrintRoleIconAndName(OrderCard orderCard, CardImage cardImage)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var usableRectangle = cardImage.UsableRectangle;
 
             var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
@@ -502,7 +502,7 @@ namespace GtR
 
         private void PrintInfluence(OrderCard orderCard, CardImage cardImage)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var usableRectangle = cardImage.UsableRectangle;
             var influenceImageSide = InfluenceImageSide(cardImage);
 
@@ -523,7 +523,7 @@ namespace GtR
 
         private void PrintResourceType(OrderCard orderCard, CardImage cardImage)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var usableRectangle = cardImage.UsableRectangle;
             var cardNameFont = new Font(boldFontFamily, orderCardHeaderFontSize, FontStyle.Bold, GraphicsUnit.Pixel);
             var suit = orderCard.CardSuit;
@@ -548,7 +548,7 @@ namespace GtR
 
         private void PrintSetIndicator(OrderCard orderCard, CardImage cardImage)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var usableRectangle = cardImage.UsableRectangle;
 
             var setIndicatorCircleWidth = (int)(usableRectangle.Width * SetIndicatorPercentage);
@@ -604,7 +604,7 @@ namespace GtR
 
         private void PrintCardText(string text, CardImage cardImage, int top, int textBoxWidth, int textRectangleHeight, int xOffset, int backgroundOpacity, Brush defaultBrush)
         {
-            var graphics = cardImage.Graphics;
+             var graphics = Graphics.FromImage(cardImage.Bitmap);
             var usableRectangle = cardImage.UsableRectangle;
             var rectangle = new Rectangle(usableRectangle.X + xOffset, top, textBoxWidth, textRectangleHeight);
             var words = text.Split(new[] { " " }, StringSplitOptions.None);

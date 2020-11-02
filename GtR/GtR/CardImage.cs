@@ -48,8 +48,13 @@ namespace GtR
             UsableRectangleWithoutPadding.Width - (BorderPaddingInPixels * 2),
             UsableRectangleWithoutPadding.Height - (BorderPaddingInPixels * 2));
 
+        public void Dispose()
+        {
+            Bitmap.Dispose();
+            Bitmap = null;
+        }
+
         public Bitmap Bitmap { get; private set; }
-        public Graphics Graphics { get; private set; }
         private ImageOrientation Orientation { get; set; }
 
         public string Name { get; private set; }
@@ -67,7 +72,6 @@ namespace GtR
             var bitmap = CreateBitmap(orientation);
             Bitmap = bitmap;
             Orientation = orientation;
-            Graphics = Graphics.FromImage(bitmap);
             Name = name;
             Subfolder = subfolder;
         }
@@ -86,43 +90,48 @@ namespace GtR
 
         public void PrintCardBorderAndBackground(Color backgroundColor, Color? outerBorderColor = null, Color? middleBorderColor = null)
         {
-            if(outerBorderColor.HasValue)
-                Graphics.FillRoundedRectangle(
-                    new SolidBrush(outerBorderColor.Value),
-                    0,
-                    0,
-                    WidthInPixelsWithBleed,
-                    HeightInPixelsWithBleed,
+            using (var graphics = Graphics.FromImage(Bitmap))
+            {
+                if (outerBorderColor.HasValue)
+                    graphics.FillRoundedRectangle(
+                        new SolidBrush(outerBorderColor.Value),
+                        0,
+                        0,
+                        WidthInPixelsWithBleed,
+                        HeightInPixelsWithBleed,
+                        borderRadius);
+                if (middleBorderColor.HasValue)
+                    graphics.FillRoundedRectangle(
+                        new SolidBrush(middleBorderColor.Value),
+                        BleedSizeInPixels,
+                        BleedSizeInPixels,
+                        WidthInPixels,
+                        HeightInPixels,
+                        borderRadius);
+                graphics.FillRoundedRectangle(
+                    new SolidBrush(backgroundColor),
+                    UsableRectangleWithoutPadding.X,
+                    UsableRectangleWithoutPadding.Y,
+                    UsableRectangleWithoutPadding.Width,
+                    UsableRectangleWithoutPadding.Height,
                     borderRadius);
-            if (middleBorderColor.HasValue)
-                Graphics.FillRoundedRectangle(
-                    new SolidBrush(middleBorderColor.Value),
-                    BleedSizeInPixels,
-                    BleedSizeInPixels,
-                    WidthInPixels,
-                    HeightInPixels,
-                    borderRadius);
-            Graphics.FillRoundedRectangle(
-                new SolidBrush(backgroundColor),
-                UsableRectangleWithoutPadding.X,
-                UsableRectangleWithoutPadding.Y,
-                UsableRectangleWithoutPadding.Width,
-                UsableRectangleWithoutPadding.Height,
-                borderRadius);
+            }
         }
 
         public void RotateBitmap(RotateFlipType rotateFlipType)
         {
             var fileName = Path.Combine($"/tmp", "imageToRotate.png");
-            var originalBitmap = Bitmap;
-            originalBitmap.Save(fileName, ImageFormat.Png);
+            Bitmap.Save(fileName, ImageFormat.Png);
 
-            var bitmapToRotate = new Bitmap(fileName);
-            bitmapToRotate.RotateFlip(rotateFlipType);
-            bitmapToRotate.Save(fileName, ImageFormat.Png);
+            Dispose();
 
-            var newBitmap = new Bitmap(fileName);
-            Bitmap = newBitmap;
+            Bitmap = new Bitmap(fileName);
+            Bitmap.RotateFlip(rotateFlipType);
+            Bitmap.Save(fileName, ImageFormat.Png);
+
+            Dispose();
+
+            Bitmap = new Bitmap(fileName);
         }
     }
 }
