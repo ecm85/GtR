@@ -79,28 +79,67 @@ export class Home extends Component {
             downloadLink
         } = this.state;
         return (
-            <>
-                <div>
-                    <input type='number' value={cardShortSideInInches} onChange={this.handleCardShortSideInInchesChange} disabled={generating}/>
-                    <input type='number' value={cardLongSideInInches} onChange={this.handleCardLongSideInInchesChange} disabled={generating}/>
+            <form>
+                <div className='card'>
+                    <div className='card-body'>
+                        <div className='form-row'>
+                            <div className='col'>
+                                <div className='form-group'>
+                                    <label htmlFor='cardShortSideInInches'>
+                                        Card short side, in inches
+                                    </label>
+                                    <input id='cardShortSideInInches' className='form-control' type='number' value={cardShortSideInInches} onChange={this.handleCardShortSideInInchesChange} disabled={generating} />
+                                </div>
+                            </div>
+                            <div className='col'>
+                                <div className='form-group'>
+                                    <label htmlFor='cardLongSideInInches'>
+                                        Card long side, in inches
+                                    </label>
+                                    <input id='cardLongSideInInches' className='form-control' type='number' value={cardLongSideInInches} onChange={this.handleCardLongSideInInchesChange} disabled={generating} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='form-row'>
+                            <div className='col'>
+                                <div className='form-group'>
+                                    <label htmlFor='bleedSizeInInches'>
+                                        Bleed size, in inches (default is 1/8th of an inch)
+                                    </label>
+                                    <input id='bleedSizeInInches' className='form-control' type='number' value={bleedSizeInInches} onChange={this.handleBleedSizeInInchesChange} disabled={generating} />
+                                </div>
+                            </div>
+                            <div className='col'>
+                                <div className='form-group'>
+                                    <label htmlFor='borderPaddingInInches'>
+                                        Border padding, in inches (default is 1/16th of an inch)
+                                    </label>
+                                    <input id='borderPaddingInInches' className='form-control' type='number' value={borderPaddingInInches} onChange={this.handleBorderPaddingInInchesChange} disabled={generating} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='form-row'>
+                            <div className='col'>
+                                <div className='form-group'>
+                                    <label htmlFor='saveConfiguration'>
+                                        Bleed size, in inches (default is 1/8th of an inch)
+                                    </label>
+                                    <select id='saveConfiguration' className='form-control' value={saveConfiguration} onChange={this.handleSaveConfigurationChange} disabled={generating}>
+                                        <option>Page</option>
+                                        <option>SingleImage</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            {!generating && <button type='button' className='btn btn-primary form-control' onClick={this.handleGenerateClick}>Generate Images</button>}
+                            {generating && <button type='button' className='btn btn-primary disabled form-control'>Generating...</button>}
+                        </div>
+                    </div>
+                    {downloadLink != null && <div className='card-footer'><p className='card-text'><a className='card-link' href={downloadLink}>Download generated file</a> (Link valid for 1 day)</p></div>}
+                    {error != null && <div className='card-footer'><p className='card-text'>Error generating file or uploading to S3.</p></div>}
                 </div>
-                <div>
-                    <input type='number' value={bleedSizeInInches} onChange={this.handleBleedSizeInInchesChange} disabled={generating}/>
-                    <input type='number' value={borderPaddingInInches} onChange={this.handleBorderPaddingInInchesChange} disabled={generating}/>
-                </div>
-                <div>
-                    <select value={saveConfiguration} onChange={this.handleSaveConfigurationChange} disabled={generating}>
-                        <option>Page</option>
-                        <option>SingleImage</option>
-                    </select>
-                </div>
-                <div>
-                    {!generating && <button type='button' className='btn btn-primary' onClick={this.handleGenerateClick}>Generate Labels</button>}
-                    {generating && <button type='button' className='btn btn-primary disabled'>Generating...</button>}
-                    {downloadLink != null && <h3>Generated File: <a href={downloadLink}>Link</a> (Link valid for 1 day)</h3>}
-                    {error != null && <div>Error generating file or uploading to S3: {error}</div>}
-                </div>
-            </>
+            </form>
         );
     }
 }
