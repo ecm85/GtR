@@ -81,6 +81,9 @@ export class Home extends Component {
         return (
             <form>
                 <div className='card'>
+                    <div className='card-header'>
+                        Image Generation
+                    </div>
                     <div className='card-body'>
                         <div className='form-row'>
                             <div className='col'>
