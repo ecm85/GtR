@@ -17,7 +17,7 @@ namespace GtR.Web
                 Environment.GetEnvironmentVariable("S3_AWS_SECRET_ACCESS_KEY"),
                 RegionEndpoint.USEast2);
             var transferUtility = new TransferUtility(client);
-            var filename = $"{filenameWithoutExtension}{Guid.NewGuid()}.zip";
+            var filename = $"{filenameWithoutExtension} {Guid.NewGuid()}.zip";
             using (var memoryStream = new MemoryStream(bytes))
             {
                 var request = new TransferUtilityUploadRequest
