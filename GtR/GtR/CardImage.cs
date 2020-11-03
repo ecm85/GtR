@@ -124,21 +124,21 @@ namespace GtR
 
         public void RotateBitmap(RotateFlipType rotateFlipType)
         {
-            var newStream1 = new MemoryStream();
-            Bitmap.Save(newStream1, ImageFormat.Png);
+            //var newStream1 = new MemoryStream();
+            //Bitmap.Save(newStream1, ImageFormat.Png);
 
-            Dispose();
+            //Dispose();
 
-            BitmapStream = newStream1;
-            Bitmap = new Bitmap(newStream1);
+            //BitmapStream = newStream1;
+            //Bitmap = new Bitmap(newStream1);
             Bitmap.RotateFlip(rotateFlipType);
-            var newStream2 = new MemoryStream();
-            Bitmap.Save(newStream2, ImageFormat.Png);
+            //var newStream2 = new MemoryStream();
+            //Bitmap.Save(newStream2, ImageFormat.Png);
 
-            Dispose();
+            //Dispose();
 
-            BitmapStream = newStream2;
-            Bitmap = new Bitmap(newStream2);
+            //BitmapStream = newStream2;
+            //Bitmap = new Bitmap(newStream2);
         }
     }
 }
