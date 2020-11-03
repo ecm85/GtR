@@ -52,7 +52,11 @@ namespace GtR
         private void AddCardToPage(CardImage card, int rowIndex, int columnIndex)
         {
             if (card.Bitmap.Width < card.Bitmap.Height)
+            {
+                card.RotateBitmap(RotateFlipType.Rotate180FlipNone);
+                card.RotateBitmap(RotateFlipType.Rotate180FlipNone);
                 card.RotateBitmap(RotateFlipType.Rotate270FlipNone);
+            }
             using (var graphics = Graphics.FromImage(Bitmap))
                 graphics.DrawImageUnscaled(card.Bitmap, xOffsetInPixels + rowIndex * card.FullRectangle.Height, yOffsetInPixels + columnIndex * card.FullRectangle.Width);
         }
