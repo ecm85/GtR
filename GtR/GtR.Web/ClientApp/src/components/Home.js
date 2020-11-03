@@ -122,11 +122,11 @@ export class Home extends Component {
                             <div className='col'>
                                 <div className='form-group'>
                                     <label htmlFor='saveConfiguration'>
-                                        Bleed size, in inches (default is 1/8th of an inch)
+                                        Card Configuration
                                     </label>
                                     <select id='saveConfiguration' className='form-control' value={saveConfiguration} onChange={this.handleSaveConfigurationChange} disabled={generating}>
-                                        <option>Page</option>
-                                        <option>SingleImage</option>
+                                        <option value='Page'>Pages of Cards</option>
+                                        <option value='SingleImage'>One Image Per Card</option>
                                     </select>
                                 </div>
                             </div>
