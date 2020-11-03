@@ -1,3 +1,5 @@
+#NOTE: This guide is out of date. See gtr.stormtide.net instead!
+
 # GtR Printing Guide
 This guide will attempt to walk through the steps needed to generate files for Glory to Rome.
 
