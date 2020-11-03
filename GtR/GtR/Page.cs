@@ -53,9 +53,9 @@ namespace GtR
         {
             if (card.Bitmap.Width < card.Bitmap.Height)
             {
-                card.RotateBitmap(RotateFlipType.Rotate180FlipNone);
-                card.RotateBitmap(RotateFlipType.Rotate180FlipNone);
-                card.RotateBitmap(RotateFlipType.Rotate270FlipNone);
+                card.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                card.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                card.Bitmap.RotateFlip(RotateFlipType.Rotate270FlipNone);
             }
             using (var graphics = Graphics.FromImage(Bitmap))
                 graphics.DrawImageUnscaled(card.Bitmap, xOffsetInPixels + rowIndex * card.FullRectangle.Height, yOffsetInPixels + columnIndex * card.FullRectangle.Width);

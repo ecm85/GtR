@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace GtR
 {
@@ -52,13 +50,9 @@ namespace GtR
         {
             Bitmap.Dispose();
             Bitmap = null;
-            if (BitmapStream != null)
-                BitmapStream.Dispose();
-            BitmapStream = null;
         }
 
         public Bitmap Bitmap { get; private set; }
-        private Stream BitmapStream { get; set; }
         private ImageOrientation Orientation { get; set; }
 
         public string Name { get; private set; }
@@ -120,25 +114,6 @@ namespace GtR
                     UsableRectangleWithoutPadding.Height,
                     borderRadius);
             }
-        }
-
-        public void RotateBitmap(RotateFlipType rotateFlipType)
-        {
-            //var newStream1 = new MemoryStream();
-            //Bitmap.Save(newStream1, ImageFormat.Png);
-
-            //Dispose();
-
-            //BitmapStream = newStream1;
-            //Bitmap = new Bitmap(newStream1);
-            Bitmap.RotateFlip(rotateFlipType);
-            //var newStream2 = new MemoryStream();
-            //Bitmap.Save(newStream2, ImageFormat.Png);
-
-            //Dispose();
-
-            //BitmapStream = newStream2;
-            //Bitmap = new Bitmap(newStream2);
         }
     }
 }

@@ -155,7 +155,7 @@ namespace GtR
 
             var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
             foreach (var siteBackImage in siteBackImages)
-                siteBackImage.RotateBitmap(RotateFlipType.Rotate180FlipNone);
+                siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
             var siteBackPage = new Page("SiteBack", "Pages");
             siteBackPage.AddCardsToPage(siteBackImages);
             foreach (var card in siteBackImages)
@@ -183,11 +183,11 @@ namespace GtR
 
             var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
             foreach (var merchantBonusBackCard in merchantBonusBackCards)
-                merchantBonusBackCard.RotateBitmap(RotateFlipType.Rotate180FlipNone);
+                merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
             var jackImageBack = imageCreator.CreateJackImageQuill();
-            jackImageBack.RotateBitmap(RotateFlipType.Rotate180FlipNone);
+            jackImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
             var leaderImageBack = imageCreator.CreateLeaderImage();
-            leaderImageBack.RotateBitmap(RotateFlipType.Rotate180FlipNone);
+            leaderImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
             var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
                 .Concat(merchantBonusBackCards.Take(3).Reverse())
