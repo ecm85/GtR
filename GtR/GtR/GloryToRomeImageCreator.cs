@@ -622,7 +622,8 @@ namespace GtR
             if (text[0] == '|')
             {
                 forcesNewline = true;
-                text = text.Substring(1);
+                var isForcedParagraph = text[1] == '|';
+                text = isForcedParagraph ? AddFourPerEmSpaces("") : text.Substring(1);
             }
             var matchingSuitKeyword = SuitsByKeyword.Keys.FirstOrDefault(keyword => text.Contains(keyword));
             var isSuitKeyword = matchingSuitKeyword != null;
