@@ -4,7 +4,7 @@ Amphitheatre	Concrete	Upon completion, |you may perform one |CRAFTSMAN action fo
 Aqueduct	Concrete	When performing |PATRON action, you |may take one additional client from your hand. |Maximum clientele size x2	Standard	False
 Archway	Brick	When performing |ARCHITECT action, you |may take a material |from the pool |instead of your stockpile.	Standard	True
 Atrium	Brick	When performing |MERCHANT action, you |may take a card |from the deck |instead of your stockpile |(Don't look at it).	Standard	True
-Bacchanalia	Stone	Upon completion, reveal |cards from the deck equal |to your influence. |You may put one into each: |your vault, your stockpile, |your clientele, as foundation on |an in-town site, an incomplete |building as material. |Leftovers go to your hand.	Promo	True
+Bacchanalia	Stone	Upon completion, reveal |cards from the deck equal |to your influence. |You may put one into each: |your vault, your stockpile, |your clientele, as foundation |on an in-town |site, an incomplete |building as material. |Leftovers go to your hand.	Promo	True
 Bar	Rubble	When performing |PATRON action, you |may take one additional client card from the deck.	Standard	True
 Basilica	Marble	When performing |MERCHANT action, you |may move one additional |card from your hand |to your vault.	Standard	True
 Bath	Brick	When performing |PATRON action, each |client you hire |may perform its action once |as it enters your clientele.	Standard	True
