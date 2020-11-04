@@ -1,18 +1,23 @@
-﻿Academy	Brick	You may perform one THINKER action after any turn during which you performed at least one CRAFTSMAN action.	Standard	True
+﻿Aerarium	Concrete	Use the highest influence |among players at all |times except final scoring. |Upon completion, you may |exchange 2 influence to |trigger an 'Upon Completion' |effect on a complete building.	Promo	True
+Academy	Brick	You may perform one THINKER action after any turn during which you performed at least one CRAFTSMAN action.	Standard	True
 Amphitheatre	Concrete	Upon completion, |you may perform one |CRAFTSMAN action for |each influence.	Standard	True
 Aqueduct	Concrete	When performing |PATRON action, you |may take one additional client from your hand. |Maximum clientele size x2	Standard	False
 Archway	Brick	When performing |ARCHITECT action, you |may take a material |from the pool |instead of your stockpile.	Standard	True
 Atrium	Brick	When performing |MERCHANT action, you |may take a card |from the deck |instead of your stockpile |(Don't look at it).	Standard	True
+Bacchanalia	Stone	Upon completion, reveal |cards from the deck equal |to your influence. |You may put one into each: |your vault, your stockpile, |your clientele, as foundation |on an in-town site, an |incomplete building as material. |Leftovers go to your hand.	Promo	True
 Bar	Rubble	When performing |PATRON action, you |may take one additional client card from the deck.	Standard	True
 Basilica	Marble	When performing |MERCHANT action, you |may move one additional |card from your hand |to your vault.	Standard	True
 Bath	Brick	When performing |PATRON action, each |client you hire |may perform its action once |as it enters your clientele.	Standard	True
 Bridge	Concrete	When performing |LEGIONARY action, you |may demand materials |from all players. |You may additionally take one material from each opponent's stockpile. |Ignore Palisades.	Standard	False
+Castra	Rubble	THINK at end of a |round in which you lost at |least one card from your| hand to a LEGIONARY.	Promo	True
+Castra Praetoria	Brick	You may show an |incomplete building to |demand with a LEGIONARY. |Upon completion, you may |put the material from this |building into your clientele.	Promo	True
 Catacomb	Stone	Upon completion, |game ends immediately. |Score as usual.	Standard	True
 Circus	Wood	You may play two cards of the same role as a JACK.	Imperium	True
 Circus Maximus	Stone	Each of your clients may perform its action twice when you lead or follow |its role.	Standard	True
 Colosseum	Stone	When performing |LEGIONARY action, you |may additionally take one matching client from each opponent and place it in your vault.	Imperium	True
 Crane	Wood	You may use any card to lead or follow ARCHITECT.	Republic	True
 Dock	Wood	When performing |LABORER action, you |may take one additional material from your hand.	Standard	True
+Domus	Wood	Upon completion, |you may perform one |PATRON action.	Promo	True
 Domus Aurea	Stone	When performing |LEGIONARY action, you |may additionally tear down one matching incomplete building with no material of each victim. |Place foundation in your |stockpile and site |in your influence.	Republic	True
 Forum	Marble	You win immediately |whenever you have |a client of each type |in your clientele.	Imperium	True
 Forum Romanum	Marble	You win immediately |whenever you have |a client of each role |in your clientele and |one material of each |type in your stockpile.	Republic	True
@@ -26,6 +31,7 @@ Ludus Magnus	Marble	Each MERCHANT client |in your clientele |counts as any role.
 Market	Wood	Maximum vault size +2	Standard	True
 Palace	Marble	You may play multiple |cards of the same role to |perform additional actions.	Standard	True
 Palisade	Wood	Immune to |LEGIONARY	Standard	False
+Plebian Council	Marble	You win immediately |whenever you have more |LABORER clients than any |other player and there are |more LABORER clients than |LEGIONARY clients in total.	Promo	True
 Prison	Stone	Upon completion, |you may exchange the prison's site (and thus influence) for an opponent's completed structure.	Standard	True
 Road	Rubble	You may use any material towards the completion of STONE structures.	Standard	False
 School	Brick	Upon completion, |you may perform |one THINKER action |for each influence.	Standard	True
@@ -33,12 +39,16 @@ Scriptorium	Stone	You may complete any |structure by adding |MARBLE to it, |no m
 Senate	Concrete	At the end of each turn, |you may take |into your hand |any JACKS played by opponents.	Imperium	True
 Sewer	Stone	You may place order cards you used to lead or follow into your stockpile at the end of your turn.	Standard	True
 Shrine	Brick	Hand refill size +2	Standard	True
+Solarium	Concrete	Whenever you complete a |building using ARCHITECT, |you may move one material |from that building into your |stockpile. This also applies |to Solarium.	Promo	True
 Stairway	Marble	When performing |ARCHITECT action, you |may additionally add a material to an opponent's completed structure to make its function available |to all players.	Standard	False
 Statue	Marble	+3 VP |You may place the statue |on any site.	Standard	True
 Storeroom	Concrete	Each client |in your clientele also |counts as a LABORER.	Standard	True
 Temple	Marble	Hand refill size +4	Standard	True
 Tower	Concrete	You may use RUBBLE |in any structure. |You may lay foundations onto out of town sites |at no extra cost.	Standard	True
 Tribunal	Concrete	After performing |THINKER action, you may draw a JACK.	Republic	True
+Triclinium	Marble	When leading or following, |you may put each client into |your vault after it performs |its role.	Promo	True
 Villa	Stone	If you use the ARCHITECT to put one stone into the construction of the villa, it is completed immediately.	Standard	True
 Vomitorium	Concrete	Before performing |THINKER action, you may discard all your cards |to the pool.	Standard	True
 Wall	Concrete	Immune to LEGIONARY. |+1 VP for every two materials in your stockpile.	Standard	False
+Watch Post	Stone	You may use a CRAFTSMAN |action to tear down one of |your completed buildings. |Add its foundation to |your hand and its material |to your stockpile.	Promo	True
+Watermill	Brick	At end of turn a in |which you led or |followed LABORER, you |may use each of your |ARCHITECT clients once.	Promo	False

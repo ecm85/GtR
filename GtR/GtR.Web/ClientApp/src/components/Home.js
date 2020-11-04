@@ -11,6 +11,7 @@ export class Home extends Component {
             bleedSizeInInches: 0.125,
             borderPaddingInInches: .0625,
             saveConfiguration: 'Page',
+            cardTypesToInclude: ['StandardOrderCard', 'RepublicOrderCard', 'ImperiumOrderCard', 'SiteCard', 'MiscCard'],
             generating: false,
             error: null,
             downloadLink: null
@@ -32,6 +33,10 @@ export class Home extends Component {
     handleSaveConfigurationChange = (event) => {
         this.setState({ saveConfiguration: event.target.value });
     }
+    handleCardTypesToIncludeChange = (event) => {
+        const cardTypesToInclude = Array.from(event.target.selectedOptions).map(option => option.value);
+        this.setState({ cardTypesToInclude });
+    }
 
     handleGenerateClick = async () => {
         var {
@@ -39,7 +44,8 @@ export class Home extends Component {
             cardLongSideInInches,
             bleedSizeInInches,
             borderPaddingInInches,
-            saveConfiguration
+            saveConfiguration,
+            cardTypesToInclude
         } = this.state;
         this.setState({ generating: true, error: null, downloadLink: null });
         const body = JSON.stringify({
@@ -47,7 +53,8 @@ export class Home extends Component {
             cardLongSideInInches,
             bleedSizeInInches,
             borderPaddingInInches,
-            saveConfiguration
+            saveConfiguration,
+            cardTypesToInclude
         });
         try {
             var response = await fetch('Gtr/GenerateImages', {
@@ -74,6 +81,7 @@ export class Home extends Component {
             bleedSizeInInches,
             borderPaddingInInches,
             saveConfiguration,
+            cardTypesToInclude,
             generating,
             error,
             downloadLink
@@ -122,6 +130,21 @@ export class Home extends Component {
                             </div>
                         </div>
                         <div className='form-row'>
+                            <div className='col'>
+                                <div className='form-group'>
+                                    <label htmlFor='cardTypesToInclude'>
+                                        Cards To Include
+                                    </label>
+                                    <select id='cardTypesToInclude' className='form-control' multiple size={6} value={cardTypesToInclude} onChange={this.handleCardTypesToIncludeChange} disabled={generating}>
+                                        <option value='StandardOrderCard'>Standard Order Cards</option>
+                                        <option value='RepublicOrderCard'>Republic Order Cards</option>
+                                        <option value='ImperiumOrderCard'>Imperium Order Cards</option>
+                                        <option value='PromoOrderCard'>Promo Order Cards</option>
+                                        <option value='SiteCard'>Site Cards</option>
+                                        <option value='MiscCard'>Miscellaneous Cards (Leader, Jacks, Merchant Bonuses)</option>
+                                    </select>
+                                </div>
+                            </div>
                             <div className='col'>
                                 <div className='form-group'>
                                     <label htmlFor='saveConfiguration'>

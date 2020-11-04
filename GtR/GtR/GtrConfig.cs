@@ -7,5 +7,6 @@
         public float BleedSizeInInches { get; set; }
         public float BorderPaddingInInches { get; set; }
         public SaveConfiguration SaveConfiguration { get; set; }
+        public CardType[] CardTypesToInclude { get; set; }
     }
 }

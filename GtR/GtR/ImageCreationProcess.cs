@@ -88,28 +88,41 @@ namespace GtR
                 .ToList();
             var imageCreator = new GloryToRomeImageCreator(gtrConfig);
 
+            var cardsToPrint = Enumerable.Empty<ISaveableImage>();
+
             var orderCards = ReadOrderCards();
-            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
-            var orderCardBackImage = imageCreator.CreateOrderCardBack();
-
-            var siteFrontImages = allSuits.Select(suit => imageCreator.CreateSiteFront(suit)).ToList();
-            var siteBackImages = allSuits.Select(suit => imageCreator.CreateSiteBack(suit)).ToList();
-
-            var jackImageFront = imageCreator.CreateJackImageSword();
-            var jackImageBack = imageCreator.CreateJackImageQuill();
-
-            var merchantBonusCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
-
-            var leaderImage = imageCreator.CreateLeaderImage();
-
-            return orderCardFrontImages
-                .Concat(new[] { orderCardBackImage })
-                .Concat(siteFrontImages)
-                .Concat(siteBackImages)
-                .Concat(new [] { jackImageFront, jackImageBack})
-                .Concat(merchantBonusCards)
-                .Concat(new [] { leaderImage })
+            var orderCardsToInclude = orderCards
+                .Where(orderCard => gtrConfig.CardTypesToInclude.Contains(orderCard.CardType))
                 .ToList();
+            var orderCardFrontImages = orderCardsToInclude.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
+            if (orderCardsToInclude.Any())
+            {
+                var orderCardBackImage = imageCreator.CreateOrderCardBack();
+                cardsToPrint = cardsToPrint.Concat(orderCardFrontImages).Concat(new[] { orderCardBackImage });
+            }
+
+            if (gtrConfig.CardTypesToInclude.Contains(CardType.SiteCard))
+            {
+                var siteFrontImages = allSuits.Select(suit => imageCreator.CreateSiteFront(suit)).ToList();
+                var siteBackImages = allSuits.Select(suit => imageCreator.CreateSiteBack(suit)).ToList();
+                cardsToPrint = cardsToPrint.Concat(siteFrontImages).Concat(siteBackImages);
+            }
+
+            if (gtrConfig.CardTypesToInclude.Contains(CardType.MiscCard))
+            {
+                var jackImageFront = imageCreator.CreateJackImageSword();
+                var jackImageBack = imageCreator.CreateJackImageQuill();
+
+                var merchantBonusCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+
+                var leaderImage = imageCreator.CreateLeaderImage();
+                cardsToPrint = cardsToPrint
+                    .Concat(new[] { jackImageFront, jackImageBack })
+                    .Concat(merchantBonusCards)
+                    .Concat(new[] { leaderImage });
+            }
+
+            return cardsToPrint.ToList();
         }
 
         private static IEnumerable<ISaveableImage> CreatePages(GtrConfig gtrConfig)
@@ -122,8 +135,14 @@ namespace GtR
                 .ToList();
             var imageCreator = new GloryToRomeImageCreator(gtrConfig);
 
+            
             var orderCards = ReadOrderCards();
-            var orderCardFrontImages = orderCards.SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard)).ToList();
+            var orderCardsToInclude = orderCards
+                .Where(orderCard => gtrConfig.CardTypesToInclude.Contains(orderCard.CardType))
+                .ToList();
+            var orderCardFrontImages = orderCardsToInclude
+                .SelectMany(orderCard => CreateCardsForOrderCard(imageCreator, orderCard))
+                .ToList();
             Console.WriteLine($"{DateTime.Now:G}: Created order card front images");
             var remainingOrderCards = orderCardFrontImages.ToList();
             while (remainingOrderCards.Any())
@@ -137,72 +156,81 @@ namespace GtR
             }
             Console.WriteLine($"{DateTime.Now:G}: Created order card front pages");
 
-            var orderCardBackImage = imageCreator.CreateOrderCardBack();
-            var pageOfOrderBackImages = Enumerable.Repeat(orderCardBackImage, Page.cardsPerColumn * Page.cardsPerRow).ToList();
-            var orderBackPage = new Page("OrderCardBack", "Pages");
-            orderBackPage.AddCardsToPage(pageOfOrderBackImages);
-            orderCardBackImage.Dispose();
-            pages.Add(orderBackPage);
-            Console.WriteLine($"{DateTime.Now:G}: Created order card back page");
+            if (orderCardsToInclude.Any())
+            {
+                var orderCardBackImage = imageCreator.CreateOrderCardBack();
+                var pageOfOrderBackImages = Enumerable.Repeat(orderCardBackImage, Page.cardsPerColumn * Page.cardsPerRow).ToList();
+                var orderBackPage = new Page("OrderCardBack", "Pages");
+                orderBackPage.AddCardsToPage(pageOfOrderBackImages);
+                orderCardBackImage.Dispose();
+                pages.Add(orderBackPage);
+                Console.WriteLine($"{DateTime.Now:G}: Created order card back page");
+            }
 
-            var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
-            var siteFrontPage = new Page("SiteFront", "Pages");
-            siteFrontPage.AddCardsToPage(siteFrontImages);
-            foreach (var card in siteFrontImages)
-                card.Dispose();
-            pages.Add(siteFrontPage);
-            Console.WriteLine($"{DateTime.Now:G}: Created site front page");
+            if (gtrConfig.CardTypesToInclude.Contains(CardType.SiteCard))
+            {
+                var siteFrontImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteFront(suit))).ToList();
+                var siteFrontPage = new Page("SiteFront", "Pages");
+                siteFrontPage.AddCardsToPage(siteFrontImages);
+                foreach (var card in siteFrontImages)
+                    card.Dispose();
+                pages.Add(siteFrontPage);
+                Console.WriteLine($"{DateTime.Now:G}: Created site front page");
 
-            var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
-            foreach (var siteBackImage in siteBackImages)
-                siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-            var siteBackPage = new Page("SiteBack", "Pages");
-            siteBackPage.AddCardsToPage(siteBackImages);
-            foreach (var card in siteBackImages)
-                card.Dispose();
-            pages.Add(siteBackPage);
-            Console.WriteLine($"{DateTime.Now:G}: Created site back page");
+                var siteBackImages = allSuits.SelectMany(suit => Enumerable.Range(0, 3).Select(index => imageCreator.CreateSiteBack(suit))).ToList();
+                foreach (var siteBackImage in siteBackImages)
+                    siteBackImage.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                var siteBackPage = new Page("SiteBack", "Pages");
+                siteBackPage.AddCardsToPage(siteBackImages);
+                foreach (var card in siteBackImages)
+                    card.Dispose();
+                pages.Add(siteBackPage);
+                Console.WriteLine($"{DateTime.Now:G}: Created site back page");
+            }
 
-            var jackImageFront = imageCreator.CreateJackImageSword();
-            var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
-            var leaderImageFront = imageCreator.CreateLeaderImage();
+            if (gtrConfig.CardTypesToInclude.Contains(CardType.MiscCard))
+            {
+                var jackImageFront = imageCreator.CreateJackImageSword();
+                var merchantBonusFrontCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+                var leaderImageFront = imageCreator.CreateLeaderImage();
 
-            var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
-                .Concat(merchantBonusFrontCards)
-                .Concat(Enumerable.Repeat(leaderImageFront, 3))
-                .ToList();
+                var miscImagesFront = Enumerable.Repeat(jackImageFront, 6)
+                    .Concat(merchantBonusFrontCards)
+                    .Concat(Enumerable.Repeat(leaderImageFront, 3))
+                    .ToList();
 
-            var miscFrontPage = new Page("MiscFront", "Pages");
-            miscFrontPage.AddCardsToPage(miscImagesFront);
-            jackImageFront.Dispose();
-            foreach (var card in merchantBonusFrontCards)
-                card.Dispose();
-            leaderImageFront.Dispose();
-            pages.Add(miscFrontPage);
-            Console.WriteLine($"{DateTime.Now:G}: Created misc front page");
+                var miscFrontPage = new Page("MiscFront", "Pages");
+                miscFrontPage.AddCardsToPage(miscImagesFront);
+                jackImageFront.Dispose();
+                foreach (var card in merchantBonusFrontCards)
+                    card.Dispose();
+                leaderImageFront.Dispose();
+                pages.Add(miscFrontPage);
+                Console.WriteLine($"{DateTime.Now:G}: Created misc front page");
 
-            var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
-            foreach (var merchantBonusBackCard in merchantBonusBackCards)
-                merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-            var jackImageBack = imageCreator.CreateJackImageQuill();
-            jackImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
-            var leaderImageBack = imageCreator.CreateLeaderImage();
-            leaderImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                var merchantBonusBackCards = allSuits.Select(suit => imageCreator.CreateMerchantBonusImage(suit)).ToList();
+                foreach (var merchantBonusBackCard in merchantBonusBackCards)
+                    merchantBonusBackCard.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                var jackImageBack = imageCreator.CreateJackImageQuill();
+                jackImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
+                var leaderImageBack = imageCreator.CreateLeaderImage();
+                leaderImageBack.Bitmap.RotateFlip(RotateFlipType.Rotate180FlipNone);
 
-            var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
-                .Concat(merchantBonusBackCards.Take(3).Reverse())
-                .Concat(merchantBonusBackCards.Skip(3).Take(3).Reverse())
-                .Concat(Enumerable.Repeat(leaderImageBack, 3))
-                .ToList();
+                var miscImagesBack = Enumerable.Repeat(jackImageBack, 6)
+                    .Concat(merchantBonusBackCards.Take(3).Reverse())
+                    .Concat(merchantBonusBackCards.Skip(3).Take(3).Reverse())
+                    .Concat(Enumerable.Repeat(leaderImageBack, 3))
+                    .ToList();
 
-            var miscBackPage = new Page("MiscBack", "Pages");
-            miscBackPage.AddCardsToPage(miscImagesBack);
-            jackImageBack.Dispose();
-            foreach (var card in merchantBonusBackCards)
-                card.Dispose();
-            leaderImageBack.Dispose();
-            pages.Add(miscBackPage);
-            Console.WriteLine($"{DateTime.Now:G}: Created misc back page");
+                var miscBackPage = new Page("MiscBack", "Pages");
+                miscBackPage.AddCardsToPage(miscImagesBack);
+                jackImageBack.Dispose();
+                foreach (var card in merchantBonusBackCards)
+                    card.Dispose();
+                leaderImageBack.Dispose();
+                pages.Add(miscBackPage);
+                Console.WriteLine($"{DateTime.Now:G}: Created misc back page");
+            }
 
             return pages;
         }
@@ -262,6 +290,8 @@ namespace GtR
                     return CardSet.Republic;
                 case "Imperium":
                     return CardSet.Imperium;
+                case "Promo":
+                    return CardSet.Promo;
                 default:
                     throw new InvalidOperationException($"Invalid card set encountered: {text}.");
             }
