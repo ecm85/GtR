@@ -10,7 +10,7 @@ Basilica	Marble	When performing |MERCHANT action, you |may move one additional |
 Bath	Brick	When performing |PATRON action, each |client you hire |may perform its action once |as it enters your clientele.	Standard	True
 Bridge	Concrete	When performing |LEGIONARY action, you |may demand materials |from all players. |You may additionally take one material from each opponent's stockpile. |Ignore Palisades.	Standard	False
 Castra	Rubble	THINK at the end of a |round in which you lost at |least one card from your |hand to a LEGIONARY.	Promo	True
-Castra Praetoria	Brick	You may show an |incomplete building to |demand with a LEGIONARY. || |Upon completion, you may |put the material from this |building into your clientele.	Promo	True
+Castra Praetoria	Brick	You may show an |incomplete building to |demand with a LEGIONARY. || |Upon completion, you may |put the material from this |building into your clientele.	Promo	False
 Catacomb	Stone	Upon completion, |game ends immediately. |Score as usual.	Standard	True
 Circus	Wood	You may play two cards of the same role as a JACK.	Imperium	True
 Circus Maximus	Stone	Each of your clients may perform its action twice when you lead or follow |its role.	Standard	True
