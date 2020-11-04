@@ -10,18 +10,15 @@ namespace GtR
         public readonly float bleedSizeInInches;
         public readonly float borderPaddingInInches;
 
-        private const float borderThicknessInInches = 0f;
-
         private int CardShortSideInPixels => (int)(GraphicsUtilities.dpi * cardShortSideInInches) - 1;
         private int CardLongSideInPixels => (int)(GraphicsUtilities.dpi * cardLongSideInInches) - 1;
         private int BleedSizeInPixels => (int)Math.Round(GraphicsUtilities.dpi * bleedSizeInInches);
-        private int BorderThicknessInPixels => (int)(GraphicsUtilities.dpi * borderThicknessInInches);
         private int BorderPaddingInPixels => (int)(GraphicsUtilities.dpi * borderPaddingInInches);
 
         private int CardShortSideInPixelsWithBleed => CardShortSideInPixels + BleedSizeInPixels * 2;
         private int CardLongSideInPixelsWithBleed => CardLongSideInPixels + BleedSizeInPixels * 2;
 
-        public Point Origin => new Point(BleedSizeInPixels + BorderThicknessInPixels, BleedSizeInPixels + BorderThicknessInPixels);
+        public Point Origin => new Point(BleedSizeInPixels, BleedSizeInPixels);
 
         private int WidthInPixels => Orientation == ImageOrientation.Landscape ? CardLongSideInPixels : CardShortSideInPixels;
         private int HeightInPixels => Orientation == ImageOrientation.Portrait ? CardLongSideInPixels : CardShortSideInPixels;
@@ -37,8 +34,8 @@ namespace GtR
         private Rectangle UsableRectangleWithoutPadding => new Rectangle(
             Origin.X,
             Origin.Y,
-            WidthInPixels - 2 * BorderThicknessInPixels,
-            HeightInPixels - 2 * BorderThicknessInPixels);
+            WidthInPixels,
+            HeightInPixels);
 
         public Rectangle UsableRectangle => new Rectangle(
             UsableRectangleWithoutPadding.X + BorderPaddingInPixels,
@@ -86,7 +83,7 @@ namespace GtR
             return null;
         }
 
-        public void PrintCardBorderAndBackground(Color backgroundColor, Color? outerBorderColor = null, Color? middleBorderColor = null)
+        public void PrintCardBorderAndBackground(Color backgroundColor, Color? outerBorderColor = null)
         {
             using (var graphics = Graphics.FromImage(Bitmap))
             {
@@ -97,14 +94,6 @@ namespace GtR
                         0,
                         WidthInPixelsWithBleed,
                         HeightInPixelsWithBleed,
-                        borderRadius);
-                if (middleBorderColor.HasValue)
-                    graphics.FillRoundedRectangle(
-                        new SolidBrush(middleBorderColor.Value),
-                        BleedSizeInPixels,
-                        BleedSizeInPixels,
-                        WidthInPixels,
-                        HeightInPixels,
                         borderRadius);
                 graphics.FillRoundedRectangle(
                     new SolidBrush(backgroundColor),
