@@ -1,15 +1,15 @@
-﻿Aerarium	Concrete	Use the highest influence |among players at all |times except final scoring. |Upon completion, you may |exchange 2 influence to |trigger an 'Upon Completion' |effect on a complete building.	Promo	True
+﻿Aerarium	Concrete	Use the highest influence |among players at all |times except final scoring. |Upon completion, you may |exchange 2 influence to |trigger an 'Upon Completion' |effect on a |complete building.	Promo	True
 Academy	Brick	You may perform one THINKER action after any turn during which you performed at least one CRAFTSMAN action.	Standard	True
 Amphitheatre	Concrete	Upon completion, |you may perform one |CRAFTSMAN action for |each influence.	Standard	True
 Aqueduct	Concrete	When performing |PATRON action, you |may take one additional client from your hand. |Maximum clientele size x2	Standard	False
 Archway	Brick	When performing |ARCHITECT action, you |may take a material |from the pool |instead of your stockpile.	Standard	True
 Atrium	Brick	When performing |MERCHANT action, you |may take a card |from the deck |instead of your stockpile |(Don't look at it).	Standard	True
-Bacchanalia	Stone	Upon completion, reveal |cards from the deck equal |to your influence. |You may put one into each: |your vault, your stockpile, |your clientele, as foundation |on an in-town site, an |incomplete building as material. |Leftovers go to your hand.	Promo	True
+Bacchanalia	Stone	Upon completion, reveal |cards from the deck equal |to your influence. |You may put one into each: |your vault, your stockpile, |your clientele, as foundation on |an in-town site, an incomplete |building as material. |Leftovers go to your hand.	Promo	True
 Bar	Rubble	When performing |PATRON action, you |may take one additional client card from the deck.	Standard	True
 Basilica	Marble	When performing |MERCHANT action, you |may move one additional |card from your hand |to your vault.	Standard	True
 Bath	Brick	When performing |PATRON action, each |client you hire |may perform its action once |as it enters your clientele.	Standard	True
 Bridge	Concrete	When performing |LEGIONARY action, you |may demand materials |from all players. |You may additionally take one material from each opponent's stockpile. |Ignore Palisades.	Standard	False
-Castra	Rubble	THINK at end of a |round in which you lost at |least one card from your| hand to a LEGIONARY.	Promo	True
+Castra	Rubble	THINK at the end of a |round in which you lost at |least one card from your |hand to a LEGIONARY.	Promo	True
 Castra Praetoria	Brick	You may show an |incomplete building to |demand with a LEGIONARY. |Upon completion, you may |put the material from this |building into your clientele.	Promo	True
 Catacomb	Stone	Upon completion, |game ends immediately. |Score as usual.	Standard	True
 Circus	Wood	You may play two cards of the same role as a JACK.	Imperium	True
@@ -51,4 +51,4 @@ Villa	Stone	If you use the ARCHITECT to put one stone into the construction of t
 Vomitorium	Concrete	Before performing |THINKER action, you may discard all your cards |to the pool.	Standard	True
 Wall	Concrete	Immune to LEGIONARY. |+1 VP for every two materials in your stockpile.	Standard	False
 Watch Post	Stone	You may use a CRAFTSMAN |action to tear down one of |your completed buildings. |Add its foundation to |your hand and its material |to your stockpile.	Promo	True
-Watermill	Brick	At end of turn a in |which you led or |followed LABORER, you |may use each of your |ARCHITECT clients once.	Promo	False
+Watermill	Brick	At end of a turn in |which you led or |followed LABORER, you |may use each of your |ARCHITECT clients once.	Promo	False
