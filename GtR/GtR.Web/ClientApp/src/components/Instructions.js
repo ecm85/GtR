@@ -158,8 +158,7 @@ export class Instructions extends Component {
                     </div>
                     <div className='card-body'>
                         <div className='card-text'>
-                            Some planned updates
-                            <li>Promo cards (and configurable if you want to print them)</li>
+                            Some future updates (that might or might not happen)
                             <li>Page size configurable (images per page / size of page)</li>
                             <li>
                                 Allow only printing individual cards. So far, the following cards have been fixed since inception:
