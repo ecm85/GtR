@@ -139,16 +139,6 @@ export class Home extends Component {
                         </div>
                         <div className='form-row'>
                             <div className='col'>
-                                <div className='form-check'>
-                                    <input type='checkbox' id='showSiteBackTextBackground' className='form-check-input' value={showSiteBackTextBackground} onChange={this.handleShowSiteBackTextBackground} disabled={generating} />
-                                    <label className='form-check-label' htmlFor='showSiteBackTextBackground'>
-                                        Show Site Back Text Background Rectangle
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div className='form-row'>
-                            <div className='col'>
                                 <div className='form-group'>
                                     <label htmlFor='cardTypesToInclude'>
                                         Cards To Include
@@ -172,6 +162,16 @@ export class Home extends Component {
                                         <option value='Page'>Pages of Cards</option>
                                         <option value='SingleImage'>One Image Per Card</option>
                                     </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div className='form-row'>
+                            <div className='col'>
+                                <div className='form-check'>
+                                    <input type='checkbox' id='showSiteBackTextBackground' className='form-check-input' value={showSiteBackTextBackground} onChange={this.handleShowSiteBackTextBackground} disabled={generating} />
+                                    <label className='form-check-label' htmlFor='showSiteBackTextBackground'>
+                                        Show Site Back Text Background Rectangle
+                                    </label>
                                 </div>
                             </div>
                         </div>
