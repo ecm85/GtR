@@ -139,11 +139,11 @@ export class Home extends Component {
                         </div>
                         <div className='form-row'>
                             <div className='col'>
-                                <div className='form-group'>
-                                    <label htmlFor='showSiteBackTextBackground'>
+                                <div className='form-check'>
+                                    <input type='checkbox' id='showSiteBackTextBackground' className='form-check-input' value={showSiteBackTextBackground} onChange={this.handleShowSiteBackTextBackground} disabled={generating} />
+                                    <label className='form-check-label' htmlFor='showSiteBackTextBackground'>
                                         Show Site Back Text Background Rectangle
                                     </label>
-                                    <input type='checkbox' id='showSiteBackTextBackground' className='form-control' value={showSiteBackTextBackground} onChange={this.handleShowSiteBackTextBackground} disabled={generating} />
                                 </div>
                             </div>
                         </div>

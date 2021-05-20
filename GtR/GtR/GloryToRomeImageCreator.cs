@@ -333,7 +333,7 @@ namespace GtR
             var outOfTownSiteTextRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y + yOffset, maxTextBoxWidth, textHeight);
             if (GtrConfig.ShowSiteBackTextBackground)
 			{
-                var backgroundRectangle = new Rectangle(usableRectangle.X + (int)(maxTextBoxWidth * .2), usableRectangle.Y + yOffset - (int)(resourceNameTextHeight * 1.2), (int) (maxTextBoxWidth * .6), resourceNameTextHeight + textHeight);
+                var backgroundRectangle = new Rectangle(usableRectangle.X + (int)(maxTextBoxWidth * .2), usableRectangle.Y + yOffset - (int)(resourceNameTextHeight * 1.5), (int) (maxTextBoxWidth * .6), resourceNameTextHeight + textHeight);
                 graphics.FillRectangle(new SolidBrush(Color.White), backgroundRectangle);
             }
             //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
