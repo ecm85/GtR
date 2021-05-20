@@ -331,6 +331,11 @@ namespace GtR
             var yOffset = usableRectangle.Height/2 - textHeight/2;
             var resourceNameTextRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y + yOffset - resourceNameTextHeight, maxTextBoxWidth, textHeight);
             var outOfTownSiteTextRectangle = new Rectangle(usableRectangle.X, usableRectangle.Y + yOffset, maxTextBoxWidth, textHeight);
+            if (GtrConfig.ShowSiteBackTextBackground)
+			{
+                var backgroundRectangle = new Rectangle(usableRectangle.X + (int)(maxTextBoxWidth * .2), usableRectangle.Y + yOffset - (int)(resourceNameTextHeight * 1.2), (int) (maxTextBoxWidth * .6), resourceNameTextHeight + textHeight);
+                graphics.FillRectangle(new SolidBrush(Color.White), backgroundRectangle);
+            }
             //graphics.FillRectangle(new SolidBrush(Color.Blue), textRectangle);
             GraphicsUtilities.DrawString(graphics, resourceNameText, cardNameFont, GraphicsUtilities.BlackBrush, resourceNameTextRectangle, GraphicsUtilities.HorizontalCenterAlignment);
             GraphicsUtilities.DrawString(graphics, outOfTownSiteText, costFont, GraphicsUtilities.BlackBrush, outOfTownSiteTextRectangle, GraphicsUtilities.HorizontalCenterAlignment);

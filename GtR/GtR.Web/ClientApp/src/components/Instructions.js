@@ -40,6 +40,7 @@ export class Instructions extends Component {
                                 <li>Card long side, in inches - This is larger dimension of the cards, in inches. Default value: 3.5</li>
                                 <li>Bleed size, in inches - This is the amount of bleed to include outside the bounds of the card image. Default value: .125</li>
                                 <li>Border padding, in inches (default is 1/16th of an inch) - This is the extra padding -inside the valid printing area- to leave blank. Default value: .0625</li>
+                                <li>Show Site Back Text Background Rectangle - check this if you want to include a white background behind the 'out of town site' text. Default value: false (unchecked)</li>
                                 <li>Cards To Include - You can choose which cards you need. Default value: Everything but promo cards.</li>
                                 <li>Card Configuration - This is the output type, can be 'Pages of Cards' or 'One Image Per Card'. Default value: 'Pages of Cards'</li>
                             </ul>

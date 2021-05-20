@@ -8,5 +8,6 @@
         public float BorderPaddingInInches { get; set; }
         public SaveConfiguration SaveConfiguration { get; set; }
         public CardType[] CardTypesToInclude { get; set; }
-    }
+		public bool ShowSiteBackTextBackground { get; set; }
+	}
 }

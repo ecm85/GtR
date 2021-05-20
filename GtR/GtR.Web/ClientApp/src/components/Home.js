@@ -11,6 +11,7 @@ export class Home extends Component {
             bleedSizeInInches: 0.125,
             borderPaddingInInches: .0625,
             saveConfiguration: 'Page',
+            showSiteBackTextBackground: false,
             cardTypesToInclude: ['StandardOrderCard', 'RepublicOrderCard', 'ImperiumOrderCard', 'SiteCard', 'MiscCard'],
             generating: false,
             error: null,
@@ -30,6 +31,10 @@ export class Home extends Component {
     handleBorderPaddingInInchesChange = (event) => {
         this.setState({ borderPaddingInInches: +event.target.value });
     }
+    handleShowSiteBackTextBackground = () => {
+        const { showSiteBackTextBackground } = this.state;
+        this.setState({ showSiteBackTextBackground: !showSiteBackTextBackground });
+    }
     handleSaveConfigurationChange = (event) => {
         this.setState({ saveConfiguration: event.target.value });
     }
@@ -45,7 +50,8 @@ export class Home extends Component {
             bleedSizeInInches,
             borderPaddingInInches,
             saveConfiguration,
-            cardTypesToInclude
+            cardTypesToInclude,
+            showSiteBackTextBackground
         } = this.state;
         this.setState({ generating: true, error: null, downloadLink: null });
         const body = JSON.stringify({
@@ -54,7 +60,8 @@ export class Home extends Component {
             bleedSizeInInches,
             borderPaddingInInches,
             saveConfiguration,
-            cardTypesToInclude
+            cardTypesToInclude,
+            showSiteBackTextBackground
         });
         try {
             var response = await fetch('Gtr/GenerateImages', {
@@ -82,6 +89,7 @@ export class Home extends Component {
             borderPaddingInInches,
             saveConfiguration,
             cardTypesToInclude,
+            showSiteBackTextBackground,
             generating,
             error,
             downloadLink
@@ -126,6 +134,16 @@ export class Home extends Component {
                                         Border padding, in inches (default is 1/16th of an inch)
                                     </label>
                                     <input id='borderPaddingInInches' className='form-control' type='number' value={borderPaddingInInches} onChange={this.handleBorderPaddingInInchesChange} disabled={generating} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='form-row'>
+                            <div className='col'>
+                                <div className='form-group'>
+                                    <label htmlFor='showSiteBackTextBackground'>
+                                        Show Site Back Text Background Rectangle
+                                    </label>
+                                    <input type='checkbox' id='showSiteBackTextBackground' className='form-control' value={showSiteBackTextBackground} onChange={this.handleShowSiteBackTextBackground} disabled={generating} />
                                 </div>
                             </div>
                         </div>
